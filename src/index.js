@@ -1,5 +1,9 @@
-import Handlebars from 'handlebars'
+import '../node_modules/font-awesome/scss/font-awesome.scss'
 import './styles.scss'
-import sum from './modules/sum/index'
 
-sum()
+import { LoginPage } from './pages/login/index'
+
+window.onload = () => {
+    const loginPage = new LoginPage()
+    loginPage.init()
+}

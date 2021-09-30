@@ -455,82 +455,55 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"6cF5V":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _handlebars = require("handlebars");
-var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _fontAwesomeScss = require("../node_modules/font-awesome/scss/font-awesome.scss");
 var _stylesScss = require("./styles.scss");
-var _index = require("./modules/sum/index");
-var _indexDefault = parcelHelpers.interopDefault(_index);
-_indexDefault.default();
-
-},{"./styles.scss":"5IPRo","./modules/sum/index":"7fW5a","handlebars":"7oyOD","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"5IPRo":[function() {},{}],"7fW5a":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _handlebars = require("handlebars");
-var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
-var _sum = require("./sum");
-var _sumTmpl = require("./sum.tmpl");
-var _sumTmplDefault = parcelHelpers.interopDefault(_sumTmpl);
-var _sumScss = require("./sum.scss");
-exports.default = function() {
-    const root = document.querySelector('#root');
-    const sumResult = _sum.sum(5, -1).toString();
-    const template = _handlebarsDefault.default.compile(_sumTmplDefault.default);
-    const result = template({
-        sumResult
-    });
-    root.innerHTML = result;
+var _index = require("./pages/login/index");
+window.onload = ()=>{
+    const loginPage = new _index.LoginPage();
+    loginPage.init();
 };
 
-},{"./sum":"lBw5p","./sum.tmpl":"lrdzI","./sum.scss":"KRJfj","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","handlebars":"7oyOD"}],"lBw5p":[function(require,module,exports) {
+},{"./styles.scss":"5IPRo","./pages/login/index":"3o5UP","../node_modules/font-awesome/scss/font-awesome.scss":"12h4e"}],"5IPRo":[function() {},{}],"3o5UP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "sum", ()=>sum
+parcelHelpers.export(exports, "LoginPage", ()=>_login.LoginPage
 );
-function sum(...args) {
-    if (args.length === 0) throw Error('sum required at least 1 argument');
-    return args.reduce((result, current)=>result + current
-    , 0);
+var _login = require("./login");
+
+},{"./login":"aqTP6","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"aqTP6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "LoginPage", ()=>LoginPage
+);
+var _handlebars = require("handlebars");
+var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _index = require("../../components/header/index");
+var _loginScss = require("./login.scss");
+var _loginTmpl = require("./login.tmpl");
+var _loginTmplDefault = parcelHelpers.interopDefault(_loginTmpl);
+class LoginPage {
+    constructor(){
+    }
+    init() {
+        const root = document.getElementById("root");
+        const loginPage = document.createElement("div");
+        loginPage.id = "loginPage";
+        loginPage.innerHTML = this.render();
+        root.appendChild(loginPage);
+    }
+    render() {
+        const headerInstance = new _index.Header();
+        const headerTmpl = headerInstance.init();
+        console.log(headerTmpl);
+        const template = _handlebarsDefault.default.compile(`${headerTmpl} ${_loginTmplDefault.default}`);
+        const result = template({
+            header: headerTmpl
+        });
+        return result;
+    }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule') return;
-        // Skip duplicate re-exports when they have the same value.
-        if (key in dest && dest[key] === source[key]) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"lrdzI":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-exports.default = `\n    <div class="border_red">\n        {{ sumResult }}\n    </div>\n`;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"KRJfj":[function() {},{}],"7oyOD":[function(require,module,exports) {
+},{"handlebars":"7oyOD","../../components/header/index":"9Rbqt","./login.scss":"j3gJq","./login.tmpl":"7po6V","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"7oyOD":[function(require,module,exports) {
 // USAGE:
 // var handlebars = require('handlebars');
 /* eslint-disable no-var */ // var local = handlebars.create();
@@ -11910,6 +11883,81 @@ PrintVisitor.prototype.HashPair = function(pair) {
 },{"./visitor":"2O4Fg"}],"8VSUO":[function(require,module,exports) {
 "use strict";
 
-},{}]},["8Ye98","6cF5V"], "6cF5V", "parcelRequire2a44")
+},{}],"9Rbqt":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Header", ()=>_header.Header
+);
+var _header = require("./header");
+
+},{"./header":"gFow1","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"gFow1":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Header", ()=>Header
+);
+var _handlebars = require("handlebars");
+var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _headerScss = require("./header.scss");
+var _headerTmpl = require("./header.tmpl");
+var _headerTmplDefault = parcelHelpers.interopDefault(_headerTmpl);
+class Header {
+    title = 'Fast messenger';
+    constructor(){
+    }
+    init() {
+        return this.render();
+    }
+    render() {
+        const template = _handlebarsDefault.default.compile(_headerTmplDefault.default);
+        const result = template({
+            title: this.title
+        });
+        return result;
+    }
+}
+
+},{"handlebars":"7oyOD","./header.scss":"aGNZR","./header.tmpl":"8EVxI","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"aGNZR":[function() {},{}],"8EVxI":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+exports.default = `\n    <div class="header">\n        <div class="header__items">\n            <i class="header__icon fa fa-paper-plane"></i>\n            <h2 class="header__title">{{ title }}</h2>\n        </div>\n    </div>\n`;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule') return;
+        // Skip duplicate re-exports when they have the same value.
+        if (key in dest && dest[key] === source[key]) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"j3gJq":[function() {},{}],"7po6V":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+exports.default = `\n    <div class="login">\n        <h2>Login works!</h2>\n    </div>\n`;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"12h4e":[function() {},{}]},["8Ye98","6cF5V"], "6cF5V", "parcelRequire2a44")
 
 //# sourceMappingURL=index.5cb7de60.js.map

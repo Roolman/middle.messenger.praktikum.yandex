@@ -1,0 +1,25 @@
+@import "../../styles.scss";
+
+.header {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  background-color: $main_color;
+}
+
+.header__items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.header__title {
+  color: white;
+  margin-left: 20px;
+}
+
+.header__icon {
+  color: white;
+  font-size: 20px !important;
+}
