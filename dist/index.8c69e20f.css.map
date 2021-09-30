@@ -1,0 +1,1 @@
+{"mappings":";ACKA;EAJE;EACA;EAKA","sources":["src/styles.scss","src/modules/sum/sum.scss"],"sourcesContent":[null,"@mixin border {\r\n  border-style: solid;\r\n  border-width: 6px;\r\n}\r\n\r\n.border_red {\r\n  @include border;\r\n  border-color: red;\r\n}\r\n"],"names":[],"version":3,"file":"index.8c69e20f.css.map","sourceRoot":"/__parcel_source_root/"}
