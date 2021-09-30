@@ -1,6 +1,6 @@
-## vanillajs-messenger
+## VanillaJS messenger
 
-VanillaJS messenger with component approach
+Мессенджер на чистом JS с применением компонентного подхода
 
 ## Макет проекта
 
