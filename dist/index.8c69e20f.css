@@ -3,10 +3,20 @@ body {
   font-family: "Roboto", sans-serif;
   margin: 0;
 }
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 .login {
   display: flex;
@@ -15,10 +25,20 @@ body {
   justify-content: center;
   align-items: center;
 }
+.login__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 .header {
   display: flex;
@@ -46,6 +66,11 @@ body {
   font-family: "Roboto", sans-serif;
   margin: 0;
 }
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
 .login-register-block {
   display: flex;
   flex-direction: column;
@@ -69,6 +94,11 @@ body {
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 .button {
   display: flex;
@@ -102,10 +132,120 @@ body {
   background-color: transparent;
   border: none;
   color: #0099ef;
+  font-size: 0.9rem;
 }
 .button_link:hover {
   background-color: #008ee01e;
   color: #008ee0;
+}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  height: 60px;
+}
+.input-container__label {
+  display: block;
+  transition: 0.2s;
+  color: #a7a7a7;
+  font-size: small;
+  transform: translateY(-60px);
+}
+.input-container__input {
+  font-family: inherit;
+  width: 100%;
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px solid;
+  border-bottom-color: #0099ef;
+  outline: 0;
+  background: transparent;
+  font-size: large;
+}
+.input-container__input::placeholder {
+  color: transparent;
+}
+.input-container__input:placeholder-shown {
+  border-bottom-color: #a7a7a7 !important;
+}
+.input-container__input:placeholder-shown ~ .input-container__label {
+  font-size: large;
+  cursor: text;
+  transform: translateY(-40px);
+}
+.input-container__error {
+  color: #c50000;
+  margin: 0;
+  font-size: small;
+  visibility: visible;
+}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  font-size: medium;
+  color: #a7a7a7;
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox-container:hover input ~ .checkbox-container__checkmark {
+  background-color: #008ee01e;
+}
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkbox-container input:checked ~ .checkbox-container__checkmark {
+  background-color: #2196f3;
+}
+.checkbox-container input:checked ~ .checkbox-container__checkmark:after {
+  display: block;
+}
+.checkbox-container__checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 3px;
+  border: 1px solid #0099ef;
+}
+.checkbox-container__checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 7px;
+  top: 2px;
+  width: 6px;
+  height: 11px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome

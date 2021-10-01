@@ -1,15 +1,29 @@
 import Handlebars from "handlebars"
 
 import './login.scss'
-import templ from './login.tmpl'
+import templ, { form } from './login.tmpl'
+
+import { LoginRegisterBlock } from "../../components/login-register-block/index"
+import { Input } from "../../components/input/index"
+import { Checkbox } from "../../components/checkbox/index"
+
 
 export class LoginPage {
 
+    // Основные надписи и параметры компонентов
     blockTitle = "Войти"
     loginButtonTitle ="Авторизоваться"
     loginActionId = "loginButton"
-    goToRegisterButtonTitle = "Ещё не зарегистрировались?"
+    goToRegisterButtonTitle = "Ещё не зарегистрированы?"
     goToRegisterActionId = "goToRegisterButton"
+    // Форма
+    formId = "loginForm"
+    // Компонент логина (форма + кнопки)
+    loginBlock
+    // Компоненты формы
+    loginInput
+    passwordInput
+    rememberMeCheckbox
 
     constructor() {
 
@@ -30,14 +44,21 @@ export class LoginPage {
     }
 
     render() {
+        // Создаем компоненты формы
+        this.loginInput = new Input("loginInput", "login", "Логин", "text", "Неверно указан логин")
+        Handlebars.registerPartial("loginInput", this.loginInput.template)
+        this.passwordInput = new Input("passwordInput", "password", "Пароль", "password", "Неверно указан пароль")
+        Handlebars.registerPartial("passwordInput", this.passwordInput.template)
+        this.rememberMeCheckbox = new Checkbox("rememberMeCheckbox", "rememberMe", "Запомнить меня")
+        Handlebars.registerPartial("rememberMeCheckbox", this.rememberMeCheckbox.template)
+        // Создаем шаблон формы
+        const formPartial = Handlebars.compile(form)({formId: this.formId})
+        Handlebars.registerPartial(this.formId, formPartial)
+        // Объединяем в один компонент
+        this.loginBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.loginButtonTitle, this.loginActionId, this.goToRegisterButtonTitle, this.goToRegisterActionId)
+        Handlebars.registerPartial('loginBlock', this.loginBlock.template)
         const template = Handlebars.compile(templ)
-        const result = template({
-            blockTitle: this.blockTitle,
-            loginActionId: this.loginActionId,
-            loginButtonTitle: this.loginButtonTitle,
-            goToRegisterActionId: this.goToRegisterActionId,
-            goToRegisterButtonTitle: this.goToRegisterButtonTitle
-        })
+        const result = template()
         return result
     }
 

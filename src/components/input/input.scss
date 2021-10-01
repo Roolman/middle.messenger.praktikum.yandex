@@ -1,0 +1,51 @@
+@import "../../styles.scss";
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  height: 60px;
+}
+
+.input-container__label {
+  display: block;
+  transition: 0.2s;
+  color: $secondary_color;
+  font-size: small;
+  transform: translateY(-60px);
+}
+
+.input-container__input {
+  font-family: inherit;
+  width: 100%;
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px solid;
+  border-bottom-color: $main_color;
+  outline: 0;
+  background: transparent;
+
+  font-size: large;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown {
+    border-bottom-color: $secondary_color !important;
+  }
+
+  &:placeholder-shown ~ .input-container__label {
+    font-size: large;
+    cursor: text;
+    transform: translateY(-40px);
+  }
+}
+
+.input-container__error {
+  color: $danger_color;
+  margin: 0;
+  font-size: small;
+  visibility: visible; // !!!!
+}

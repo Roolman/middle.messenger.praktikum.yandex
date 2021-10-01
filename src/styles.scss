@@ -5,8 +5,17 @@ body {
   margin: 0;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 // Цвета
 $main_color: #0099ef;
+$light_main_color: #008ee01e;
+$secondary_color: #a7a7a7;
+$danger_color: rgb(197, 0, 0);
 
 // Константы
 $header_height: 60px;

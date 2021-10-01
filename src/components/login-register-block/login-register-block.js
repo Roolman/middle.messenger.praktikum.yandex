@@ -2,20 +2,26 @@ import Handlebars from "handlebars"
 import './login-register-block.scss'
 import templ from './login-register-block.tmpl'
 
+import { Button } from "../../components/button/index"
+import { BUTTON_TYPES } from "../../constants"
+
 export class LoginRegisterBlock {
 
     template
     // Аргументы входные
     title
-    form
+    formPartialName
     mainActionTitle
     mainAction
     secondActionTitle
     secondAction
+    // Компоненты блока
+    mainButton
+    secondButton
 
-    constructor(title, form, mainActionTitle, mainActionId, secondActionTitle, secondActionId) {
+    constructor(title, formPartialName, mainActionTitle, mainActionId, secondActionTitle, secondActionId) {
         this.title = title
-        this.form = form
+        this.formPartialName = () => formPartialName
         this.mainActionTitle = mainActionTitle
         this.mainActionId = mainActionId
         this.secondActionId = secondActionId
@@ -24,15 +30,19 @@ export class LoginRegisterBlock {
     }
 
     render() {
-        const template = Handlebars.compile(templ.replace('{{ form }}', this.form))
+        const template = Handlebars.compile(templ)
+        this.mainButton = new Button(this.mainActionId, this.mainActionTitle)
+        this.secondButton = new Button(this.secondActionId, this.secondActionTitle, BUTTON_TYPES.LINK)
+        Handlebars.registerPartial('mainButton', this.mainButton.template)
+        Handlebars.registerPartial('secondButton', this.secondButton.template)
         const result = template({
             title: this.title,
+            formPartialName: this.formPartialName,
             mainActionId: this.mainActionId,
             mainActionTitle: this.mainActionTitle,
             secondActionId: this.secondActionId,
             secondActionTitle: this.secondActionTitle
         })
-        console.log(result)
         return result
     }
 

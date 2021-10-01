@@ -480,12 +480,24 @@ var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
 var _loginScss = require("./login.scss");
 var _loginTmpl = require("./login.tmpl");
 var _loginTmplDefault = parcelHelpers.interopDefault(_loginTmpl);
+var _index = require("../../components/login-register-block/index");
+var _index1 = require("../../components/input/index");
+var _index2 = require("../../components/checkbox/index");
 class LoginPage {
+    // Основные надписи и параметры компонентов
     blockTitle = "Войти";
     loginButtonTitle = "Авторизоваться";
     loginActionId = "loginButton";
-    goToRegisterButtonTitle = "Ещё не зарегистрировались?";
+    goToRegisterButtonTitle = "Ещё не зарегистрированы?";
     goToRegisterActionId = "goToRegisterButton";
+    // Форма
+    formId = "loginForm";
+    // Компонент логина (форма + кнопки)
+    loginBlock;
+    // Компоненты формы
+    loginInput;
+    passwordInput;
+    rememberMeCheckbox;
     constructor(){
     }
     init() {
@@ -504,19 +516,28 @@ class LoginPage {
         ;
     }
     render() {
-        const template = _handlebarsDefault.default.compile(_loginTmplDefault.default);
-        const result = template({
-            blockTitle: this.blockTitle,
-            loginActionId: this.loginActionId,
-            loginButtonTitle: this.loginButtonTitle,
-            goToRegisterActionId: this.goToRegisterActionId,
-            goToRegisterButtonTitle: this.goToRegisterButtonTitle
+        // Создаем компоненты формы
+        this.loginInput = new _index1.Input("loginInput", "login", "Логин", "text", "Неверно указан логин");
+        _handlebarsDefault.default.registerPartial("loginInput", this.loginInput.template);
+        this.passwordInput = new _index1.Input("passwordInput", "password", "Пароль", "password", "Неверно указан пароль");
+        _handlebarsDefault.default.registerPartial("passwordInput", this.passwordInput.template);
+        this.rememberMeCheckbox = new _index2.Checkbox("rememberMeCheckbox", "rememberMe", "Запомнить меня");
+        _handlebarsDefault.default.registerPartial("rememberMeCheckbox", this.rememberMeCheckbox.template);
+        // Создаем шаблон формы
+        const formPartial = _handlebarsDefault.default.compile(_loginTmpl.form)({
+            formId: this.formId
         });
+        _handlebarsDefault.default.registerPartial(this.formId, formPartial);
+        // Объединяем в один компонент
+        this.loginBlock = new _index.LoginRegisterBlock(this.blockTitle, this.formId, this.loginButtonTitle, this.loginActionId, this.goToRegisterButtonTitle, this.goToRegisterActionId);
+        _handlebarsDefault.default.registerPartial('loginBlock', this.loginBlock.template);
+        const template = _handlebarsDefault.default.compile(_loginTmplDefault.default);
+        const result = template();
         return result;
     }
 }
 
-},{"handlebars":"7oyOD","./login.scss":"j3gJq","./login.tmpl":"7po6V","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"7oyOD":[function(require,module,exports) {
+},{"handlebars":"7oyOD","./login.scss":"j3gJq","./login.tmpl":"7po6V","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/login-register-block/index":"l1oK3","../../components/input/index":"9XkQV","../../components/checkbox/index":"cjnVe"}],"7oyOD":[function(require,module,exports) {
 // USAGE:
 // var handlebars = require('handlebars');
 /* eslint-disable no-var */ // var local = handlebars.create();
@@ -11899,17 +11920,13 @@ PrintVisitor.prototype.HashPair = function(pair) {
 },{}],"j3gJq":[function() {},{}],"7po6V":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "form", ()=>form
+);
 var _index = require("../../components/header/index");
-var _index1 = require("../../components/login-register-block/index");
-const title = "{{ blockTitle }}";
-const form = `\n    <h3>Здесь будет форма</h3>\n`;
-const mainActionTitle = "{{ loginButtonTitle }}";
-const mainActionId = "{{ loginActionId }}";
-const secondActionTitle = "{{ goToRegisterButtonTitle }}";
-const secondActionId = "{{ goToRegisterActionId }}";
-exports.default = `\n    ${new _index.Header().template}\n    <div class="login">\n        ${new _index1.LoginRegisterBlock(title, form, mainActionTitle, mainActionId, secondActionTitle, secondActionId).template}\n    </div>\n`;
+exports.default = `\n    ${new _index.Header().template}\n    <div class="login">\n       {{> loginBlock}}\n    </div>\n`;
+const form = `\n    <form id="{{ formId }}" class="login__form">\n        {{> loginInput }}\n        {{> passwordInput }}\n        {{> rememberMeCheckbox }}               \n    </form>\n`;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/header/index":"9Rbqt","../../components/login-register-block/index":"l1oK3"}],"JacNc":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/header/index":"9Rbqt"}],"JacNc":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -11995,18 +12012,24 @@ var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
 var _loginRegisterBlockScss = require("./login-register-block.scss");
 var _loginRegisterBlockTmpl = require("./login-register-block.tmpl");
 var _loginRegisterBlockTmplDefault = parcelHelpers.interopDefault(_loginRegisterBlockTmpl);
+var _index = require("../../components/button/index");
+var _constants = require("../../constants");
 class LoginRegisterBlock {
     template;
     // Аргументы входные
     title;
-    form;
+    formPartialName;
     mainActionTitle;
     mainAction;
     secondActionTitle;
     secondAction;
-    constructor(title, form, mainActionTitle, mainActionId, secondActionTitle, secondActionId){
+    // Компоненты блока
+    mainButton;
+    secondButton;
+    constructor(title, formPartialName, mainActionTitle, mainActionId, secondActionTitle, secondActionId){
         this.title = title;
-        this.form = form;
+        this.formPartialName = ()=>formPartialName
+        ;
         this.mainActionTitle = mainActionTitle;
         this.mainActionId = mainActionId;
         this.secondActionId = secondActionId;
@@ -12014,27 +12037,29 @@ class LoginRegisterBlock {
         this.template = this.render();
     }
     render() {
-        const template = _handlebarsDefault.default.compile(_loginRegisterBlockTmplDefault.default.replace('{{ form }}', this.form));
+        const template = _handlebarsDefault.default.compile(_loginRegisterBlockTmplDefault.default);
+        this.mainButton = new _index.Button(this.mainActionId, this.mainActionTitle);
+        this.secondButton = new _index.Button(this.secondActionId, this.secondActionTitle, _constants.BUTTON_TYPES.LINK);
+        _handlebarsDefault.default.registerPartial('mainButton', this.mainButton.template);
+        _handlebarsDefault.default.registerPartial('secondButton', this.secondButton.template);
         const result = template({
             title: this.title,
+            formPartialName: this.formPartialName,
             mainActionId: this.mainActionId,
             mainActionTitle: this.mainActionTitle,
             secondActionId: this.secondActionId,
             secondActionTitle: this.secondActionTitle
         });
-        console.log(result);
         return result;
     }
 }
 
-},{"handlebars":"7oyOD","./login-register-block.scss":"5pXv9","./login-register-block.tmpl":"dwOKU","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"5pXv9":[function() {},{}],"dwOKU":[function(require,module,exports) {
+},{"handlebars":"7oyOD","./login-register-block.scss":"5pXv9","./login-register-block.tmpl":"dwOKU","../../components/button/index":"3XLJ2","../../constants":"2cgit","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"5pXv9":[function() {},{}],"dwOKU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _index = require("../../components/button/index");
-var _constants = require("../../constants");
-exports.default = `\n    <div class="login-register-block">\n        <h2 class="login-register-block__title">{{ title }}</h2>\n        {{ form }}\n        <div class="login-register-block__actions">\n            ${new _index.Button("{{ mainActionId }}", "{{ mainActionTitle }}").template}\n            ${new _index.Button("{{ secondActionId }}", "{{ secondActionTitle }}", _constants.BUTTON_TYPES.LINK).template}\n        </div>\n    </div>\n`;
+exports.default = `\n    <div class="login-register-block">\n        <h2 class="login-register-block__title">{{ title }}</h2>\n        {{> (formPartialName) }}\n        <div class="login-register-block__actions">\n            {{> mainButton }}\n            {{> secondButton }}\n        </div>\n    </div>\n`;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/button/index":"3XLJ2","../../constants":"2cgit"}],"3XLJ2":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"3XLJ2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Button", ()=>_button.Button
@@ -12116,6 +12141,102 @@ const BUTTON_TYPES = {
     STROKED: "STROKED",
     LINK: "LINK"
 };
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"9XkQV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Input", ()=>_input.Input
+);
+var _input = require("./input");
+
+},{"./input":"9kUOa","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"9kUOa":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Input", ()=>Input
+);
+var _handlebars = require("handlebars");
+var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _inputScss = require("./input.scss");
+var _inputTmpl = require("./input.tmpl");
+var _inputTmplDefault = parcelHelpers.interopDefault(_inputTmpl);
+class Input {
+    template;
+    // Параметры
+    id;
+    name;
+    title;
+    type;
+    errorMessage;
+    constructor(id, name, title, type, errorMessage){
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.type = type;
+        this.errorMessage = errorMessage;
+        this.template = this.render();
+    }
+    render() {
+        const template = _handlebarsDefault.default.compile(_inputTmplDefault.default);
+        const result = template({
+            id: this.id,
+            name: this.name,
+            title: this.title,
+            type: this.type,
+            errorMessage: this.errorMessage
+        });
+        return result;
+    }
+}
+
+},{"handlebars":"7oyOD","./input.scss":"cF5vR","./input.tmpl":"eBKll","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cF5vR":[function() {},{}],"eBKll":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+exports.default = `\n    <div class="input-container">\n        <input type="{{ type }}" id="{{ id }}" name="{{ name }}" class="input-container__input" placeholder="{{ title }}" />\n        <p class="input-container__error">{{ errorMessage }}</p>\n        <label for="{{ id }}" class="input-container__label">{{ title }}</label>\n    </div>\n`;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cjnVe":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Checkbox", ()=>_checkbox.Checkbox
+);
+var _checkbox = require("./checkbox");
+
+},{"./checkbox":"gvPr3","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"gvPr3":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Checkbox", ()=>Checkbox
+);
+var _handlebars = require("handlebars");
+var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _checkboxScss = require("./checkbox.scss");
+var _checkboxTmpl = require("./checkbox.tmpl");
+var _checkboxTmplDefault = parcelHelpers.interopDefault(_checkboxTmpl);
+class Checkbox {
+    template;
+    //
+    id;
+    name;
+    label;
+    constructor(id, name, label){
+        this.id = id;
+        this.name = name;
+        this.label = label;
+        this.template = this.render();
+    }
+    render() {
+        const template = _handlebarsDefault.default.compile(_checkboxTmplDefault.default);
+        const result = template({
+            id: this.id,
+            name: this.name,
+            label: this.label
+        });
+        return result;
+    }
+}
+
+},{"handlebars":"7oyOD","./checkbox.scss":"22Tsy","./checkbox.tmpl":"htyW7","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"22Tsy":[function() {},{}],"htyW7":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+exports.default = `\n    <label class="checkbox-container">{{ label }}\n        <input type="checkbox" id="{{ id }}" name="{{ name }}">\n        <span class="checkbox-container__checkmark"></span>\n    </label>\n`;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"12h4e":[function() {},{}]},["8Ye98","6cF5V"], "6cF5V", "parcelRequire2a44")
 

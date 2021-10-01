@@ -41,9 +41,10 @@ $hover_color: #008ee0;
   background-color: transparent;
   border: none;
   color: $main_color;
+  font-size: 0.9rem;
 
   &:hover {
-    background-color: #008ee01e;
+    background-color: $light_main_color;
     color: $hover_color;
   }
 }
