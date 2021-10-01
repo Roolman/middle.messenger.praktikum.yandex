@@ -1,0 +1,28 @@
+@import "../../styles.scss";
+
+.login-register-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 400px;
+  min-height: 500px;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+
+  border-radius: 12px;
+  box-shadow: $common_shadow;
+}
+
+.login-register-block__title {
+}
+
+.login-register-block__actions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

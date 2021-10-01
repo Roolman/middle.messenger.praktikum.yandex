@@ -1,38 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
 }
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
 }
-
+.login {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 60px);
+  justify-content: center;
+  align-items: center;
+}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
 .header {
   display: flex;
   width: 100%;
   height: 60px;
   background-color: #0099ef;
 }
-
 .header__items {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-left: 10px;
 }
-
 .header__title {
   color: white;
   margin-left: 20px;
+  font-size: xx-large;
 }
-
 .header__icon {
   color: white;
   font-size: 20px !important;
 }
-.login {
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+.login-register-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 400px;
+  min-height: 500px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.14);
+}
+.login-register-block__actions {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 100%;
+}
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+}
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: large;
+  cursor: pointer;
+}
+.button_basic {
+  background-color: #0099ef;
+  color: white;
+}
+.button_basic:hover {
+  background-color: #008ee0;
+}
+.button_stroked {
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #0099ef;
+  color: #0099ef;
+}
+.button_stroked:hover {
+  background-color: #fafafa;
+}
+.button_link {
+  background-color: transparent;
+  border: none;
+  color: #0099ef;
+}
+.button_link:hover {
+  background-color: #008ee01e;
+  color: #008ee0;
 }
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome

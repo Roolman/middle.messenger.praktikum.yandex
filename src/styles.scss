@@ -1,6 +1,13 @@
-$main_color: #0099ef;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap");
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
 }
+
+// Цвета
+$main_color: #0099ef;
+
+// Константы
+$header_height: 60px;
+$common_shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.14);

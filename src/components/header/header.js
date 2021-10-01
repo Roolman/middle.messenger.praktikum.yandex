@@ -5,13 +5,10 @@ import templ from './header.tmpl'
 export class Header {
 
     title = 'Fast messenger'
+    template
 
-    constructor(){
-
-    }
-
-    init() {
-        return this.render()
+    constructor() {
+        this.template = this.render()
     }
 
     render() {

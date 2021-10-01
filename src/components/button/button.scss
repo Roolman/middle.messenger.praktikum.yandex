@@ -1,0 +1,49 @@
+@import "../../styles.scss";
+
+$hover_color: #008ee0;
+
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: large;
+
+  cursor: pointer;
+}
+
+.button_basic {
+  background-color: $main_color;
+  color: white;
+
+  &:hover {
+    background-color: $hover_color;
+  }
+}
+
+.button_stroked {
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: $main_color;
+  color: $main_color;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+}
+
+.button_link {
+  background-color: transparent;
+  border: none;
+  color: $main_color;
+
+  &:hover {
+    background-color: #008ee01e;
+    color: $hover_color;
+  }
+}
