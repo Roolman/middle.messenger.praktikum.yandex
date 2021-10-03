@@ -1,9 +1,0 @@
-@mixin border {
-  border-style: solid;
-  border-width: 6px;
-}
-
-.border_red {
-  @include border;
-  border-color: red;
-}

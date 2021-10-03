@@ -7,7 +7,7 @@ import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
 import { Checkbox } from "../../components/checkbox/index"
 
-import { goToRegisterPage } from "../../services/navigation"
+import { goToRegisterPage, goToMainPage } from "../../services/navigation"
 
 export class LoginPage {
 
@@ -39,7 +39,7 @@ export class LoginPage {
         root.appendChild(loginPage)
         // Навешиваем обработичики
         const loginButton = document.getElementById(this.loginActionId)
-        loginButton.onclick = () => alert("Вошел!")
+        loginButton.onclick = () => goToMainPage()
         const goToRegisterButton = document.getElementById(this.goToRegisterActionId)
         goToRegisterButton.onclick = () => goToRegisterPage()
     }
