@@ -7,11 +7,12 @@ import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
 import { Checkbox } from "../../components/checkbox/index"
 
+import { goToRegisterPage } from "../../services/navigation"
 
 export class LoginPage {
 
     // Основные надписи и параметры компонентов
-    blockTitle = "Войти"
+    blockTitle = "Вход"
     loginButtonTitle ="Авторизоваться"
     loginActionId = "loginButton"
     goToRegisterButtonTitle = "Ещё не зарегистрированы?"
@@ -40,12 +41,12 @@ export class LoginPage {
         const loginButton = document.getElementById(this.loginActionId)
         loginButton.onclick = () => alert("Вошел!")
         const goToRegisterButton = document.getElementById(this.goToRegisterActionId)
-        goToRegisterButton.onclick = () => alert("Перешел на зарегаться!")
+        goToRegisterButton.onclick = () => goToRegisterPage()
     }
 
     render() {
         // Создаем компоненты формы
-        this.loginInput = new Input("loginInput", "login", "Логин", "text", "Неверно указан логин")
+        this.loginInput = new Input("loginInput", "login", "Логин", "text", "")
         Handlebars.registerPartial("loginInput", this.loginInput.template)
         this.passwordInput = new Input("passwordInput", "password", "Пароль", "password", "Неверно указан пароль")
         Handlebars.registerPartial("passwordInput", this.passwordInput.template)

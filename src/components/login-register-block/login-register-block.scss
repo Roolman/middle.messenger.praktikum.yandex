@@ -2,6 +2,14 @@
 
 .login-register-block {
   display: flex;
+  width: 100%;
+  height: calc(100vh - $header_height);
+  justify-content: center;
+  align-items: center;
+}
+
+.login-register-block__container {
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -19,6 +27,8 @@
 }
 
 .login-register-block__title {
+  margin: 0;
+  padding-bottom: 20px;
 }
 
 .login-register-block__actions {

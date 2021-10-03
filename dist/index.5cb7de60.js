@@ -483,9 +483,10 @@ var _loginTmplDefault = parcelHelpers.interopDefault(_loginTmpl);
 var _index = require("../../components/login-register-block/index");
 var _index1 = require("../../components/input/index");
 var _index2 = require("../../components/checkbox/index");
+var _navigation = require("../../services/navigation");
 class LoginPage {
     // Основные надписи и параметры компонентов
-    blockTitle = "Войти";
+    blockTitle = "Вход";
     loginButtonTitle = "Авторизоваться";
     loginActionId = "loginButton";
     goToRegisterButtonTitle = "Ещё не зарегистрированы?";
@@ -512,12 +513,12 @@ class LoginPage {
         loginButton.onclick = ()=>alert("Вошел!")
         ;
         const goToRegisterButton = document.getElementById(this.goToRegisterActionId);
-        goToRegisterButton.onclick = ()=>alert("Перешел на зарегаться!")
+        goToRegisterButton.onclick = ()=>_navigation.goToRegisterPage()
         ;
     }
     render() {
         // Создаем компоненты формы
-        this.loginInput = new _index1.Input("loginInput", "login", "Логин", "text", "Неверно указан логин");
+        this.loginInput = new _index1.Input("loginInput", "login", "Логин", "text", "");
         _handlebarsDefault.default.registerPartial("loginInput", this.loginInput.template);
         this.passwordInput = new _index1.Input("passwordInput", "password", "Пароль", "password", "Неверно указан пароль");
         _handlebarsDefault.default.registerPartial("passwordInput", this.passwordInput.template);
@@ -537,7 +538,7 @@ class LoginPage {
     }
 }
 
-},{"handlebars":"7oyOD","./login.scss":"j3gJq","./login.tmpl":"7po6V","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/login-register-block/index":"l1oK3","../../components/input/index":"9XkQV","../../components/checkbox/index":"cjnVe"}],"7oyOD":[function(require,module,exports) {
+},{"handlebars":"7oyOD","./login.scss":"j3gJq","./login.tmpl":"7po6V","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/login-register-block/index":"l1oK3","../../components/input/index":"9XkQV","../../components/checkbox/index":"cjnVe","../../services/navigation":"jycAf"}],"7oyOD":[function(require,module,exports) {
 // USAGE:
 // var handlebars = require('handlebars');
 /* eslint-disable no-var */ // var local = handlebars.create();
@@ -11923,7 +11924,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "form", ()=>form
 );
 var _index = require("../../components/header/index");
-exports.default = `\n    ${new _index.Header().template}\n    <div class="login">\n       {{> loginBlock}}\n    </div>\n`;
+exports.default = `\n    ${new _index.Header().template}\n    {{> loginBlock}}\n`;
 const form = `\n    <form id="{{ formId }}" class="login__form">\n        {{> loginInput }}\n        {{> passwordInput }}\n        {{> rememberMeCheckbox }}               \n    </form>\n`;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../components/header/index":"9Rbqt"}],"JacNc":[function(require,module,exports) {
@@ -12057,7 +12058,7 @@ class LoginRegisterBlock {
 },{"handlebars":"7oyOD","./login-register-block.scss":"5pXv9","./login-register-block.tmpl":"dwOKU","../../components/button/index":"3XLJ2","../../constants":"2cgit","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"5pXv9":[function() {},{}],"dwOKU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-exports.default = `\n    <div class="login-register-block">\n        <h2 class="login-register-block__title">{{ title }}</h2>\n        {{> (formPartialName) }}\n        <div class="login-register-block__actions">\n            {{> mainButton }}\n            {{> secondButton }}\n        </div>\n    </div>\n`;
+exports.default = `\n<div class="login-register-block">\n    <div class="login-register-block__container">\n        <h1 class="login-register-block__title">{{ title }}</h1>\n        {{> (formPartialName) }}\n        <div class="login-register-block__actions">\n            {{> mainButton }}\n            {{> secondButton }}\n        </div>\n    </div>\n</div>\n`;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"3XLJ2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -12191,7 +12192,7 @@ class Input {
 },{"handlebars":"7oyOD","./input.scss":"cF5vR","./input.tmpl":"eBKll","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cF5vR":[function() {},{}],"eBKll":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-exports.default = `\n    <div class="input-container">\n        <input type="{{ type }}" id="{{ id }}" name="{{ name }}" class="input-container__input" placeholder="{{ title }}" />\n        <p class="input-container__error">{{ errorMessage }}</p>\n        <label for="{{ id }}" class="input-container__label">{{ title }}</label>\n    </div>\n`;
+exports.default = `\n    <div class="input-container">\n        <div class="input-container__input-group">\n            <input type="{{ type }}" id="{{ id }}" name="{{ name }}" class="input-container__input" placeholder="{{ title }}" />\n            <label for="{{ id }}" class="input-container__label">{{ title }}</label>\n        </div>\n        <span class="input-container__error">{{ errorMessage }}</span>\n    </div>\n`;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cjnVe":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -12238,6 +12239,118 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 exports.default = `\n    <label class="checkbox-container">{{ label }}\n        <input type="checkbox" id="{{ id }}" name="{{ name }}">\n        <span class="checkbox-container__checkmark"></span>\n    </label>\n`;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"12h4e":[function() {},{}]},["8Ye98","6cF5V"], "6cF5V", "parcelRequire2a44")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"jycAf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "goToRegisterPage", ()=>goToRegisterPage
+);
+parcelHelpers.export(exports, "goToLoginPage", ()=>goToLoginPage
+);
+// Тестовый код для сдачи 1 спринта !
+var _register = require("../pages/register/register");
+var _login = require("../pages/login/login");
+const removeAllChildNodes = (myNode)=>{
+    while(myNode.lastElementChild)myNode.removeChild(myNode.lastElementChild);
+};
+function goToRegisterPage() {
+    const root = document.getElementById("root");
+    removeAllChildNodes(root);
+    new _register.RegisterPage().init();
+}
+function goToLoginPage() {
+    const root = document.getElementById("root");
+    removeAllChildNodes(root);
+    new _login.LoginPage().init();
+}
+
+},{"../pages/register/register":"jkNqx","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../pages/login/login":"aqTP6"}],"jkNqx":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "RegisterPage", ()=>RegisterPage
+);
+var _handlebars = require("handlebars");
+var _handlebarsDefault = parcelHelpers.interopDefault(_handlebars);
+var _registerScss = require("./register.scss");
+var _registerTmpl = require("./register.tmpl");
+var _registerTmplDefault = parcelHelpers.interopDefault(_registerTmpl);
+var _index = require("../../components/login-register-block/index");
+var _index1 = require("../../components/input/index");
+var _navigation = require("../../services/navigation");
+class RegisterPage {
+    // Основные надписи и параметры компонентов
+    blockTitle = "Регистрация";
+    registerButtonTitle = "Зарегистрироваться";
+    registerActionId = "registerButton";
+    goToLoginButtonTitle = "Войти";
+    goToLoginActionId = "goToLoginButton";
+    // Форма
+    formId = "registerForm";
+    // Компонент страницы
+    registerBlock;
+    // Компоненты формы
+    emailInput;
+    loginInput;
+    firstNameInput;
+    secondNameInput;
+    phoneInput;
+    passwordInput;
+    passwordCheckInput;
+    constructor(){
+    }
+    init() {
+        // Вставляем шаблон
+        const root = document.getElementById("root");
+        const registerPage = document.createElement("div");
+        registerPage.id = "registerPage";
+        registerPage.innerHTML = this.render();
+        root.appendChild(registerPage);
+        // Навешиваем обработичики
+        const registerButton = document.getElementById(this.registerActionId);
+        registerButton.onclick = ()=>alert("Зареган!")
+        ;
+        const goToLoginButton = document.getElementById(this.goToLoginActionId);
+        goToLoginButton.onclick = ()=>_navigation.goToLoginPage()
+        ;
+    }
+    render() {
+        // Создаем компоненты формы
+        this.emailInput = new _index1.Input("emailInput", "email", "Почта", "text", "Неверно указана почта");
+        _handlebarsDefault.default.registerPartial("emailInput", this.emailInput.template);
+        this.loginInput = new _index1.Input("loginInput", "login", "Логин", "text", "");
+        _handlebarsDefault.default.registerPartial("loginInput", this.loginInput.template);
+        this.firstNameInput = new _index1.Input("firstNameInput", "first_name", "Имя", "text", "");
+        _handlebarsDefault.default.registerPartial("firstNameInput", this.firstNameInput.template);
+        this.secondNameInput = new _index1.Input("secondNameInput", "second_name", "Фамилия", "text", "");
+        _handlebarsDefault.default.registerPartial("secondNameInput", this.secondNameInput.template);
+        this.phoneInput = new _index1.Input("phoneInput", "phone", "Телефон", "text", "Неверный формат номера");
+        _handlebarsDefault.default.registerPartial("phoneInput", this.phoneInput.template);
+        this.passwordInput = new _index1.Input("passwordInput", "password", "Пароль", "password", "Введите пароль");
+        _handlebarsDefault.default.registerPartial("passwordInput", this.passwordInput.template);
+        this.passwordCheckInput = new _index1.Input("passwordCheckInput", "password_check", "Пароль еще раз", "password", "Пароли не совпадают");
+        _handlebarsDefault.default.registerPartial("passwordCheckInput", this.passwordCheckInput.template);
+        // Создаем шаблон формы
+        const formPartial = _handlebarsDefault.default.compile(_registerTmpl.form)({
+            formId: this.formId
+        });
+        _handlebarsDefault.default.registerPartial(this.formId, formPartial);
+        // Объединяем в один компонент
+        this.registerBlock = new _index.LoginRegisterBlock(this.blockTitle, this.formId, this.registerButtonTitle, this.registerActionId, this.goToLoginButtonTitle, this.goToLoginActionId);
+        _handlebarsDefault.default.registerPartial('registerBlock', this.registerBlock.template);
+        const template = _handlebarsDefault.default.compile(_registerTmplDefault.default);
+        const result = template();
+        return result;
+    }
+}
+
+},{"handlebars":"7oyOD","./register.scss":"1o0Kw","./register.tmpl":"gkD3s","../../components/login-register-block/index":"l1oK3","../../components/input/index":"9XkQV","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","../../services/navigation":"jycAf"}],"1o0Kw":[function() {},{}],"gkD3s":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "form", ()=>form
+);
+var _index = require("../../components/header/index");
+exports.default = `\n    ${new _index.Header().template}\n    {{> registerBlock}}\n`;
+const form = `\n    <form id="{{ formId }}" class="register__form">\n        {{> emailInput }}\n        {{> loginInput }}\n        {{> firstNameInput }}\n        {{> secondNameInput }}               \n        {{> phoneInput }}               \n        {{> passwordInput }}    \n        {{> passwordCheckInput }}                          \n    </form>\n`;
+
+},{"../../components/header/index":"9Rbqt","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"12h4e":[function() {},{}]},["8Ye98","6cF5V"], "6cF5V", "parcelRequire2a44")
 
 //# sourceMappingURL=index.5cb7de60.js.map

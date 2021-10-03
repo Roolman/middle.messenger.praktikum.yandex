@@ -8,12 +8,16 @@
   height: 60px;
 }
 
+.input-container__input-group {
+  height: 35px;
+}
+
 .input-container__label {
   display: block;
   transition: 0.2s;
   color: $secondary_color;
   font-size: small;
-  transform: translateY(-60px);
+  transform: translateY(-45px);
 }
 
 .input-container__input {
@@ -39,7 +43,7 @@
   &:placeholder-shown ~ .input-container__label {
     font-size: large;
     cursor: text;
-    transform: translateY(-40px);
+    transform: translateY(-25px);
   }
 }
 

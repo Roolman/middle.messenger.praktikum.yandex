@@ -1,8 +1,10 @@
 export default
 `
     <div class="input-container">
-        <input type="{{ type }}" id="{{ id }}" name="{{ name }}" class="input-container__input" placeholder="{{ title }}" />
-        <p class="input-container__error">{{ errorMessage }}</p>
-        <label for="{{ id }}" class="input-container__label">{{ title }}</label>
+        <div class="input-container__input-group">
+            <input type="{{ type }}" id="{{ id }}" name="{{ name }}" class="input-container__input" placeholder="{{ title }}" />
+            <label for="{{ id }}" class="input-container__label">{{ title }}</label>
+        </div>
+        <span class="input-container__error">{{ errorMessage }}</span>
     </div>
 `

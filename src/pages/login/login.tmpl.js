@@ -3,9 +3,7 @@ import { Header } from "../../components/header/index"
 export default
 `
     ${new Header().template}
-    <div class="login">
-       {{> loginBlock}}
-    </div>
+    {{> loginBlock}}
 `
 
 export const form = 
