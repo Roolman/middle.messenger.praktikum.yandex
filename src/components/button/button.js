@@ -8,20 +8,18 @@ export class Button {
 
     template
     // Стили кнопки
-    width
-    height
     type
     // Параметры template
     buttonClass = "button"
     id
     title
+    iconClass
 
-    constructor(id, title, type = BUTTON_TYPES.BASIC, width = "100%", height = "auto") {
+    constructor(id, title, type = BUTTON_TYPES.BASIC, iconClass) {
         this.id = id
         this.title = title
         this.type = type
-        this.width = width
-        this.height = height
+        this.iconClass = iconClass
         this.template = this.render()
     }
 
@@ -31,7 +29,8 @@ export class Button {
         const result = template({
             id: this.id,
             title: this.title,
-            buttonClass: this.buttonClass
+            buttonClass: this.buttonClass,
+            iconClass: this.iconClass
         })
         return result
     }
@@ -46,6 +45,9 @@ export class Button {
                 break
             case BUTTON_TYPES.LINK:
                 this.buttonClass += " button_link"
+                break
+            case BUTTON_TYPES.ROUND:
+                this.buttonClass += " button_round"
                 break
             default: 
                 break

@@ -11,7 +11,11 @@
     "handlebars": "^4.7.7"
   },
   "scripts": {
-    "dev": "./node_modules/.bin/parcel index.html",
+    "copy-static-linux": "cp -r public/* dist/",
+    "copy-static-windows": "xcopy /i /e static dist\\static",
+    "pre-dev": "./node_modules/.bin/parcel index.html",
+    "dev": "npm run copy-static-linux && npm run pre-dev",
+    "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
     "pre-build": "./node_modules/.bin/parcel build index.html",

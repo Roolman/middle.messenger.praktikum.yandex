@@ -48,3 +48,20 @@ $hover_color: #008ee0;
     color: $hover_color;
   }
 }
+
+.button_round {
+  height: 30px;
+  width: 30px;
+  border-radius: 50px;
+  background-color: $main_color;
+  color: white;
+
+  &:hover {
+    background-color: $hover_color;
+  }
+
+  i {
+    padding-top: 2px;
+    font-size: medium;
+  }
+}
