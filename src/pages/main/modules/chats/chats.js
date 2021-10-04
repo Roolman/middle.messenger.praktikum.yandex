@@ -13,7 +13,7 @@ const CHATS = [
         avatar: "",
         lastMessage: "Изображение",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setDate(4),
+        lastMessageTime: new Date(),
         unreadCount: 2
     },
     {
@@ -90,6 +90,21 @@ const CHATS = [
     },
 ]
 
+const getShortDate = (date) => {
+    // Сравниваем с сегодня
+    const now = new Date()
+    const diff = Math.abs(date - now)
+    const day = 60*60*24
+    const week = day*7
+    // Если сегодня, то время
+    const dateObj = new Date(date)
+    if(diff < day) return `${dateObj.getHours()}:${dateObj.getMinutes()}`
+    // Если до недели, то день недели
+    if(diff < week) return `${dateObj.toLocaleString("ru-Ru", { weekday: "long" })}`
+    // Иначе дату в формате: "1 января 2021"
+    return `${dateObj.toLocaleString("ru-Ru", {day: 'numeric', month: 'numeric', year: 'numeric' })}`
+}
+
 export class Chats {
 
     template
@@ -108,7 +123,10 @@ export class Chats {
         this.addChatButton = new Button("addChatButton", "", BUTTON_TYPES.ROUND, "fa fa-plus")
         Handlebars.registerPartial("addChatButton", this.addChatButton.template)
         const template = Handlebars.compile(templ)
-        const result = template({chats: CHATS})
+        const chatsViewData = CHATS.map(x => {
+            return {...x, lastMessageTime: getShortDate(x.lastMessageTime)}
+        })
+        const result = template({chats: chatsViewData})
         return result
     }
 

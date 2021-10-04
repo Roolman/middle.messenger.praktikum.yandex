@@ -27,17 +27,26 @@ export default
                             <img class="chats__chat-avatar-image" src="static/img/chat_default.png"/>
                         {{/if}}
                     </div>
-                    <div class="chats__chat-message">
-                        <span class="chats__chat-name">{{ this.name }}</span>
-                        <span class="chats__chat-last-message">
-                            {{#if this.lastMessageSentByUser}}
-                                <span class="chats__chat-last-message-sent-by-user">Вы :</span>
+                    <div class="chats__chat-info-group">
+                        <div class="chats__chat-message">
+                            <span class="chats__chat-name">{{ this.name }}</span>
+                            <span class="chats__chat-last-message-time">
+                                {{ this.lastMessageTime }}
+                            </span>
+                        </div>
+                        <div class="chats__chat-info">
+                            <span class="chats__chat-last-message">
+                                {{#if this.lastMessageSentByUser}}
+                                    <span class="chats__chat-last-message-sent-by-user">Вы :</span>
+                                {{/if}}
+                                {{ this.lastMessage }}
+                            </span>
+                            {{#if this.unreadCount}}
+                                <div class="chats__chat-unread-count">
+                                    {{ this.unreadCount }}
+                                </div>
                             {{/if}}
-                            {{ this.lastMessage }}
-                        </span>
-                    </div>
-                    <div class="chats__chat-info">
-                        2
+                        </div>                    
                     </div>
                 </li>
             {{/each}}
