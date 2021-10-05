@@ -17,7 +17,7 @@
   "scripts": {
     "copy-static-linux": "cp -r public/* dist/",
     "copy-static-windows": "xcopy /i /e static dist\\static",
-    "pre-dev": "./node_modules/.bin/parcel index.html",
+    "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
     "dev": "npm run copy-static-linux && npm run pre-dev",
     "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
