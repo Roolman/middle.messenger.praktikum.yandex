@@ -4,7 +4,7 @@ import './chats.scss'
 import templ from './chats.tmpl'
 
 import {Button} from "../../../../components/button/index"
-import { BUTTON_TYPES } from "../../../../constants"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants"
 
 const CHATS = [
     {
@@ -120,7 +120,7 @@ export class Chats {
     }
 
     render() {
-        this.addChatButton = new Button("addChatButton", "", BUTTON_TYPES.ROUND, "fa fa-plus")
+        this.addChatButton = new Button("addChatButton", "", BUTTON_TYPES.ROUND, BUTTON_THEMES.PRIMARY, "fa fa-plus")
         Handlebars.registerPartial("addChatButton", this.addChatButton.template)
         const template = Handlebars.compile(templ)
         const chatsViewData = CHATS.map(x => {

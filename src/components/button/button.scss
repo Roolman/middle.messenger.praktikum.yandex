@@ -1,7 +1,5 @@
 @import "../../styles.scss";
 
-$hover_color: #008ee0;
-
 .button {
   display: flex;
   flex-direction: row;
@@ -17,35 +15,27 @@ $hover_color: #008ee0;
 }
 
 .button_basic {
-  background-color: $main_color;
-  color: white;
-
-  &:hover {
-    background-color: $hover_color;
-  }
+  color: white !important;
+  border: 0;
 }
 
 .button_stroked {
-  background-color: white;
+  background-color: transparent !important;
   border-style: solid;
   border-width: 1px;
-  border-color: $main_color;
-  color: $main_color;
 
   &:hover {
-    background-color: #fafafa;
+    background-color: #fafafa !important;
   }
 }
 
 .button_link {
-  background-color: transparent;
+  background-color: transparent !important;
   border: none;
-  color: $main_color;
   font-size: 0.9rem;
 
   &:hover {
-    background-color: $light_main_color;
-    color: $hover_color;
+    background-color: #fafafa !important;
   }
 }
 
@@ -53,15 +43,29 @@ $hover_color: #008ee0;
   height: 30px;
   width: 30px;
   border-radius: 50px;
-  background-color: $main_color;
-  color: white;
-
-  &:hover {
-    background-color: $hover_color;
-  }
+  color: white !important;
 
   i {
-    padding-top: 2px;
     font-size: medium;
+  }
+}
+
+.button_primary {
+  background-color: $main_color;
+  border-color: $main_color;
+  color: $main_color;
+
+  &:hover {
+    background-color: $hover_main_color;
+  }
+}
+
+.button_danger {
+  background-color: $danger_color;
+  border-color: $danger_color;
+  color: $danger_color;
+
+  &:hover {
+    background-color: $hover_danger_color;
   }
 }

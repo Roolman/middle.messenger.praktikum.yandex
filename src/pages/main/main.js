@@ -5,6 +5,7 @@ import templ from './main.tmpl'
 
 import {Chats} from "./modules/chats/chats"
 import {Chat} from "./modules/chat/chat"
+import {goToProfilePage} from "../../services/navigation"
 
 export class MainPage {
 
@@ -22,6 +23,12 @@ export class MainPage {
         mainPage.id = "mainPage"
         mainPage.innerHTML = this.render()
         root.appendChild(mainPage)
+        // Вешаем обработчики
+        const goToProfileLink = document.getElementsByClassName('chats__profile-link')[0]
+        goToProfileLink.onclick = function (event) {
+            event.preventDefault()
+            goToProfilePage()
+        }
     }
 
     render() {

@@ -1,7 +1,8 @@
 // Тестовый код для сдачи 1 спринта !
-import { RegisterPage } from "../pages/register/register"
-import { LoginPage } from "../pages/login/login"
-import { MainPage } from "../pages/main/main"
+import { RegisterPage } from "../pages/register/index"
+import { LoginPage } from "../pages/login/index"
+import { MainPage } from "../pages/main/index"
+import { ProfilePage } from "../pages/profile/index"
 
 const removeAllChildNodes = (myNode) => {
     while (myNode.lastElementChild) {
@@ -25,4 +26,10 @@ export function goToMainPage() {
     const root = document.getElementById("root")
     removeAllChildNodes(root)
     new MainPage().init()
+}
+
+export function goToProfilePage() {
+    const root = document.getElementById("root")
+    removeAllChildNodes(root)
+    new ProfilePage().init()
 }

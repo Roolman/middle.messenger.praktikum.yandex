@@ -2,7 +2,7 @@ import Handlebars from "handlebars"
 import './button.scss'
 import templ from './button.tmpl'
 
-import { BUTTON_TYPES } from "../../constants"
+import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants"
 
 export class Button {
 
@@ -13,12 +13,14 @@ export class Button {
     buttonClass = "button"
     id
     title
+    theme
     iconClass
 
-    constructor(id, title, type = BUTTON_TYPES.BASIC, iconClass) {
+    constructor(id, title, type = BUTTON_TYPES.BASIC, theme = BUTTON_THEMES.PRIMARY, iconClass) {
         this.id = id
         this.title = title
         this.type = type
+        this.theme = theme
         this.iconClass = iconClass
         this.template = this.render()
     }
@@ -48,6 +50,19 @@ export class Button {
                 break
             case BUTTON_TYPES.ROUND:
                 this.buttonClass += " button_round"
+                break
+            default: 
+                break
+        }
+        switch(this.theme) {
+            case BUTTON_THEMES.PRIMARY:
+                this.buttonClass += " button_primary"
+                break
+            case BUTTON_THEMES.DANGER:
+                this.buttonClass += " button_danger"
+                break
+            case BUTTON_THEMES.BASIC:
+                this.buttonClass += " button_basic"
                 break
             default: 
                 break

@@ -4,3 +4,9 @@ export const BUTTON_TYPES = {
     LINK: "LINK",
     ROUND: "ROUND"
 }
+
+export const BUTTON_THEMES = {
+    PRIMARY: "PRIMARY",
+    DANGER: "DANGER",
+    BASIC: "BASIC",
+}

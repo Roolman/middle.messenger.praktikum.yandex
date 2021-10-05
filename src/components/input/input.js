@@ -11,13 +11,15 @@ export class Input {
     title
     type
     errorMessage
+    defaultValue
 
-    constructor(id, name, title, type, errorMessage) {
+    constructor(id, name, title, type, errorMessage, defaultValue = "") {
         this.id = id
         this.name = name
         this.title = title
         this.type = type
         this.errorMessage = errorMessage
+        this.defaultValue = defaultValue
         this.template = this.render()
     }
 
@@ -28,7 +30,8 @@ export class Input {
             name: this.name,
             title: this.title,
             type: this.type,
-            errorMessage: this.errorMessage
+            errorMessage: this.errorMessage,
+            defaultValue: this.defaultValue
         })
         return result
     }

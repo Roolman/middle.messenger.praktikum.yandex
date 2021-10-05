@@ -1,7 +1,7 @@
 @import "../../../../styles.scss";
 
 $controls_height: 102px;
-$chats_width: 30vw;
+$chats_width: 35vw;
 
 .chats {
   display: flex;
@@ -9,7 +9,7 @@ $chats_width: 30vw;
   min-height: 100vh;
   width: $chats_width;
   max-width: 310px;
-  background-color: #fbfbfb;
+  background-color: $light_gray_chat_color;
 
   padding-bottom: 0;
 }
@@ -104,7 +104,7 @@ $chats_width: 30vw;
     padding: 10px;
     border: 0;
     border-top: 1px;
-    border-color: #eaeaea;
+    border-color: $light_gray_border_color;
     border-style: solid;
     user-select: none;
 
@@ -179,7 +179,7 @@ $chats_width: 30vw;
 
     &:hover {
       cursor: pointer;
-      background-color: #e4edfd;
+      background-color: $light_gray_hover_color;
     }
   }
 

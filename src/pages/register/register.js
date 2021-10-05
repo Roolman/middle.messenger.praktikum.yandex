@@ -49,7 +49,7 @@ export class RegisterPage {
 
     render() {
         // Создаем компоненты формы
-        this.emailInput = new Input("emailInput", "email", "Почта", "text", "Неверно указана почта")
+        this.emailInput = new Input("emailInput", "email", "Почта", "email", "Неверно указана почта")
         Handlebars.registerPartial("emailInput", this.emailInput.template)
         this.loginInput = new Input("loginInput", "login", "Логин", "text", "")
         Handlebars.registerPartial("loginInput", this.loginInput.template)
