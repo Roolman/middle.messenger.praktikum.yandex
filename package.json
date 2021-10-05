@@ -25,8 +25,8 @@
     "pre-build": "./node_modules/.bin/parcel build index.html",
     "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
     "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
-    "start": "npm run build && node server.js",
-    "start-windows": "npm run build-windows && node server.js",
+    "start": "npm install && npm run build && node server.js",
+    "start-windows": "npm install && npm run build-windows && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
