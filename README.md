@@ -10,9 +10,13 @@
 
 https://cranky-goldberg-655a03.netlify.app
 
+## Local сервер
+
+Написать `npm run start` (linux) или `npm run start-windows` (windows) в консоли для запуска dev сервера. Дождаться сборки проекта и перейти на `http://localhost:3000/`.
+
 ## Development сервер
 
-Написать `npm run dev` в консоли для запуска dev сервера. Перейти на `http://localhost:3000/`. Приложение автоматически обновится при изменении файлов.
+Написать `npm run dev` (linux) или `npm run dev-windows` (windows) в консоли для запуска dev сервера. Перейти на `http://localhost:3000/`. Приложение автоматически обновится при изменении файлов.
 
 ## Build
 
