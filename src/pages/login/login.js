@@ -6,6 +6,7 @@ import templ, { form } from './login.tmpl'
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
 import { Checkbox } from "../../components/checkbox/index"
+import { Header } from "../../components/header/index"
 
 import { goToRegisterPage, goToMainPage } from "../../services/navigation"
 
@@ -42,6 +43,7 @@ export class LoginPage {
         loginButton.onclick = () => goToMainPage()
         const goToRegisterButton = document.getElementById(this.goToRegisterActionId)
         goToRegisterButton.onclick = () => goToRegisterPage()
+        this.header.setHandlers()
     }
 
     render() {
@@ -55,6 +57,9 @@ export class LoginPage {
         // Создаем шаблон формы
         const formPartial = Handlebars.compile(form)({formId: this.formId})
         Handlebars.registerPartial(this.formId, formPartial)
+        // Создаем хэдер
+        this.header = new Header()
+        Handlebars.registerPartial("header", this.header.template)
         // Объединяем в один компонент
         this.loginBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.loginButtonTitle, this.loginActionId, this.goToRegisterButtonTitle, this.goToRegisterActionId)
         Handlebars.registerPartial('loginBlock', this.loginBlock.template)

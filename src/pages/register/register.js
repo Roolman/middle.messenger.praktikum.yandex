@@ -5,6 +5,7 @@ import templ, { form } from './register.tmpl'
 
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
+import { Header } from "../../components/header/index"
 
 import { goToLoginPage } from "../../services/navigation"
 
@@ -66,6 +67,9 @@ export class RegisterPage {
         // Создаем шаблон формы
         const formPartial = Handlebars.compile(form)({formId: this.formId})
         Handlebars.registerPartial(this.formId, formPartial)
+        //
+        const header = new Header()
+        Handlebars.registerPartial("header", header.template)
         // Объединяем в один компонент
         this.registerBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.registerButtonTitle, this.registerActionId, this.goToLoginButtonTitle, this.goToLoginActionId)
         Handlebars.registerPartial('registerBlock', this.registerBlock.template)

@@ -1,8 +1,7 @@
-import { Header } from "../../components/header/index"
 
 export default
 `
-    ${new Header().template}
+    {{> header}}
     {{> registerBlock}}
 `
 

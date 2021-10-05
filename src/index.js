@@ -7,10 +7,10 @@ import { ProfilePage } from './pages/profile/index'
 import { MainPage } from './pages/main/index'
 
 window.onload = () => {
-    // const loginPage = new LoginPage()
-    // loginPage.init()
-    const profilePage = new ProfilePage()
-    profilePage.init()
+    const loginPage = new LoginPage()
+    loginPage.init()
+    // const profilePage = new ProfilePage()
+    // profilePage.init()
     // const mainPage = new MainPage()
     // mainPage.init()
 }
