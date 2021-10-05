@@ -67,12 +67,16 @@ export class ProfilePage {
     // Форма для данных
     profileEditForm
     profileFormName = "profileEditForm"
+    // Форма для пароля
+    passwordChangeFormName = "passwordChangeForm"
     //
     profileIsEditable
+    changePasswordFormIsShown
     
     constructor() {
         this.profileEditForm = {}
         this.profileIsEditable = false
+        this.changePasswordFormIsShown = false
     }
 
     init() {
@@ -108,7 +112,9 @@ export class ProfilePage {
         const result = template({
             profileData: PROFILE_DATA,
             profileFormName: this.profileFormName,
-            profileIsEditable: this.profileIsEditable
+            passwordChangeFormName: this.passwordChangeFormName,
+            profileIsEditable: this.profileIsEditable,
+            changePasswordFormIsShown: this.changePasswordFormIsShown
         })
         return result
     }
@@ -126,18 +132,26 @@ export class ProfilePage {
             const saveButton = document.getElementById(this.profileSaveButton.id)
             if(!saveButton.onclick) saveButton.onclick = () => {
                 // Тестовый код
-                const elements = document.getElementById(this.profileFormName).elements
-                for(let i=0; i < elements.length; i++){
-                    let item = elements.item(i)
-                    const field = PROFILE_DATA.find(x => x.name == item.name) 
-                    field.value = item.value
+                if(!this.changePasswordFormIsShown) {
+                    const elements = document.getElementById(this.profileFormName).elements
+                    for(let i=0; i < elements.length; i++){
+                        let item = elements.item(i)
+                        const field = PROFILE_DATA.find(x => x.name == item.name) 
+                        field.value = item.value
+                    }
                 }
+                this.changePasswordFormIsShown = false
                 this._switchProfileEditable()
             }
         }
         else {
             const editButton = document.getElementById(this.editDataButton.id)
             if(!editButton.onclick) editButton.onclick = this._switchProfileEditable
+            const changPasswordButton = document.getElementById(this.changePasswordButton.id)
+            if(!changPasswordButton.onclick) changPasswordButton.onclick = () => {
+                this.changePasswordFormIsShown = true
+                this._switchProfileEditable()
+            }
             const logoutButton = document.getElementById(this.logoutButton.id)
             if(!logoutButton.onclick) logoutButton.onclick = goToLoginPage
         }

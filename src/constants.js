@@ -10,3 +10,8 @@ export const BUTTON_THEMES = {
     DANGER: "DANGER",
     BASIC: "BASIC",
 }
+
+export const MESSAGE_TYPES = {
+    TEXT: 'TEXT',
+    IMAGE: 'IMAGE'
+}

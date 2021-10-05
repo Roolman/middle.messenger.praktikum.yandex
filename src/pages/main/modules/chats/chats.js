@@ -6,6 +6,8 @@ import templ from './chats.tmpl'
 import {Button} from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants"
 
+import {getShortChatDate} from "../../../../utils/date.utils"
+
 const CHATS = [
     {
         id: 1,
@@ -90,20 +92,7 @@ const CHATS = [
     },
 ]
 
-const getShortDate = (date) => {
-    // Сравниваем с сегодня
-    const now = new Date()
-    const diff = Math.abs(date - now)
-    const day = 60*60*24
-    const week = day*7
-    // Если сегодня, то время
-    const dateObj = new Date(date)
-    if(diff < day) return `${dateObj.getHours()}:${dateObj.getMinutes()}`
-    // Если до недели, то день недели
-    if(diff < week) return `${dateObj.toLocaleString("ru-Ru", { weekday: "long" })}`
-    // Иначе дату в формате: "1 января 2021"
-    return `${dateObj.toLocaleString("ru-Ru", {day: 'numeric', month: 'numeric', year: 'numeric' })}`
-}
+
 
 export class Chats {
 
@@ -124,7 +113,7 @@ export class Chats {
         Handlebars.registerPartial("addChatButton", this.addChatButton.template)
         const template = Handlebars.compile(templ)
         const chatsViewData = CHATS.map(x => {
-            return {...x, lastMessageTime: getShortDate(x.lastMessageTime)}
+            return {...x, lastMessageTime: getShortChatDate(x.lastMessageTime)}
         })
         const result = template({chats: chatsViewData})
         return result

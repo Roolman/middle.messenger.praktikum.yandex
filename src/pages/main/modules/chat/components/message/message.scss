@@ -1,0 +1,71 @@
+@import "../../../../../../styles.scss";
+
+$message_radius: 12px;
+$message_gray_color: #f8f8f8;
+
+.message {
+  display: flex;
+  max-width: 400px;
+  margin: 5px 0;
+  font-size: 0.96rem;
+  position: relative;
+
+  .message_text-value {
+    padding: 10px;
+  }
+
+  .message_image-value {
+    border: 1px solid $message_gray_color;
+    max-width: 400px;
+    max-height: 400px;
+  }
+}
+
+.message_text {
+  background-color: $message_gray_color;
+}
+
+.message-image {
+  & > .message__time {
+    background-color: $secondary_color;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 10px;
+  }
+}
+
+.message_sent-not-by-user {
+  border-radius: $message_radius;
+  border-top-left-radius: 0;
+
+  & > .message_image-value {
+    border-radius: $message_radius;
+    border-top-left-radius: 0;
+  }
+
+  & > .message__time {
+    color: $secondary_color;
+  }
+}
+.message_sent-by-user {
+  border-radius: $message_radius;
+  border-bottom-right-radius: 0;
+  align-self: flex-end;
+  background-color: #e4edfd;
+
+  & > .message_image-value {
+    border-radius: $message_radius;
+    border-bottom-right-radius: 0;
+  }
+
+  & > .message__time {
+    color: $main_color;
+  }
+}
+
+.message__time {
+  position: absolute;
+  font-size: 0.85rem;
+  bottom: 8px;
+  right: 5px;
+}
