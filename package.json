@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "VanillaJS messenger with component approach",
   "dependencies": {
+    "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "parcel": "^2.0.0-rc.0"
   },
@@ -19,8 +20,8 @@
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
     "pre-build": "./node_modules/.bin/parcel build index.html",
-    "build": "npm run remove-dist-linux && npm run pre-build",
-    "build-windows": "npm run remove-dist-windows && npm run pre-build",
+    "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
+    "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
