@@ -9,10 +9,10 @@ import { MainPage } from './pages/main/index'
 window.onload = () => {
     // const loginPage = new LoginPage()
     // loginPage.init()
-    // const profilePage = new ProfilePage()
-    // profilePage.init()
-    const mainPage = new MainPage()
-    mainPage.init()
+    const profilePage = new ProfilePage()
+    profilePage.init()
+    // const mainPage = new MainPage()
+    // mainPage.init()
 }
 
 // Глобальный хэлпер

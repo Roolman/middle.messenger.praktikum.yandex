@@ -49,4 +49,5 @@ export default
             </div>
         </div>
     </div>
+    {{> сhangeAvatar}}
 `

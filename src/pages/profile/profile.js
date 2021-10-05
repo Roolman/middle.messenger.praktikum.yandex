@@ -6,6 +6,7 @@ import templ from './profile.tmpl'
 import {Input} from "../../components/input/index"
 import {Button} from "../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants"
+import {ChangeAvatar} from "./modules/change-avatar"
 
 import {goToMainPage} from "../../services/navigation"
 import {goToLoginPage} from "../../services/navigation"
@@ -69,9 +70,11 @@ export class ProfilePage {
     profileFormName = "profileEditForm"
     // Форма для пароля
     passwordChangeFormName = "passwordChangeForm"
-    //
+    // Состояния страницы
     profileIsEditable
     changePasswordFormIsShown
+    // Модуль смены аватара
+    сhangeAvatar
     
     constructor() {
         this.profileEditForm = {}
@@ -107,6 +110,9 @@ export class ProfilePage {
             const input = new Input(name, name, title, type, errorMessage, defaultValue)
             return new Handlebars.SafeString(input.template)
         })
+        // Смена аватара
+        this.сhangeAvatar = new ChangeAvatar()
+        Handlebars.registerPartial("сhangeAvatar", this.сhangeAvatar.template)
         //
         const template = Handlebars.compile(templ)
         const result = template({
@@ -154,7 +160,15 @@ export class ProfilePage {
             }
             const logoutButton = document.getElementById(this.logoutButton.id)
             if(!logoutButton.onclick) logoutButton.onclick = goToLoginPage
+            const avatar = document.getElementsByClassName('profile__main-avatar-container')[0]
+            if(!avatar.onclick) avatar.onclick = () => {
+                this._showChangeAvatar()
+            }
+            this.сhangeAvatar.setOnApply()
         }
     }
 
+    _showChangeAvatar = () => {
+        this.сhangeAvatar.show()
+    }
 }
