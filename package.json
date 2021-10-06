@@ -15,7 +15,7 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "copy-static-linux": "cp -r public/* dist/",
+    "copy-static-linux": "cp -avr static/ dist/",
     "copy-static-windows": "xcopy /i /e static dist\\static",
     "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
     "dev": "npm run copy-static-linux && npm run pre-dev",
