@@ -11,13 +11,10 @@
     "@parcel/transformer-sass": "^2.0.0-rc.0",
     "handlebars": "^4.7.7"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "scripts": {
-    "copy-static-linux": "cp -avr static/ dist/",
+    "copy-static-linux": "cp -r static/ dist/",
     "copy-static-windows": "xcopy /i /e static dist\\static",
-    "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
+    "pre-dev": "./node_modules/.bin/parcel index.html",
     "dev": "npm run copy-static-linux && npm run pre-dev",
     "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
@@ -25,8 +22,8 @@
     "pre-build": "./node_modules/.bin/parcel build index.html",
     "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
     "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
-    "start": "npm install && npm run build && node server.js",
-    "start-windows": "npm install && npm run build-windows && node server.js",
+    "start": "npm run build && node server.js",
+    "start-windows": "npm run build-windows && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
