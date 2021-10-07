@@ -2,14 +2,14 @@ import Handlebars from "handlebars"
 import './button.scss'
 import templ from './button.tmpl'
 
-import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants"
+import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
 
 export class Button {
 
-    template
+    content
     // Стили кнопки
     type
-    // Параметры template
+    // Параметры content
     buttonClass = "button"
     id
     title
@@ -22,7 +22,7 @@ export class Button {
         this.type = type
         this.theme = theme
         this.iconClass = iconClass
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {

@@ -3,17 +3,13 @@ import Handlebars from "handlebars"
 import './404.scss'
 import templ from './404.tmpl'
 import {Button} from "../../../components/button"
-import { BUTTON_TYPES } from "../../../constants"
+import { BUTTON_TYPES } from "../../../constants/button"
 import { goToMainPage } from "../../../services/navigation"
 
 export class Error404Page {
 
     goToMainButton
     goToMainButtonName = "goToMainButton"
-
-    constructor() {
-
-    }
 
     init() {
         // Вставляем шаблон
@@ -29,7 +25,7 @@ export class Error404Page {
 
     render() {
         this.goToMainButton = new Button(this.goToMainButtonName, "Назад к чатам", BUTTON_TYPES.LINK)
-        Handlebars.registerPartial("error404goToMainButton", this.goToMainButton.template)
+        Handlebars.registerPartial("error404goToMainButton", this.goToMainButton.content)
         const template = Handlebars.compile(templ)
         const result = template()
         return result

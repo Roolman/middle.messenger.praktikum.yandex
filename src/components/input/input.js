@@ -4,7 +4,7 @@ import templ from './input.tmpl'
 
 export class Input {
 
-    template
+    content
     // Параметры
     id
     name
@@ -20,7 +20,7 @@ export class Input {
         this.type = type
         this.errorMessage = errorMessage
         this.defaultValue = defaultValue
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {

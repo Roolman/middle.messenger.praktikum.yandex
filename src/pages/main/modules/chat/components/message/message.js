@@ -2,14 +2,14 @@ import Handlebars from "handlebars"
 import './message.scss'
 import templ from './message.tmpl'
 
-import { MESSAGE_TYPES } from "../../../../../../constants"
+import { MESSAGE_TYPES } from "../../../../../../constants/message"
 import {getDateHoursAndMinutes} from "../../../../../../utils/date.utils"
 
 export class Message {
 
-    template
+    content
     type
-    // Параметры template
+    // Параметры content
     messageClass = ""
     id
     value
@@ -22,7 +22,7 @@ export class Message {
         this.type = type
         this.time = time
         this.sentByUser = sentByUser
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {

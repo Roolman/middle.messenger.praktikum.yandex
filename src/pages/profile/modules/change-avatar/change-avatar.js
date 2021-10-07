@@ -6,19 +6,19 @@ import { Button } from "../../../../components/button/index"
 
 export class ChangeAvatar {
 
-    template
+    content
     // Аргументы входные
     applyButton
     applyButtonName = "applyButton"
 
     constructor() {
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {
         const template = Handlebars.compile(templ)
         this.applyButton = new Button(this.applyButtonName, "Изменить")
-        Handlebars.registerPartial('applyButton', this.applyButton.template)
+        Handlebars.registerPartial('applyButton', this.applyButton.content)
         const result = template({
             title: this.title
         })

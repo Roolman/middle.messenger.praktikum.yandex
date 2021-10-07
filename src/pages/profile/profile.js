@@ -5,56 +5,13 @@ import templ from './profile.tmpl'
 
 import {Input} from "../../components/input/index"
 import {Button} from "../../components/button/index"
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import {ChangeAvatar} from "./modules/change-avatar"
 
 import {goToMainPage} from "../../services/navigation"
 import {goToLoginPage} from "../../services/navigation"
+import { PROFILE_DATA } from "../../mock/profile"
 
-let PROFILE_DATA = [
-    {
-        name: "email",
-        type: "email",
-        title: "Почта",
-        value: "pochta@yandex.ru",
-        errorMessage: "Неверно указана почта"
-    },
-    {
-        name: "login",
-        type: "text",
-        title: "Логин",
-        value: "ivanovivan",
-        errorMessage: "Укажите логин"
-    },
-    {
-        name: "first_name",
-        type: "text",
-        title: "Имя",
-        value: "Иван",
-        errorMessage: "Укажите имя"
-    },
-    {
-        name: "second_name",
-        type: "text",
-        title: "Фамилия",
-        value: "Иванов",
-        errorMessage: "Укажите фамилию"
-    },
-    {
-        name: "dispalay_name",
-        type: "text",
-        title: "Имя в чате",
-        value: "Иван",
-        errorMessage: "Укажите имя в чате"
-    },
-    {
-        name: "phone",
-        type: "text",
-        title: "Телефон",
-        value: "+7 (909) 967 30 30",
-        errorMessage: "Укажите телефон"
-    }
-]
 
 export class ProfilePage {
 
@@ -96,23 +53,23 @@ export class ProfilePage {
     render() {
         // Кнопочки
         this.returnButton = new Button("returnButton", '', BUTTON_TYPES.ROUND, BUTTON_THEMES.PRIMARY, 'fa fa-arrow-left')
-        Handlebars.registerPartial("returnButton", this.returnButton.template)
+        Handlebars.registerPartial("returnButton", this.returnButton.content)
         this.editDataButton = new Button("editDataButton", 'Изменить данные', BUTTON_TYPES.LINK)
-        Handlebars.registerPartial("editDataButton", this.editDataButton.template)
+        Handlebars.registerPartial("editDataButton", this.editDataButton.content)
         this.changePasswordButton = new Button("changePasswordButton", 'Изменить пароль', BUTTON_TYPES.LINK)
-        Handlebars.registerPartial("changePasswordButton", this.changePasswordButton.template)
+        Handlebars.registerPartial("changePasswordButton", this.changePasswordButton.content)
         this.logoutButton = new Button("logoutButton", 'Выйти', BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("logoutButton", this.logoutButton.template)
+        Handlebars.registerPartial("logoutButton", this.logoutButton.content)
         this.profileSaveButton = new Button("profileSaveButton", 'Сохранить')
-        Handlebars.registerPartial("profileSaveButton", this.profileSaveButton.template)
+        Handlebars.registerPartial("profileSaveButton", this.profileSaveButton.content)
         // Инпут
         Handlebars.registerHelper("profileInput", function(name, title, type, errorMessage, defaultValue) {
             const input = new Input(name, name, title, type, errorMessage, defaultValue)
-            return new Handlebars.SafeString(input.template)
+            return new Handlebars.SafeString(input.content)
         })
         // Смена аватара
         this.сhangeAvatar = new ChangeAvatar()
-        Handlebars.registerPartial("сhangeAvatar", this.сhangeAvatar.template)
+        Handlebars.registerPartial("сhangeAvatar", this.сhangeAvatar.content)
         //
         const template = Handlebars.compile(templ)
         const result = template({

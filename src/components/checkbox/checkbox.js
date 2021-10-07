@@ -4,7 +4,7 @@ import templ from './checkbox.tmpl'
 
 export class Checkbox {
 
-    template
+    content
     //
     id
     name
@@ -14,7 +14,7 @@ export class Checkbox {
         this.id = id
         this.name = name
         this.label = label
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {

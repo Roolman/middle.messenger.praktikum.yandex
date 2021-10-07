@@ -49,20 +49,20 @@ export class LoginPage {
     render() {
         // Создаем компоненты формы
         this.loginInput = new Input("loginInput", "login", "Логин", "text", "")
-        Handlebars.registerPartial("loginInput", this.loginInput.template)
+        Handlebars.registerPartial("loginInput", this.loginInput.content)
         this.passwordInput = new Input("passwordInput", "password", "Пароль", "password", "Неверно указан пароль")
-        Handlebars.registerPartial("passwordInput", this.passwordInput.template)
+        Handlebars.registerPartial("passwordInput", this.passwordInput.content)
         this.rememberMeCheckbox = new Checkbox("rememberMeCheckbox", "rememberMe", "Запомнить меня")
-        Handlebars.registerPartial("rememberMeCheckbox", this.rememberMeCheckbox.template)
+        Handlebars.registerPartial("rememberMeCheckbox", this.rememberMeCheckbox.content)
         // Создаем шаблон формы
         const formPartial = Handlebars.compile(form)({formId: this.formId})
         Handlebars.registerPartial(this.formId, formPartial)
         // Создаем хэдер
         this.header = new Header()
-        Handlebars.registerPartial("header", this.header.template)
+        Handlebars.registerPartial("header", this.header.content)
         // Объединяем в один компонент
         this.loginBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.loginButtonTitle, this.loginActionId, this.goToRegisterButtonTitle, this.goToRegisterActionId)
-        Handlebars.registerPartial('loginBlock', this.loginBlock.template)
+        Handlebars.registerPartial('loginBlock', this.loginBlock.content)
         const template = Handlebars.compile(templ)
         const result = template()
         return result

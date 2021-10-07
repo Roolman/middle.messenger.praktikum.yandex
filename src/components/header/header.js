@@ -1,5 +1,5 @@
 import Handlebars from "handlebars"
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { goToError404Page, goToError500Page } from "../../services/navigation"
 import { Button } from "../button"
 import './header.scss'
@@ -8,20 +8,20 @@ import templ from './header.tmpl'
 export class Header {
 
     title = 'Fast messenger'
-    template
+    content
     //
     goToError404
     goToError500
 
     constructor() {
-        this.template = this.render()
+        this.content = this.render()
     }
 
     render() {
         this.goToError404 = new Button("goToError404", "Ошибка 404", BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("goToError404", this.goToError404.template)
+        Handlebars.registerPartial("goToError404", this.goToError404.content)
         this.goToError500 = new Button("goToError500", "Ошибка 500", BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("goToError500", this.goToError500.template)
+        Handlebars.registerPartial("goToError500", this.goToError500.content)
         const template = Handlebars.compile(templ)
         const result = template({title: this.title})
         return result

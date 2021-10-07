@@ -12,10 +12,6 @@ export class MainPage {
     chats
     chat
 
-    constructor() {
-
-    }
-
     init() {
         // Вставляем шаблон
         const root = document.getElementById("root")
@@ -33,9 +29,9 @@ export class MainPage {
 
     render() {
         this.chats = new Chats()
-        Handlebars.registerPartial("chats", this.chats.template)
+        Handlebars.registerPartial("chats", this.chats.content)
         this.chat = new Chat()
-        Handlebars.registerPartial("chat", this.chat.template)
+        Handlebars.registerPartial("chat", this.chat.content)
         const template = Handlebars.compile(templ)
         const result = template()
         return result

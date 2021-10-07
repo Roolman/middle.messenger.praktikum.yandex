@@ -51,28 +51,28 @@ export class RegisterPage {
     render() {
         // Создаем компоненты формы
         this.emailInput = new Input("emailInput", "email", "Почта", "email", "Неверно указана почта")
-        Handlebars.registerPartial("emailInput", this.emailInput.template)
+        Handlebars.registerPartial("emailInput", this.emailInput.content)
         this.loginInput = new Input("loginInput", "login", "Логин", "text", "")
-        Handlebars.registerPartial("loginInput", this.loginInput.template)
+        Handlebars.registerPartial("loginInput", this.loginInput.content)
         this.firstNameInput = new Input("firstNameInput", "first_name", "Имя", "text", "")
-        Handlebars.registerPartial("firstNameInput", this.firstNameInput.template)
+        Handlebars.registerPartial("firstNameInput", this.firstNameInput.content)
         this.secondNameInput = new Input("secondNameInput", "second_name", "Фамилия", "text", "")
-        Handlebars.registerPartial("secondNameInput", this.secondNameInput.template)
+        Handlebars.registerPartial("secondNameInput", this.secondNameInput.content)
         this.phoneInput = new Input("phoneInput", "phone", "Телефон", "text", "Неверный формат номера")
-        Handlebars.registerPartial("phoneInput", this.phoneInput.template)
+        Handlebars.registerPartial("phoneInput", this.phoneInput.content)
         this.passwordInput = new Input("passwordInput", "password", "Пароль", "password", "Введите пароль")
-        Handlebars.registerPartial("passwordInput", this.passwordInput.template)
+        Handlebars.registerPartial("passwordInput", this.passwordInput.content)
         this.passwordCheckInput = new Input("passwordCheckInput", "password_check", "Пароль еще раз", "password", "Пароли не совпадают")
-        Handlebars.registerPartial("passwordCheckInput", this.passwordCheckInput.template)
+        Handlebars.registerPartial("passwordCheckInput", this.passwordCheckInput.content)
         // Создаем шаблон формы
         const formPartial = Handlebars.compile(form)({formId: this.formId})
         Handlebars.registerPartial(this.formId, formPartial)
         //
         const header = new Header()
-        Handlebars.registerPartial("header", header.template)
+        Handlebars.registerPartial("header", header.content)
         // Объединяем в один компонент
         this.registerBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.registerButtonTitle, this.registerActionId, this.goToLoginButtonTitle, this.goToLoginActionId)
-        Handlebars.registerPartial('registerBlock', this.registerBlock.template)
+        Handlebars.registerPartial('registerBlock', this.registerBlock.content)
         const template = Handlebars.compile(templ)
         const result = template()
         return result
