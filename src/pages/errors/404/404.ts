@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './404.scss'
 import templ from './404.tmpl'
@@ -8,7 +8,7 @@ import { goToMainPage } from "../../../services/navigation"
 
 export class Error404Page {
 
-    goToMainButton
+    goToMainButton: Button
     goToMainButtonName = "goToMainButton"
 
     init() {
@@ -17,17 +17,20 @@ export class Error404Page {
         const error404Page = document.createElement("div")
         error404Page.id = "error404Page"
         error404Page.innerHTML = this.render()
+        if(!root) {
+            throw new Error("Не был получен корневой элемент!")
+        }
         root.appendChild(error404Page)
         //
         const goToMain = document.getElementById(this.goToMainButton.id)
-        goToMain.onclick = goToMainPage
+        if(goToMain) goToMain.onclick = goToMainPage
     }
 
     render() {
         this.goToMainButton = new Button(this.goToMainButtonName, "Назад к чатам", BUTTON_TYPES.LINK)
         Handlebars.registerPartial("error404goToMainButton", this.goToMainButton.content)
         const template = Handlebars.compile(templ)
-        const result = template()
+        const result = template({})
         return result
     }
 

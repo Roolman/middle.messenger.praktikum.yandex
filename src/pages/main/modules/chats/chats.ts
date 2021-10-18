@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './chats.scss'
 import templ from './chats.tmpl'
@@ -12,9 +12,9 @@ import {CHATS} from "../../../../mock/chats"
 
 export class Chats {
 
-    content
+    content: string
     //
-    addChatButton
+    addChatButton: Button
 
     constructor() {
         this.init()
@@ -28,8 +28,9 @@ export class Chats {
         this.addChatButton = new Button("addChatButton", "", BUTTON_TYPES.ROUND, BUTTON_THEMES.PRIMARY, "fa fa-plus")
         Handlebars.registerPartial("addChatButton", this.addChatButton.content)
         const template = Handlebars.compile(templ)
+        // TODO: Fix AS
         const chatsViewData = CHATS.map(x => {
-            return {...x, lastMessageTime: getShortChatDate(x.lastMessageTime)}
+            return {...x, lastMessageTime: getShortChatDate(x.lastMessageTime as Date)}
         })
         const result = template({chats: chatsViewData})
         return result

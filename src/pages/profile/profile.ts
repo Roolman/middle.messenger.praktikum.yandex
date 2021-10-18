@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './profile.scss'
 import templ from './profile.tmpl'
@@ -15,13 +15,13 @@ import { PROFILE_DATA } from "../../mock/profile"
 
 export class ProfilePage {
 
-    profilePage
+    page: HTMLElement
     // Кнопки
-    returnButton
-    editDataButton
-    changePasswordButton
-    logoutButton
-    profileSaveButton
+    returnButton: Button
+    editDataButton: Button
+    changePasswordButton: Button
+    logoutButton: Button
+    profileSaveButton: Button
     // Форма для данных
     profileEditForm
     profileFormName = "profileEditForm"
@@ -31,7 +31,7 @@ export class ProfilePage {
     profileIsEditable
     changePasswordFormIsShown
     // Модуль смены аватара
-    сhangeAvatar
+    сhangeAvatar: ChangeAvatar
     
     constructor() {
         this.profileEditForm = {}
@@ -42,10 +42,13 @@ export class ProfilePage {
     init() {
         // Вставляем шаблон
         const root = document.getElementById("root")
-        this.profilePage = document.createElement("div")
-        this.profilePage.id = "profilePage"
-        this.profilePage.innerHTML = this.render()
-        root.appendChild(this.profilePage)
+        this.page = document.createElement("div")
+        this.page.id = "profilePage"
+        this.page.innerHTML = this.render()
+        if(!root) {
+            throw new Error("Не был получен корневой элемент!")
+        }
+        root.appendChild(this.page)
         // Вешаем обработчики
         this._setHandlers()
     }
@@ -84,23 +87,26 @@ export class ProfilePage {
 
     _switchProfileEditable = () => {
         this.profileIsEditable = !this.profileIsEditable
-        this.profilePage.innerHTML = this.render()
+        this.page.innerHTML = this.render()
         this._setHandlers()
     }
 
     _setHandlers = () => {
-        const goToMain = document.getElementsByClassName('profile__return')[0]
+        // TODO: Fix AS
+        const goToMain = document.getElementsByClassName('profile__return')[0] as HTMLElement
         if(!goToMain.onclick) goToMain.onclick = goToMainPage
         if(this.profileIsEditable) {
             const saveButton = document.getElementById(this.profileSaveButton.id)
-            if(!saveButton.onclick) saveButton.onclick = () => {
+            if(saveButton && !saveButton.onclick) saveButton.onclick = () => {
                 // Тестовый код
                 if(!this.changePasswordFormIsShown) {
-                    const elements = document.getElementById(this.profileFormName).elements
+                    const form: HTMLFormElement = document.getElementById(this.profileFormName) as HTMLFormElement
+                    const elements = form.elements
                     for(let i=0; i < elements.length; i++){
                         let item = elements.item(i)
-                        const field = PROFILE_DATA.find(x => x.name == item.name) 
-                        field.value = item.value
+                        if(!item) continue
+                        const field = PROFILE_DATA.find(x => x.name == item?.getAttribute('name')) 
+                        if(field) field.value = item?.getAttribute('value') || ''
                     }
                 }
                 this.changePasswordFormIsShown = false
@@ -108,16 +114,17 @@ export class ProfilePage {
             }
         }
         else {
+            // TODO: Fix AS
             const editButton = document.getElementById(this.editDataButton.id)
-            if(!editButton.onclick) editButton.onclick = this._switchProfileEditable
+            if(editButton && !editButton.onclick) editButton.onclick = this._switchProfileEditable
             const changPasswordButton = document.getElementById(this.changePasswordButton.id)
-            if(!changPasswordButton.onclick) changPasswordButton.onclick = () => {
+            if(changPasswordButton && !changPasswordButton.onclick) changPasswordButton.onclick = () => {
                 this.changePasswordFormIsShown = true
                 this._switchProfileEditable()
             }
             const logoutButton = document.getElementById(this.logoutButton.id)
-            if(!logoutButton.onclick) logoutButton.onclick = goToLoginPage
-            const avatar = document.getElementsByClassName('profile__main-avatar-container')[0]
+            if(logoutButton && !logoutButton.onclick) logoutButton.onclick = goToLoginPage
+            const avatar = document.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
             if(!avatar.onclick) avatar.onclick = () => {
                 this._showChangeAvatar()
             }

@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './checkbox.scss'
 import templ from './checkbox.tmpl'
 
@@ -10,7 +10,7 @@ export class Checkbox {
     name
     label
 
-    constructor(id, name, label) {
+    constructor(id: string, name: string, label: string) {
         this.id = id
         this.name = name
         this.label = label

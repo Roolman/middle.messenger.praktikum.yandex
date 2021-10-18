@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './login.scss'
 import templ, { form } from './login.tmpl'
@@ -13,19 +13,21 @@ import { goToRegisterPage, goToMainPage } from "../../services/navigation"
 export class LoginPage {
 
     // Основные надписи и параметры компонентов
-    blockTitle = "Вход"
-    loginButtonTitle ="Авторизоваться"
-    loginActionId = "loginButton"
-    goToRegisterButtonTitle = "Ещё не зарегистрированы?"
-    goToRegisterActionId = "goToRegisterButton"
+    blockTitle: string = "Вход"
+    loginButtonTitle: string ="Авторизоваться"
+    loginActionId: string = "loginButton"
+    goToRegisterButtonTitle: string = "Ещё не зарегистрированы?"
+    goToRegisterActionId: string = "goToRegisterButton"
     // Форма
-    formId = "loginForm"
+    formId: string = "loginForm"
     // Компонент логина (форма + кнопки)
-    loginBlock
+    loginBlock: LoginRegisterBlock
     // Компоненты формы
-    loginInput
-    passwordInput
-    rememberMeCheckbox
+    loginInput: Input
+    passwordInput: Input
+    rememberMeCheckbox: Checkbox
+    //
+    header: Header
 
     constructor() {
 
@@ -37,12 +39,16 @@ export class LoginPage {
         const loginPage = document.createElement("div")
         loginPage.id = "loginPage"
         loginPage.innerHTML = this.render()
+        if(!root) {
+            throw new Error("Не был получен корневой элемент!")
+        }
         root.appendChild(loginPage)
         // Навешиваем обработичики
+        // TODO: Исправить типы
         const loginButton = document.getElementById(this.loginActionId)
-        loginButton.onclick = () => goToMainPage()
+        if(loginButton) loginButton.onclick = () => goToMainPage()
         const goToRegisterButton = document.getElementById(this.goToRegisterActionId)
-        goToRegisterButton.onclick = () => goToRegisterPage()
+        if(goToRegisterButton) goToRegisterButton.onclick = () => goToRegisterPage()
         this.header.setHandlers()
     }
 
@@ -64,7 +70,7 @@ export class LoginPage {
         this.loginBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.loginButtonTitle, this.loginActionId, this.goToRegisterButtonTitle, this.goToRegisterActionId)
         Handlebars.registerPartial('loginBlock', this.loginBlock.content)
         const template = Handlebars.compile(templ)
-        const result = template()
+        const result = template({})
         return result
     }
 

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "target": "es2015",
+        "declaration": false,
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+   }
+} 

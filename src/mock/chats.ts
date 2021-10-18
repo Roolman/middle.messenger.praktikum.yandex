@@ -14,7 +14,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "стикер",
         lastMessageSentByUser: true,
-        lastMessageTime: new Date().setDate(3),
+        lastMessageTime: new Date(new Date().setDate(3)),
         unreadCount: 0
     },
     {
@@ -23,7 +23,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "Друзья, у меня для вас особенный выпуск новостей! Сегодня случился случай бла-бла-бла",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setDate(3),
+        lastMessageTime: new Date(new Date().setDate(3)),
         unreadCount: 4
     },
     {
@@ -32,7 +32,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "Круто!",
         lastMessageSentByUser: true,
-        lastMessageTime: new Date().setDate(2),
+        lastMessageTime: new Date(new Date().setDate(2)),
         unreadCount: 0
     },
     {
@@ -41,7 +41,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "И Human Interface Guidelines и Material Design рекомендуют делать сразу несколько важных пометок",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setDate(1),
+        lastMessageTime: new Date(new Date().setDate(1)),
         unreadCount: 0
     },
     {
@@ -50,7 +50,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "Миллионы россиян ежедневно проводят десятки часов своего времени в настолках",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setDate(0),
+        lastMessageTime: new Date(new Date().setDate(0)),
         unreadCount: 0
     },
     {
@@ -59,7 +59,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "В 2008 году художник Jon Rafman  начал собирать макет",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setMonth(8),
+        lastMessageTime: new Date(new Date().setMonth(8)),
         unreadCount: 0
     },
     {
@@ -68,7 +68,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "Так увлекся работой по курсу, что совсем забыл его анонсировать",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setMonth(8),
+        lastMessageTime: new Date(new Date().setMonth(8)),
         unreadCount: 0
     },
     {
@@ -77,7 +77,7 @@ export const CHATS = [
         avatar: "",
         lastMessage: "Можно или сегодня или завтра вечером.",
         lastMessageSentByUser: false,
-        lastMessageTime: new Date().setMonth(7),
+        lastMessageTime: new Date(new Date().setMonth(7)),
         unreadCount: 0
     },
 ]

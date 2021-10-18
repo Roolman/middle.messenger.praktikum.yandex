@@ -1,7 +1,7 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './chat.scss'
-import templ, {emptyChat, emptyChat} from './chat.tmpl'
+import templ, {emptyChat} from './chat.tmpl'
 
 import {Button} from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
@@ -10,9 +10,9 @@ import { CHAT, MESSAGES } from "../../../../mock/chat"
 
 export class Chat {
 
-    content
+    content: string
     //
-    sendButton
+    sendButton: Button
 
     constructor() {
         this.init()

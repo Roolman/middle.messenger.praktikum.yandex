@@ -1,25 +1,25 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './login-register-block.scss'
 import templ from './login-register-block.tmpl'
 
-import { Button } from "../../components/button/index"
+import { Button } from "../button/index"
 import { BUTTON_TYPES } from "../../constants/button"
 
 export class LoginRegisterBlock {
 
     content
     // Аргументы входные
-    title
+    title: string
     formPartialName
-    mainActionTitle
-    mainAction
+    mainActionTitle: string
+    mainActionId
     secondActionTitle
-    secondAction
+    secondActionId: string
     // Компоненты блока
-    mainButton
-    secondButton
+    mainButton: Button
+    secondButton: Button
 
-    constructor(title, formPartialName, mainActionTitle, mainActionId, secondActionTitle, secondActionId) {
+    constructor(title: string, formPartialName: string, mainActionTitle: string, mainActionId: string, secondActionTitle: string, secondActionId: string) {
         this.title = title
         this.formPartialName = () => formPartialName
         this.mainActionTitle = mainActionTitle

@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './message.scss'
 import templ from './message.tmpl'
 
@@ -16,7 +16,7 @@ export class Message {
     time
     sentByUser
 
-    constructor(id, type = MESSAGE_TYPES.TEXT, value, time, sentByUser) {
+    constructor(id: string, type = MESSAGE_TYPES.TEXT, value: string, time: Date, sentByUser: boolean) {
         this.id = id
         this.value = value
         this.type = type

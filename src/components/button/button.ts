@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './button.scss'
 import templ from './button.tmpl'
 
@@ -16,7 +16,7 @@ export class Button {
     theme
     iconClass
 
-    constructor(id, title, type = BUTTON_TYPES.BASIC, theme = BUTTON_THEMES.PRIMARY, iconClass) {
+    constructor(id: string, title: string, type = BUTTON_TYPES.BASIC, theme = BUTTON_THEMES.PRIMARY, iconClass?: string) {
         this.id = id
         this.title = title
         this.type = type
@@ -67,11 +67,6 @@ export class Button {
             default: 
                 break
         }
-    }
-
-    _defineStyle(props) {
-        const button = document.getElementById(this.id)
-        for(let [prop, value] of Object.entries(props)) button.style[prop] = value
     }
 
 }

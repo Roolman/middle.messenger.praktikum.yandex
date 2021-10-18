@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './main.scss'
 import templ from './main.tmpl'
@@ -9,8 +9,8 @@ import {goToProfilePage} from "../../services/navigation"
 
 export class MainPage {
 
-    chats
-    chat
+    chats: Chats
+    chat: Chat
 
     init() {
         // Вставляем шаблон
@@ -18,10 +18,14 @@ export class MainPage {
         const mainPage = document.createElement("div")
         mainPage.id = "mainPage"
         mainPage.innerHTML = this.render()
+        if(!root) {
+            throw new Error("Не был получен корневой элемент!")
+        }
         root.appendChild(mainPage)
         // Вешаем обработчики
-        const goToProfileLink = document.getElementsByClassName('chats__profile-link')[0]
-        goToProfileLink.onclick = function (event) {
+        // TODO: Fix AS
+        const goToProfileLink: HTMLElement = document.getElementsByClassName('chats__profile-link')[0] as HTMLElement
+        if(goToProfileLink) goToProfileLink.onclick = function (event: MouseEvent) {
             event.preventDefault()
             goToProfilePage()
         }
@@ -33,7 +37,7 @@ export class MainPage {
         this.chat = new Chat()
         Handlebars.registerPartial("chat", this.chat.content)
         const template = Handlebars.compile(templ)
-        const result = template()
+        const result = template({})
         return result
     }
 

@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './change-avatar.scss'
 import templ from './change-avatar.tmpl'
 
@@ -6,9 +6,9 @@ import { Button } from "../../../../components/button/index"
 
 export class ChangeAvatar {
 
-    content
+    content: string
     // Аргументы входные
-    applyButton
+    applyButton: Button
     applyButtonName = "applyButton"
 
     constructor() {
@@ -19,20 +19,20 @@ export class ChangeAvatar {
         const template = Handlebars.compile(templ)
         this.applyButton = new Button(this.applyButtonName, "Изменить")
         Handlebars.registerPartial('applyButton', this.applyButton.content)
-        const result = template({
-            title: this.title
-        })
+        const result = template({})
         return result
     }
 
     setOnApply() {
-        const block = document.getElementsByClassName('change-avatar')[0]
+        // TODO: Fix AS
+        const block = document.getElementsByClassName('change-avatar')[0] as HTMLElement
         const applyButton = document.getElementById(this.applyButtonName)
-        if(!applyButton.onclick) applyButton.onclick = () => block.style.visibility = "hidden"
+        if(applyButton && !applyButton.onclick) applyButton.onclick = () => block.style.visibility = "hidden"
     }
 
     show() {
-        const block = document.getElementsByClassName('change-avatar')[0]
+        // TODO: Fix AS
+        const block = document.getElementsByClassName('change-avatar')[0] as HTMLElement
         block.style.visibility = "visible"
     }
 

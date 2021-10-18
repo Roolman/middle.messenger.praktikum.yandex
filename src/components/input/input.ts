@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import './input.scss'
 import templ from './input.tmpl'
 
@@ -13,7 +13,7 @@ export class Input {
     errorMessage
     defaultValue
 
-    constructor(id, name, title, type, errorMessage, defaultValue = "") {
+    constructor(id: string, name: string, title: string, type: string, errorMessage: string, defaultValue = "") {
         this.id = id
         this.name = name
         this.title = title

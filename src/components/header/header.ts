@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { goToError404Page, goToError500Page } from "../../services/navigation"
 import { Button } from "../button"
@@ -10,8 +10,8 @@ export class Header {
     title = 'Fast messenger'
     content
     //
-    goToError404
-    goToError500
+    goToError404: Button
+    goToError500: Button
 
     constructor() {
         this.content = this.render()
@@ -29,9 +29,9 @@ export class Header {
 
     setHandlers = () => {
         const goToError404 = document.getElementById(this.goToError404.id)
-        goToError404.onclick = goToError404Page
+        if(goToError404) goToError404.onclick = goToError404Page
         const goToError500 = document.getElementById(this.goToError500.id)
-        goToError500.onclick = goToError500Page
+        if(goToError500) goToError500.onclick = goToError500Page
     }
 
 }
