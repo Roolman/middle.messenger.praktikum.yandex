@@ -1,0 +1,33 @@
+@import "../../styles/colors.scss";
+@import "../../styles/constants.scss";
+
+.header {
+  display: flex;
+  width: 100%;
+  height: $header_height;
+  background-color: $main_color;
+}
+
+.header__items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.header__title {
+  color: white;
+  margin-left: 20px;
+  font-size: xx-large;
+}
+
+.header__icon {
+  color: white;
+  font-size: 20px !important;
+}
+
+.header__page-links {
+  display: flex;
+  flex-direction: row;
+  margin-left: 50px;
+}

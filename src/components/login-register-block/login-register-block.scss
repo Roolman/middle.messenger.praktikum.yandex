@@ -1,0 +1,39 @@
+@import "../../styles/colors.scss";
+@import "../../styles/constants.scss";
+
+.login-register-block {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - $header_height);
+  justify-content: center;
+  align-items: center;
+}
+
+.login-register-block__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 400px;
+  min-height: 500px;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 75px;
+  padding-right: 75px;
+
+  border-radius: 12px;
+  box-shadow: $common_shadow;
+}
+
+.login-register-block__title {
+  margin: 0;
+  padding: 15px 0;
+}
+
+.login-register-block__actions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
