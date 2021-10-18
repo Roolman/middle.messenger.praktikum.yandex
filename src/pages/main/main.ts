@@ -3,8 +3,8 @@ import * as Handlebars from "handlebars"
 import './main.scss'
 import templ from './main.tmpl'
 
-import {Chats} from "./modules/chats/chats"
-import {Chat} from "./modules/chat/chat"
+import {Chats} from "./modules/chats/Chats"
+import {Chat} from "./modules/chat/Chat"
 import {goToProfilePage} from "../../services/navigation"
 
 export class MainPage {

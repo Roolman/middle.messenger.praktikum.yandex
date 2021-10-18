@@ -1,4 +1,4 @@
-import Handlebars from "handlebars"
+import * as Handlebars from "handlebars"
 
 import './register.scss'
 import templ, { form } from './register.tmpl'
@@ -20,15 +20,15 @@ export class RegisterPage {
     // Форма
     formId = "registerForm"
     // Компонент страницы
-    registerBlock
+    registerBlock: LoginRegisterBlock
     // Компоненты формы
-    emailInput
-    loginInput
-    firstNameInput
-    secondNameInput
-    phoneInput
-    passwordInput
-    passwordCheckInput
+    emailInput: Input
+    loginInput: Input
+    firstNameInput: Input
+    secondNameInput: Input
+    phoneInput: Input
+    passwordInput: Input
+    passwordCheckInput: Input
     
     constructor() {
 
@@ -40,12 +40,15 @@ export class RegisterPage {
         const registerPage = document.createElement("div")
         registerPage.id = "registerPage"
         registerPage.innerHTML = this.render()
+        if(!root) {
+            throw new Error("Не был получен корневой элемент!")
+        }
         root.appendChild(registerPage)
         // Навешиваем обработичики
         const registerButton = document.getElementById(this.registerActionId)
-        registerButton.onclick = () => alert("Зареган!")
+        if(registerButton) registerButton.onclick = () => alert("Зареган!")
         const goToLoginButton = document.getElementById(this.goToLoginActionId)
-        goToLoginButton.onclick = () => goToLoginPage()
+        if(goToLoginButton) goToLoginButton.onclick = () => goToLoginPage()
     }
 
     render() {
@@ -74,7 +77,7 @@ export class RegisterPage {
         this.registerBlock = new LoginRegisterBlock(this.blockTitle, this.formId, this.registerButtonTitle, this.registerActionId, this.goToLoginButtonTitle, this.goToLoginActionId)
         Handlebars.registerPartial('registerBlock', this.registerBlock.content)
         const template = Handlebars.compile(templ)
-        const result = template()
+        const result = template({})
         return result
     }
 
