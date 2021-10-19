@@ -3,10 +3,10 @@ import * as Handlebars from "handlebars"
 import './chats.scss'
 import templ from './chats.tmpl'
 
-import {Button} from "../../../../components/button/index"
+import {Button} from "../../../../components/Button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
-import {getShortChatDate} from "../../../../utils/date.utils"
+import {getShortChatDate} from "../../../../utils/helpers/date.utils"
 
 import {CHATS} from "../../../../mock/chats"
 
@@ -25,8 +25,13 @@ export class Chats {
     }
 
     render() {
-        this.addChatButton = new Button("addChatButton", "", BUTTON_TYPES.ROUND, BUTTON_THEMES.PRIMARY, "fa fa-plus")
-        Handlebars.registerPartial("addChatButton", this.addChatButton.content)
+        this.addChatButton = new Button({
+            title: '', 
+            type: BUTTON_TYPES.ROUND, 
+            theme: BUTTON_THEMES.PRIMARY, 
+            iconClass: "fa fa-plus"
+        })
+        Handlebars.registerPartial("addChatButton", this.addChatButton.render())
         const template = Handlebars.compile(templ)
         // TODO: Fix AS
         const chatsViewData = CHATS.map(x => {

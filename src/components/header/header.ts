@@ -1,37 +1,56 @@
 import * as Handlebars from "handlebars"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { goToError404Page, goToError500Page } from "../../services/navigation"
-import { Button } from "../button"
+import { Component } from "../../utils/classes/component"
+import { Button } from "../Button"
 import './header.scss'
-import templ from './header.tmpl'
+import templ from './Header.tmpl'
 
-export class Header {
+export class Header extends Component {
 
-    title = 'Fast messenger'
-    content
-    //
+    title: string
     goToError404: Button
     goToError500: Button
 
     constructor() {
-        this.content = this.render()
+        super("header")
     }
 
     render() {
-        this.goToError404 = new Button("goToError404", "Ошибка 404", BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("goToError404", this.goToError404.content)
-        this.goToError500 = new Button("goToError500", "Ошибка 500", BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("goToError500", this.goToError500.content)
+        this.element.classList.add("header")
         const template = Handlebars.compile(templ)
-        const result = template({title: this.title})
+        const result = template({title: 'Fast messenger'})
         return result
     }
 
-    setHandlers = () => {
-        const goToError404 = document.getElementById(this.goToError404.id)
-        if(goToError404) goToError404.onclick = goToError404Page
-        const goToError500 = document.getElementById(this.goToError500.id)
-        if(goToError500) goToError500.onclick = goToError500Page
+    insertComponents() {
+        this.goToError404 = new Button({
+            title: "Ошибка 404",
+            type: BUTTON_TYPES.LINK,
+            theme: BUTTON_THEMES.DANGER
+        })
+        this.goToError500 = new Button({
+            title: "Ошибка 500",
+            type: BUTTON_TYPES.LINK,
+            theme: BUTTON_THEMES.DANGER
+        })
+        
+        const linksBlock = this.element.getElementsByClassName("header__page-links")[0]
+        if(!linksBlock) {
+            throw new Error("Ошибка рендеринга Header")
+        }
+        
+        linksBlock.appendChild(this.goToError404.element)
+        linksBlock.appendChild(this.goToError500.element)
+    }
+
+    componentDidMount() {
+        this._setHandlers()
+    }
+
+    private _setHandlers() {
+        this.goToError404.element.onclick = goToError404Page
+        this.goToError500.element.onclick = goToError500Page
     }
 
 }

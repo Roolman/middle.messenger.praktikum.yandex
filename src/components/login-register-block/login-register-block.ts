@@ -2,48 +2,62 @@ import * as Handlebars from "handlebars"
 import './login-register-block.scss'
 import templ from './login-register-block.tmpl'
 
-import { Button } from "../button/index"
+import { Button } from "../Button/index"
 import { BUTTON_TYPES } from "../../constants/button"
+import { Component } from "../../utils/classes/component"
+import { Form } from "../Form"
 
-export class LoginRegisterBlock {
+type LoginRegisterBlockProps = {
+    title: string,
+    form: Form,
+    mainActionTitle: string,
+    secondActionTitle: string,
+    [key: string]: any
+}
 
-    content
-    // Аргументы входные
-    title: string
-    formPartialName
-    mainActionTitle: string
-    mainActionId
-    secondActionTitle
-    secondActionId: string
-    // Компоненты блока
+export class LoginRegisterBlock extends Component {
+
+    props: LoginRegisterBlockProps
     mainButton: Button
     secondButton: Button
 
-    constructor(title: string, formPartialName: string, mainActionTitle: string, mainActionId: string, secondActionTitle: string, secondActionId: string) {
-        this.title = title
-        this.formPartialName = () => formPartialName
-        this.mainActionTitle = mainActionTitle
-        this.mainActionId = mainActionId
-        this.secondActionId = secondActionId
-        this.secondActionTitle = secondActionTitle
-        this.content = this.render()
+    constructor(props: LoginRegisterBlockProps) {
+        super("div", props)
     }
 
     render() {
+        this.element.classList.add("login-register-block")
         const template = Handlebars.compile(templ)
-        this.mainButton = new Button(this.mainActionId, this.mainActionTitle)
-        this.secondButton = new Button(this.secondActionId, this.secondActionTitle, BUTTON_TYPES.LINK)
-        Handlebars.registerPartial('mainButton', this.mainButton.content)
-        Handlebars.registerPartial('secondButton', this.secondButton.content)
-        const result = template({
-            title: this.title,
-            formPartialName: this.formPartialName,
-            mainActionId: this.mainActionId,
-            mainActionTitle: this.mainActionTitle,
-            secondActionId: this.secondActionId,
-            secondActionTitle: this.secondActionTitle
-        })
+        const result = template({ ...this.props })
         return result
+    }
+
+    insertComponents() {
+        // Вставляем форму
+        const actionsBlock = this.element.getElementsByClassName("login-register-block__actions")[0]
+        if(!actionsBlock) {
+            throw new Error("Ошибка рендеринга LoginRegisterBlock")
+        }
+        const actionsBlockParent = actionsBlock.parentElement
+        if(!actionsBlockParent) {
+            throw new Error("Ошибка рендеринга LoginRegisterBlock")
+        }
+        actionsBlockParent.insertBefore(this.props.form.element, actionsBlock)
+        // Вставляем кнопки
+        this.mainButton = new Button({title: this.props.mainActionTitle})
+        this.secondButton = new Button({title: this.props.secondActionTitle, type: BUTTON_TYPES.LINK})
+        actionsBlock.appendChild(this.mainButton.element)
+        actionsBlock.appendChild(this.secondButton.element)
+
+    }
+
+    componentDidMount() {
+        // TODO: Remove
+        setTimeout(() => {
+            this.mainButton.setProps({title: "TEST"})
+            console.log(this.mainButton)
+        }, 5000)
+
     }
 
 }

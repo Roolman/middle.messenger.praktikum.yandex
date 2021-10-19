@@ -2,7 +2,7 @@ import * as Handlebars from "handlebars"
 import './change-avatar.scss'
 import templ from './change-avatar.tmpl'
 
-import { Button } from "../../../../components/button/index"
+import { Button } from "../../../../components/Button/index"
 
 export class ChangeAvatar {
 
@@ -17,8 +17,8 @@ export class ChangeAvatar {
 
     render() {
         const template = Handlebars.compile(templ)
-        this.applyButton = new Button(this.applyButtonName, "Изменить")
-        Handlebars.registerPartial('applyButton', this.applyButton.content)
+        this.applyButton = new Button({title: "Изменить"})
+        Handlebars.registerPartial('applyButton', this.applyButton.render())
         const result = template({})
         return result
     }

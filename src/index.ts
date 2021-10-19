@@ -6,7 +6,11 @@ import { LoginPage } from './pages/login/index'
 
 window.onload = () => {
     const loginPage = new LoginPage()
-    loginPage.init()
+    const root = document.getElementById("root")
+    if(!root) {
+        throw new Error("Не был получен корневой элемент!")
+    }
+    root.appendChild(loginPage.element)
 }
 
 // Глобальный хэлпер

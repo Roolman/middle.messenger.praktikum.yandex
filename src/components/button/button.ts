@@ -1,71 +1,80 @@
 import * as Handlebars from "handlebars"
 import './button.scss'
-import templ from './button.tmpl'
+import templ from './Button.tmpl'
 
 import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
+import { Component } from "../../utils/classes/component"
 
-export class Button {
+type ButtonProps = {
+    title: string,
+    type?: string,
+    theme?: string,
+    [key: string]: any
+}
 
-    content
-    // Стили кнопки
-    type
-    // Параметры content
-    buttonClass = "button"
-    id
-    title
-    theme
-    iconClass
+export class Button extends Component {
 
-    constructor(id: string, title: string, type = BUTTON_TYPES.BASIC, theme = BUTTON_THEMES.PRIMARY, iconClass?: string) {
-        this.id = id
-        this.title = title
-        this.type = type
-        this.theme = theme
-        this.iconClass = iconClass
-        this.content = this.render()
+    props: ButtonProps
+    
+    constructor(props: ButtonProps) {
+        super("button", props)
+    }
+
+    setDefaultProps(props: ButtonProps): ButtonProps {
+        return {
+            ...props,
+            type: props.type || BUTTON_TYPES.BASIC,
+            theme: props.theme || BUTTON_THEMES.PRIMARY
+        }
     }
 
     render() {
-        const template = Handlebars.compile(templ)
         this._defineClass()
+        const template = Handlebars.compile(templ)
         const result = template({
-            id: this.id,
-            title: this.title,
-            buttonClass: this.buttonClass,
-            iconClass: this.iconClass
+            ...this.props
         })
         return result
     }
 
-    _defineClass() {
-        switch(this.type) {
+    private _defineClass() {
+        this.element.classList.add("button")
+        let typeClass: string = ''
+        switch(this.props.type) {
             case BUTTON_TYPES.BASIC:
-                this.buttonClass += " button_basic"
+                typeClass = "button_basic"
                 break
             case BUTTON_TYPES.STROKED:
-                this.buttonClass += " button_stroked"
+                typeClass = "button_stroked"
                 break
             case BUTTON_TYPES.LINK:
-                this.buttonClass += " button_link"
+                typeClass = "button_link"
                 break
             case BUTTON_TYPES.ROUND:
-                this.buttonClass += " button_round"
+                typeClass = "button_round"
                 break
             default: 
                 break
         }
-        switch(this.theme) {
+        if(typeClass) {
+            this.element.classList.add(typeClass)
+        }
+        let themeClass: string = ''
+        switch(this.props.theme) {
             case BUTTON_THEMES.PRIMARY:
-                this.buttonClass += " button_primary"
+                themeClass = "button_primary"
                 break
             case BUTTON_THEMES.DANGER:
-                this.buttonClass += " button_danger"
+                themeClass = "button_danger"
                 break
             case BUTTON_THEMES.BASIC:
-                this.buttonClass += " button_basic"
+                themeClass = "button_basic"
                 break
             default: 
                 break
+        }
+        if(themeClass) {
+            this.element.classList.add(themeClass)
         }
     }
 

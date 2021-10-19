@@ -3,9 +3,9 @@ import * as Handlebars from "handlebars"
 import './register.scss'
 import templ, { form } from './register.tmpl'
 
-import { LoginRegisterBlock } from "../../components/login-register-block/index"
-import { Input } from "../../components/input/index"
-import { Header } from "../../components/header/index"
+import { LoginRegisterBlock } from "../../components/Login-register-block/index"
+import { Input } from "../../components/Input/index"
+import { Header } from "../../components/Header/index"
 
 import { goToLoginPage } from "../../services/navigation"
 

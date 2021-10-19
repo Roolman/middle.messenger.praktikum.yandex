@@ -1,38 +1,25 @@
 import * as Handlebars from "handlebars"
+import { Component } from "../../utils/classes/component"
 import './input.scss'
-import templ from './input.tmpl'
+import templ from './Input.tmpl'
 
-export class Input {
+type InputProps = {
+    name: string,
+    title: string,
+    type: string,
+    errorMessage: string,
+}
 
-    content
-    // Параметры
-    id
-    name
-    title
-    type
-    errorMessage
-    defaultValue
+export class Input extends Component {
 
-    constructor(id: string, name: string, title: string, type: string, errorMessage: string, defaultValue = "") {
-        this.id = id
-        this.name = name
-        this.title = title
-        this.type = type
-        this.errorMessage = errorMessage
-        this.defaultValue = defaultValue
-        this.content = this.render()
+    constructor(props: InputProps) {
+        super("div", props)
     }
 
     render() {
+        this.element.classList.add("input-container")
         const template = Handlebars.compile(templ)
-        const result = template({
-            id: this.id,
-            name: this.name,
-            title: this.title,
-            type: this.type,
-            errorMessage: this.errorMessage,
-            defaultValue: this.defaultValue
-        })
+        const result = template({ ...this.props })
         return result
     }
 

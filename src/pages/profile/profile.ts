@@ -3,8 +3,8 @@ import * as Handlebars from "handlebars"
 import './profile.scss'
 import templ from './profile.tmpl'
 
-import {Input} from "../../components/input/index"
-import {Button} from "../../components/button/index"
+import {Input} from "../../components/Input/index"
+import {Button} from "../../components/Button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import {ChangeAvatar} from "./modules/change-avatar"
 
@@ -50,21 +50,38 @@ export class ProfilePage {
         }
         root.appendChild(this.page)
         // Вешаем обработчики
-        this._setHandlers()
+        // this._setHandlers()
     }
 
     render() {
         // Кнопочки
-        this.returnButton = new Button("returnButton", '', BUTTON_TYPES.ROUND, BUTTON_THEMES.PRIMARY, 'fa fa-arrow-left')
-        Handlebars.registerPartial("returnButton", this.returnButton.content)
-        this.editDataButton = new Button("editDataButton", 'Изменить данные', BUTTON_TYPES.LINK)
-        Handlebars.registerPartial("editDataButton", this.editDataButton.content)
-        this.changePasswordButton = new Button("changePasswordButton", 'Изменить пароль', BUTTON_TYPES.LINK)
-        Handlebars.registerPartial("changePasswordButton", this.changePasswordButton.content)
-        this.logoutButton = new Button("logoutButton", 'Выйти', BUTTON_TYPES.LINK, BUTTON_THEMES.DANGER)
-        Handlebars.registerPartial("logoutButton", this.logoutButton.content)
-        this.profileSaveButton = new Button("profileSaveButton", 'Сохранить')
-        Handlebars.registerPartial("profileSaveButton", this.profileSaveButton.content)
+        this.returnButton = new Button({
+            title: '',
+            type: BUTTON_TYPES.ROUND,
+            theme: BUTTON_THEMES.PRIMARY,
+            iconClass:'fa fa-arrow-left'
+        })
+        Handlebars.registerPartial("returnButton", this.returnButton.render())
+        this.editDataButton = new Button({
+            title: "Изменить данные",
+            type: BUTTON_TYPES.LINK
+        })
+        Handlebars.registerPartial("editDataButton", this.editDataButton.render())
+        this.changePasswordButton = new Button({
+            title: 'Изменить пароль',
+            type: BUTTON_TYPES.LINK
+        })
+        Handlebars.registerPartial("changePasswordButton", this.changePasswordButton.render())
+        this.logoutButton = new Button({
+            title: 'Выйти',
+            type: BUTTON_TYPES.LINK,
+            theme: BUTTON_THEMES.DANGER
+        })
+        Handlebars.registerPartial("logoutButton", this.logoutButton.render())
+        this.profileSaveButton = new Button({
+            title: "Сохранить"
+        })
+        Handlebars.registerPartial("profileSaveButton", this.profileSaveButton.render())
         // Инпут
         Handlebars.registerHelper("profileInput", function(name, title, type, errorMessage, defaultValue) {
             const input = new Input(name, name, title, type, errorMessage, defaultValue)
@@ -88,49 +105,49 @@ export class ProfilePage {
     _switchProfileEditable = () => {
         this.profileIsEditable = !this.profileIsEditable
         this.page.innerHTML = this.render()
-        this._setHandlers()
+        // this._setHandlers()
     }
 
-    _setHandlers = () => {
-        // TODO: Fix AS
-        const goToMain = document.getElementsByClassName('profile__return')[0] as HTMLElement
-        if(!goToMain.onclick) goToMain.onclick = goToMainPage
-        if(this.profileIsEditable) {
-            const saveButton = document.getElementById(this.profileSaveButton.id)
-            if(saveButton && !saveButton.onclick) saveButton.onclick = () => {
-                // Тестовый код
-                if(!this.changePasswordFormIsShown) {
-                    const form: HTMLFormElement = document.getElementById(this.profileFormName) as HTMLFormElement
-                    const elements = form.elements
-                    for(let i=0; i < elements.length; i++){
-                        let item = elements.item(i)
-                        if(!item) continue
-                        const field = PROFILE_DATA.find(x => x.name == item?.getAttribute('name')) 
-                        if(field) field.value = item?.getAttribute('value') || ''
-                    }
-                }
-                this.changePasswordFormIsShown = false
-                this._switchProfileEditable()
-            }
-        }
-        else {
-            // TODO: Fix AS
-            const editButton = document.getElementById(this.editDataButton.id)
-            if(editButton && !editButton.onclick) editButton.onclick = this._switchProfileEditable
-            const changPasswordButton = document.getElementById(this.changePasswordButton.id)
-            if(changPasswordButton && !changPasswordButton.onclick) changPasswordButton.onclick = () => {
-                this.changePasswordFormIsShown = true
-                this._switchProfileEditable()
-            }
-            const logoutButton = document.getElementById(this.logoutButton.id)
-            if(logoutButton && !logoutButton.onclick) logoutButton.onclick = goToLoginPage
-            const avatar = document.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
-            if(!avatar.onclick) avatar.onclick = () => {
-                this._showChangeAvatar()
-            }
-            this.сhangeAvatar.setOnApply()
-        }
-    }
+    // _setHandlers = () => {
+    //     // TODO: Fix AS
+    //     const goToMain = document.getElementsByClassName('profile__return')[0] as HTMLElement
+    //     if(!goToMain.onclick) goToMain.onclick = goToMainPage
+    //     if(this.profileIsEditable) {
+    //         const saveButton = document.getElementById(this.profileSaveButton.id)
+    //         if(saveButton && !saveButton.onclick) saveButton.onclick = () => {
+    //             // Тестовый код
+    //             if(!this.changePasswordFormIsShown) {
+    //                 const form: HTMLFormElement = document.getElementById(this.profileFormName) as HTMLFormElement
+    //                 const elements = form.elements
+    //                 for(let i=0; i < elements.length; i++){
+    //                     let item = elements.item(i)
+    //                     if(!item) continue
+    //                     const field = PROFILE_DATA.find(x => x.name == item?.getAttribute('name')) 
+    //                     if(field) field.value = item?.getAttribute('value') || ''
+    //                 }
+    //             }
+    //             this.changePasswordFormIsShown = false
+    //             this._switchProfileEditable()
+    //         }
+    //     }
+    //     else {
+    //         // TODO: Fix AS
+    //         const editButton = document.getElementById(this.editDataButton.id)
+    //         if(editButton && !editButton.onclick) editButton.onclick = this._switchProfileEditable
+    //         const changPasswordButton = document.getElementById(this.changePasswordButton.id)
+    //         if(changPasswordButton && !changPasswordButton.onclick) changPasswordButton.onclick = () => {
+    //             this.changePasswordFormIsShown = true
+    //             this._switchProfileEditable()
+    //         }
+    //         const logoutButton = document.getElementById(this.logoutButton.id)
+    //         if(logoutButton && !logoutButton.onclick) logoutButton.onclick = goToLoginPage
+    //         const avatar = document.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
+    //         if(!avatar.onclick) avatar.onclick = () => {
+    //             this._showChangeAvatar()
+    //         }
+    //         this.сhangeAvatar.setOnApply()
+    //     }
+    // }
 
     _showChangeAvatar = () => {
         this.сhangeAvatar.show()

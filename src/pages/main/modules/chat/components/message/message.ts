@@ -3,7 +3,7 @@ import './message.scss'
 import templ from './message.tmpl'
 
 import { MESSAGE_TYPES } from "../../../../../../constants/message"
-import {getDateHoursAndMinutes} from "../../../../../../utils/date.utils"
+import {getDateHoursAndMinutes} from "../../../../../../utils/helpers/date.utils"
 
 export class Message {
 
