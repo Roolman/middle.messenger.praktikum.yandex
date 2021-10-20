@@ -2,17 +2,17 @@ export interface Subscription {
     unsubscribe: () => void
 }
 
-type InternalObserver = {
+export type InternalObserver = {
     onNext: Function,
     onError: Function,
     onCompleted: Function
 }
 
-type InternalSubscribe = (obs: InternalObserver) => Subscription
+export type InternalSubscribe = (obs: InternalObserver) => Subscription
 
 export class Observable {
 
-    private _subscribe: InternalSubscribe
+    protected _subscribe: InternalSubscribe
 
     constructor(subcribe?: InternalSubscribe) {
         if(subcribe) {
@@ -20,7 +20,7 @@ export class Observable {
         }
     }
 
-    subscribe(onNext: Function, onError?: Function, onCompleted?: Function) {
+    subscribe(onNext: Function, onError?: Function, onCompleted?: Function): Subscription {
         return this._subscribe({
             onNext: onNext,
             onError: onError || (() => {}),

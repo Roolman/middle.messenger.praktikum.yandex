@@ -4,8 +4,6 @@ import * as Handlebars from "handlebars"
 
 import { goToLoginPage, goToProfilePage } from './services/navigation'
 
-import {Observable} from "./utils/classes/observable"
-
 window.onload = () => {
     goToProfilePage()
 }
