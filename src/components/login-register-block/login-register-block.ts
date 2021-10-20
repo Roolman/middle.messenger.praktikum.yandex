@@ -32,7 +32,7 @@ export class LoginRegisterBlock extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         // Вставляем форму
         const actionsBlock = this.element.getElementsByClassName("login-register-block__actions")[0]
         if(!actionsBlock) {

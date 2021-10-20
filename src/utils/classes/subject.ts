@@ -15,10 +15,10 @@ export class Subject<T> {
 
     constructor() {
         this.observers = []
+        this._eventBus = new EventBus()
     }
 
     subscribe(onNext: Function, onError?: Function, onCompleted?: Function): Subscription {
-        this._eventBus = new EventBus()
 
         let onErrorFn = onError || (() => {})
         let onCompletedFn = onCompleted || (() => {})

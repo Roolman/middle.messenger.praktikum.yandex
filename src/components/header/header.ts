@@ -23,7 +23,7 @@ export class Header extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.goToError404 = new Button({
             title: "Ошибка 404",
             type: BUTTON_TYPES.LINK,

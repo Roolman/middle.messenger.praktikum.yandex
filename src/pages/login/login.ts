@@ -33,7 +33,7 @@ export class LoginPage extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         // Создаем форму
         this.loginInput = new Input({
             name: "login",

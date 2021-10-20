@@ -12,10 +12,11 @@ type ProxyObject = {
 export abstract class Component {
     static EVENTS = {
         INIT: "init",
-        FLOW_CDM: "flow:component-did-mount",
+        FLOW_CDI: "flow:component-did-init",
+        FLOW_CDR: "flow:component-did-render",
         FLOW_CDU: "flow:component-did-update",
-        FLOW_RENDER: "flow:render",
-        FLOW_INSERT_COMPONENTS: "flow:insert-components"
+        FLOW_CDM: "flow:component-did-mount",
+        FLOW_RENDER: "flow:render"
     }
 
     props: Object
@@ -45,14 +46,17 @@ export abstract class Component {
     }
 
     /*
-        Lifecycle:
-            INIT -> FLOW_RENDER -> FLOW_INSERT_COMPONENTS -> FLOW_CDM
+    Lifecycle:
+        Once:    INIT -> FLOW_CDI 
+
+        Repeted: FLOW_CDU -> FLOW_RENDER -> FLOW_INSERT_COMPONENTS -> FLOW_CDM
     */
     private _registerEvents(eventBus: EventBus) {
         eventBus.on(Component.EVENTS.INIT, this._init.bind(this))
         eventBus.on(Component.EVENTS.FLOW_RENDER, this._render.bind(this))
-        eventBus.on(Component.EVENTS.FLOW_INSERT_COMPONENTS, this._insertComponents.bind(this))
+        eventBus.on(Component.EVENTS.FLOW_CDR, this._componentDidRender.bind(this))
         eventBus.on(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
+        eventBus.on(Component.EVENTS.FLOW_CDI, this._componentDidInit.bind(this))
 
         eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
     }
@@ -62,17 +66,30 @@ export abstract class Component {
         this._element = this._createDocumentElement(tagName)
     }
 
+    // Внутренняя инициализация
     private _init() {
         this._createResources()
+        this._eventBus.emit(Component.EVENTS.FLOW_CDI)
+    }
+
+    // Компонент проинициализирован
+    // Можно планировать события  
+    private _componentDidInit() {
+        this.componentDidInit()
         this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
     }
 
+    componentDidInit() {}
+
+    // Компонент полностью собран
+    // Можно работать с элементами, DOM, событиями
     private _componentDidMount() {
         this.componentDidMount()
     }
 
     componentDidMount(oldProps?: Object) {}
 
+    // Компонент был обновлен
     private _componentDidUpdate(oldProps: Object, newProps: Object) {
         this.componentDidUpdate(oldProps, newProps)
         this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
@@ -88,7 +105,6 @@ export abstract class Component {
         }
 
         Object.assign(this.props, nextProps)
-        this._eventBus.emit(Component.EVENTS.FLOW_CDU)
     }
 
     get element() {
@@ -98,7 +114,7 @@ export abstract class Component {
     private _render() {
         const block = this.render()
         this._element.innerHTML = block
-        this._eventBus.emit(Component.EVENTS.FLOW_INSERT_COMPONENTS)
+        this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
     render(): string {
@@ -106,13 +122,14 @@ export abstract class Component {
     }
 
     // TODO: Разобраться с контекстом при вызове
-    // Внедрить другие компоненты в element
-    private _insertComponents() {
-        this.insertComponents()
+    // Шаблон был отренедрен
+    // Внедряем другие компоненты в element
+    private _componentDidRender() {
+        this.componentDidRender()
         this._eventBus.emit(Component.EVENTS.FLOW_CDM)
     }
 
-    insertComponents() {}
+    componentDidRender() {}
 
     getContent() {
         return this.element
@@ -120,8 +137,15 @@ export abstract class Component {
 
     private _makePropsProxy(props: Object) {
         return new Proxy(props, {
-            set(target: ProxyObject, prop: string, value: any) {
+            get: (target: ProxyObject, prop: string) => {
+                const value = target[prop]
+                return typeof value === "function" ? value.bind(target) : value
+            },
+            set: (target: ProxyObject, prop: string, value: any) => {
                 target[prop] = value
+
+                // TODO: Добавить cloneDeep
+                this._eventBus.emit(Component.EVENTS.FLOW_CDU, {...target}, target)
                 return true
             },
             deleteProperty() {

@@ -26,7 +26,7 @@ export class Form extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         for(let element of this.props.formElements) {
             this.element.appendChild(element)
         }

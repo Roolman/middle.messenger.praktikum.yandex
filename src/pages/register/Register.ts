@@ -34,7 +34,7 @@ export class RegisterPage extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         // Создаем компоненты формы
         this.emailInput = new Input({
             name: "email",

@@ -29,7 +29,7 @@ export default
                     <div class="chats__chat-message">
                         <span class="chats__chat-name">{{ this.name }}</span>
                         <span class="chats__chat-last-message-time">
-                            {{ this.lastMessageTime }}
+                            {{ this.lastMessageTimeShort }}
                         </span>
                     </div>
                     <div class="chats__chat-info">

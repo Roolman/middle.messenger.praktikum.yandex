@@ -23,7 +23,7 @@ export class MainPage extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.chats = new Chats()
         this.chat = new Chat()
         this.element.appendChild(this.chats.element)

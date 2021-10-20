@@ -35,7 +35,7 @@ export class Chat extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.sendButton = new Button({
             type: BUTTON_TYPES.ROUND,
             theme: BUTTON_THEMES.PRIMARY,

@@ -60,7 +60,7 @@ export class ProfilePage extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         // Кнопочки
         this.returnButton = new Button({
             title: '',

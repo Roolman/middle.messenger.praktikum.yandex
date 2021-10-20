@@ -1,6 +1,7 @@
 import { CHATS } from "../mock/chats"
 import { Observable } from "../utils/classes/observable"
 import { Subject } from "../utils/classes/subject"
+import { getShortChatDate } from "../utils/helpers/date.utils"
 
 export type Chat = {
     id: number,
@@ -9,6 +10,7 @@ export type Chat = {
     lastMessage: string,
     lastMessageSentByUser: boolean,
     lastMessageTime: Date,
+    lastMessageTimeShort: string,
     unreadCount: number
 }
 
@@ -25,7 +27,10 @@ export class ChatsService {
     }
 
     getChats(): void {
-        this._chats = CHATS
+        // TODO: Fix AS
+        this._chats = CHATS.map(x => {
+            return {...x, lastMessageTimeShort: getShortChatDate(x.lastMessageTime as Date)}
+        })
         this._chatsSubject.next(this._chats)
     }
 

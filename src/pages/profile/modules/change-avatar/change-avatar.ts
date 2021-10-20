@@ -22,7 +22,7 @@ export class ChangeAvatar extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.applyButton = new Button({title: "Изменить"})
         const block = this.element.getElementsByClassName('change-avatar__elements')[0] as HTMLElement
         if(!block) {

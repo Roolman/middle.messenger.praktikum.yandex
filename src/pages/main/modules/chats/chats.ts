@@ -6,15 +6,18 @@ import templ from './Chats.tmpl'
 import {Button} from "../../../../components/Button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
-import {getShortChatDate} from "../../../../utils/helpers/date.utils"
-
-import {CHATS} from "../../../../mock/chats"
 import { Component } from "../../../../utils/classes/component"
 import { goToProfilePage } from "../../../../services/navigation"
 import { Inject } from "../../../../utils/decorators/inject"
-import { ChatsService } from "../../../../services/chats.service"
+import { Chat, ChatsService } from "../../../../services/chats.service"
+
+type ChatsProps = {
+    chats: Chat[]
+}
 
 export class Chats extends Component {
+
+    props: ChatsProps
 
     profileLink: HTMLElement
     addChatButton: Button
@@ -26,20 +29,23 @@ export class Chats extends Component {
         super("div")
     }
 
-    render() {
-        console.log(this._chatsService)
+    componentDidInit() {
+        this._chatsService.chatsObservable.subscribe(
+            (chats: Chat[]) => {
+                this.setProps({ chats })
+            }
+        )
+        this._chatsService.getChats()
+    }
 
+    render() {
         this.element.classList.add("chats")
         const template = Handlebars.compile(templ)
-        // TODO: Fix AS
-        const chatsViewData = CHATS.map(x => {
-            return {...x, lastMessageTime: getShortChatDate(x.lastMessageTime as Date)}
-        })
-        const result = template({chats: chatsViewData})
+        const result = template({...this.props})
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.profileLink = this.element.getElementsByClassName("chats__profile-link")[0] as HTMLElement
         if(!this.profileLink || !this.profileLink.parentElement) {
             throw new Error("Ошибка рендеринга Chats")

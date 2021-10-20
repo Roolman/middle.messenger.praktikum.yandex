@@ -22,7 +22,7 @@ export class Error500Page extends Component {
         return result
     }
 
-    insertComponents() {
+    componentDidRender() {
         this.goToMainButton = new Button({
             title: "Назад к чатам", 
             type: BUTTON_TYPES.LINK
