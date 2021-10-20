@@ -7,6 +7,7 @@ type InputProps = {
     name: string,
     title: string,
     type: string,
+    value?: string,
     errorMessage: string,
 }
 
@@ -14,6 +15,13 @@ export class Input extends Component {
 
     constructor(props: InputProps) {
         super("div", props)
+    }
+
+    setDefaultProps(props: InputProps) {
+        return {
+            ...props,
+            value: props.value || ''
+        }
     }
 
     render() {

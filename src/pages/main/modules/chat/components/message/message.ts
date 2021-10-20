@@ -1,60 +1,61 @@
 import * as Handlebars from "handlebars"
 import './message.scss'
-import templ from './message.tmpl'
+import templ from './Message.tmpl'
 
 import { MESSAGE_TYPES } from "../../../../../../constants/message"
 import {getDateHoursAndMinutes} from "../../../../../../utils/helpers/date.utils"
+import { Component } from "../../../../../../utils/classes/component"
 
-export class Message {
+type MessageProps = {
+    id: string,
+    type: string,
+    value: string,
+    time: Date,
+    sentByUser: boolean
+}
 
-    content
-    type
-    // Параметры content
-    messageClass = ""
-    id
-    value
-    time
-    sentByUser
+export class Message extends Component {
 
-    constructor(id: string, type = MESSAGE_TYPES.TEXT, value: string, time: Date, sentByUser: boolean) {
-        this.id = id
-        this.value = value
-        this.type = type
-        this.time = time
-        this.sentByUser = sentByUser
-        this.content = this.render()
+    props: MessageProps
+
+    constructor(props: MessageProps) {
+        super("div", props)
     }
 
     render() {
-        const template = Handlebars.compile(templ)
         this._defineClass()
+        const template = Handlebars.compile(templ)
         const result = template({
-            id: this.id,
-            type: this.type,
-            value: this.value,
-            time: getDateHoursAndMinutes(this.time),
-            messageClass: this.messageClass
+            ...this.props,
+            time: getDateHoursAndMinutes(this.props.time),
         })
         return result
     }
 
     _defineClass() {
-        switch(this.type) {
+        this.element.classList.add("message")
+        let typeClass: string = ''
+        switch(this.props.type) {
             case MESSAGE_TYPES.TEXT:
-                this.messageClass += "message_text"
+                typeClass = "message_text"
                 break
             case MESSAGE_TYPES.IMAGE:
-                this.messageClass += "message_image"
+                typeClass = "message_image"
                 break
             default: 
                 break
         }
-        if(this.sentByUser) {
-            this.messageClass += " message_sent-by-user"
+        if(typeClass) {
+            this.element.classList.add(typeClass)
+        }
+        let sentByClass: string = ''
+        if(this.props.sentByUser) {
+            sentByClass = "message_sent-by-user"
         }
         else {
-            this.messageClass += " message_sent-not-by-user"
+            sentByClass = "message_sent-not-by-user"
         }
+        this.element.classList.add(sentByClass)
     }
 
 }

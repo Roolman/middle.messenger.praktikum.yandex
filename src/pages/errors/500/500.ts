@@ -5,35 +5,32 @@ import templ from './500.tmpl'
 import {Button} from "../../../components/Button"
 import { BUTTON_TYPES } from "../../../constants/button"
 import { goToMainPage } from "../../../services/navigation"
+import { Component } from "../../../utils/classes/component"
 
-export class Error500Page {
+export class Error500Page extends Component {
 
     goToMainButton: Button
-    goToMainButtonName = "goToMainButton"
 
-    init() {
-        // Вставляем шаблон
-        const root = document.getElementById("root")
-        const error500Page = document.createElement("div")
-        error500Page.id = "error500Page"
-        error500Page.innerHTML = this.render()
-        if(!root) {
-            throw new Error("Не был получен корневой элемент!")
-        }
-        root.appendChild(error500Page)
-        //
-        if(this.goToMainButton) this.goToMainButton.getContent().onclick = goToMainPage
+    constructor() {
+        super("div")
     }
 
     render() {
-        this.goToMainButton = new Button({
-            title: "Назад к чатам", 
-            type: BUTTON_TYPES.LINK
-        })
-        Handlebars.registerPartial("error500goToMainButton", this.goToMainButton.render())
+        this.element.classList.add("error500")
         const template = Handlebars.compile(templ)
         const result = template({})
         return result
     }
 
+    insertComponents() {
+        this.goToMainButton = new Button({
+            title: "Назад к чатам", 
+            type: BUTTON_TYPES.LINK
+        })
+        this.element.appendChild(this.goToMainButton.element)
+    }
+
+    componentDidMount() {
+        this.goToMainButton.element.onclick = goToMainPage
+    }
 }

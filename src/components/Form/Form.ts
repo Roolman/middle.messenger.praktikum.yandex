@@ -15,6 +15,10 @@ export class Form extends Component {
         super("form", props)
     }
 
+    get formElements() {
+        return this.props.formElements
+    }
+
     render() {
         this.element.classList.add("form")
         const template = Handlebars.compile(templ)

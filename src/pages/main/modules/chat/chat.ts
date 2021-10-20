@@ -1,39 +1,30 @@
 import * as Handlebars from "handlebars"
 
 import './chat.scss'
-import templ, {emptyChat} from './chat.tmpl'
+import templ, {emptyChat} from './Chat.tmpl'
 
 import {Button} from "../../../../components/Button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
 import { CHAT, MESSAGES } from "../../../../mock/chat"
+import { Component } from "../../../../utils/classes/component"
 
-export class Chat {
+export class Chat extends Component {
 
-    content: string
-    //
     sendButton: Button
 
     constructor() {
-        this.init()
-    }
-
-    init() {
-        Handlebars.registerPartial("emptyChat", emptyChat)
-        this.content = this.render()
+        super("div")
     }
 
     render() {
-        this.sendButton = new Button({
-            title: '',
-            type: BUTTON_TYPES.ROUND,
-            theme: BUTTON_THEMES.PRIMARY,
-            iconClass: "fa fa-arrow-right"
-        })
-        Handlebars.registerPartial("sendButton", this.sendButton.render())
+        this.element.classList.add("chat")
+        Handlebars.registerPartial("emptyChat", emptyChat)
         Handlebars.registerHelper("chatMessage", function (id, type, value, time, sentByUser) {
-            const message = new Message(id, type, value, time, sentByUser)
-            return new Handlebars.SafeString(message.content)
+            const message = new Message({
+                id, type, value, time, sentByUser
+            })
+            return new Handlebars.SafeString(message.element.outerHTML)
         })
         const template = Handlebars.compile(templ)
         const result = template({
@@ -42,6 +33,16 @@ export class Chat {
             messages: MESSAGES
         })
         return result
+    }
+
+    insertComponents() {
+        this.sendButton = new Button({
+            type: BUTTON_TYPES.ROUND,
+            theme: BUTTON_THEMES.PRIMARY,
+            iconClass: "fa fa-arrow-right"
+        })
+        const chat_input = this.element.getElementsByClassName("chat__input")[0] as HTMLElement
+        chat_input.appendChild(this.sendButton.element)
     }
 
 }

@@ -6,7 +6,7 @@ import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
 import { Component } from "../../utils/classes/component"
 
 type ButtonProps = {
-    title: string,
+    title?: string,
     type?: string,
     theme?: string,
     [key: string]: any
@@ -23,6 +23,7 @@ export class Button extends Component {
     setDefaultProps(props: ButtonProps): ButtonProps {
         return {
             ...props,
+            title: props.title || '',
             type: props.type || BUTTON_TYPES.BASIC,
             theme: props.theme || BUTTON_THEMES.PRIMARY
         }

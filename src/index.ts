@@ -2,15 +2,10 @@ import '../node_modules/font-awesome/scss/font-awesome.scss'
 import './styles/index.scss'
 import * as Handlebars from "handlebars"
 
-import { LoginPage } from './pages/login/index'
+import { goToLoginPage, goToProfilePage } from './services/navigation'
 
 window.onload = () => {
-    const loginPage = new LoginPage()
-    const root = document.getElementById("root")
-    if(!root) {
-        throw new Error("Не был получен корневой элемент!")
-    }
-    root.appendChild(loginPage.element)
+    goToLoginPage()
 }
 
 // Глобальный хэлпер

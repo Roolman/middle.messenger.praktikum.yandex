@@ -24,30 +24,38 @@ const removeAllChildNodes = (myNode: HTMLElement) => {
 const goToAnyPage = (page: number) => {
 
     const root = document.getElementById("root")
+    if(!root) {
+        throw new Error("Ошибка перехода! Root не найден")
+    }
     if(root) removeAllChildNodes(root)
+
+    let pageElement: HTMLElement
 
     switch(page) {
         case PAGES.REGISTER:
-            new RegisterPage().init()
+            pageElement = new RegisterPage().element
             break
         case PAGES.LOGIN:
-            new LoginPage().init()
+            pageElement = new LoginPage().element
             break   
         case PAGES.MAIN:
-            new MainPage().init()
+            pageElement = new MainPage().element
             break 
         case PAGES.PROFILE:
-            new ProfilePage().init()
+            pageElement = new ProfilePage().element
             break             
         case PAGES.ERROR404:
-            new Error404Page().init()
+            pageElement = new Error404Page().element
             break 
         case PAGES.ERROR500:
-            new Error500Page().init()
-            break 
+            pageElement = new Error500Page().element
+            break
         default:
+            pageElement = new RegisterPage().element
             break                                                        
     }
+
+    root.appendChild(pageElement)
 }
 
 export function goToRegisterPage(): void {

@@ -1,4 +1,12 @@
-export let PROFILE_DATA = [
+export type ProfileField = {
+    name: string,
+    type: string,
+    title: string,
+    value: string,
+    errorMessage: string
+}
+
+export let PROFILE_DATA: Array<ProfileField> = [
     {
         name: "email",
         type: "email",

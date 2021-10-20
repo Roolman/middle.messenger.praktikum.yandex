@@ -51,13 +51,4 @@ export class LoginRegisterBlock extends Component {
 
     }
 
-    componentDidMount() {
-        // TODO: Remove
-        setTimeout(() => {
-            this.mainButton.setProps({title: "TEST"})
-            console.log(this.mainButton)
-        }, 5000)
-
-    }
-
 }

@@ -1,39 +1,37 @@
 import * as Handlebars from "handlebars"
 import './change-avatar.scss'
-import templ from './change-avatar.tmpl'
+import templ from './Change-avatar.tmpl'
 
 import { Button } from "../../../../components/Button/index"
+import { Component } from "../../../../utils/classes/component"
 
-export class ChangeAvatar {
+export class ChangeAvatar extends Component {
 
-    content: string
     // Аргументы входные
     applyButton: Button
-    applyButtonName = "applyButton"
 
     constructor() {
-        this.content = this.render()
+        super("div")
     }
 
     render() {
+        this.element.classList.add("change-avatar")
         const template = Handlebars.compile(templ)
-        this.applyButton = new Button({title: "Изменить"})
-        Handlebars.registerPartial('applyButton', this.applyButton.render())
         const result = template({})
         return result
     }
 
-    setOnApply() {
-        // TODO: Fix AS
-        const block = document.getElementsByClassName('change-avatar')[0] as HTMLElement
-        const applyButton = document.getElementById(this.applyButtonName)
-        if(applyButton && !applyButton.onclick) applyButton.onclick = () => block.style.visibility = "hidden"
+    insertComponents() {
+        this.applyButton = new Button({title: "Изменить"})
+        const block = this.element.getElementsByClassName('change-avatar__elements')[0] as HTMLElement
+        if(!block) {
+            throw new Error("Ошибка рендеринга ChangeAvatar")
+        }
+        block.appendChild(this.applyButton.element)
     }
 
-    show() {
-        // TODO: Fix AS
-        const block = document.getElementsByClassName('change-avatar')[0] as HTMLElement
-        block.style.visibility = "visible"
+    componentDidMount() {
+        this.applyButton.element.onclick = () => this.hide()
     }
 
 }

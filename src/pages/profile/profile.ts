@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars"
 
 import './profile.scss'
-import templ from './profile.tmpl'
+import templ from './Profile.tmpl'
 
 import {Input} from "../../components/Input/index"
 import {Button} from "../../components/Button/index"
@@ -10,50 +10,57 @@ import {ChangeAvatar} from "./modules/change-avatar"
 
 import {goToMainPage} from "../../services/navigation"
 import {goToLoginPage} from "../../services/navigation"
-import { PROFILE_DATA } from "../../mock/profile"
+import { ProfileField, PROFILE_DATA } from "../../mock/profile"
+import { Component } from "../../utils/classes/component"
+import { Form } from "../../components/Form"
 
+type ProfilePageProps = {
+    profileData: Array<ProfileField>
+    profileIsEditable: boolean
+    changePasswordFormIsShown: boolean
+}
 
-export class ProfilePage {
+export class ProfilePage extends Component {
 
-    page: HTMLElement
+    props: ProfilePageProps
+
     // Кнопки
     returnButton: Button
     editDataButton: Button
     changePasswordButton: Button
     logoutButton: Button
     profileSaveButton: Button
+    // Вернуться в профиль
+    profileReturn: HTMLElement
     // Форма для данных
-    profileEditForm
-    profileFormName = "profileEditForm"
+    profileEditForm: Form
+    profileEditFormInputs: Array<Input>
     // Форма для пароля
-    passwordChangeFormName = "passwordChangeForm"
-    // Состояния страницы
-    profileIsEditable
-    changePasswordFormIsShown
+    passwordForm: Form
     // Модуль смены аватара
     сhangeAvatar: ChangeAvatar
     
     constructor() {
-        this.profileEditForm = {}
-        this.profileIsEditable = false
-        this.changePasswordFormIsShown = false
+        super("div", {})
     }
 
-    init() {
-        // Вставляем шаблон
-        const root = document.getElementById("root")
-        this.page = document.createElement("div")
-        this.page.id = "profilePage"
-        this.page.innerHTML = this.render()
-        if(!root) {
-            throw new Error("Не был получен корневой элемент!")
+    setDefaultProps(props: ProfilePageProps): ProfilePageProps {
+        return {
+            ...props,
+            profileData: PROFILE_DATA,
+            profileIsEditable: false,
+            changePasswordFormIsShown: false
         }
-        root.appendChild(this.page)
-        // Вешаем обработчики
-        // this._setHandlers()
     }
 
     render() {
+        this.element.classList.add("profile")
+        const template = Handlebars.compile(templ)
+        const result = template({ ...this.props })
+        return result
+    }
+
+    insertComponents() {
         // Кнопочки
         this.returnButton = new Button({
             title: '',
@@ -61,95 +68,117 @@ export class ProfilePage {
             theme: BUTTON_THEMES.PRIMARY,
             iconClass:'fa fa-arrow-left'
         })
-        Handlebars.registerPartial("returnButton", this.returnButton.render())
         this.editDataButton = new Button({
             title: "Изменить данные",
             type: BUTTON_TYPES.LINK
         })
-        Handlebars.registerPartial("editDataButton", this.editDataButton.render())
         this.changePasswordButton = new Button({
             title: 'Изменить пароль',
             type: BUTTON_TYPES.LINK
         })
-        Handlebars.registerPartial("changePasswordButton", this.changePasswordButton.render())
         this.logoutButton = new Button({
             title: 'Выйти',
             type: BUTTON_TYPES.LINK,
             theme: BUTTON_THEMES.DANGER
         })
-        Handlebars.registerPartial("logoutButton", this.logoutButton.render())
         this.profileSaveButton = new Button({
             title: "Сохранить"
         })
-        Handlebars.registerPartial("profileSaveButton", this.profileSaveButton.render())
-        // Инпут
-        Handlebars.registerHelper("profileInput", function(name, title, type, errorMessage, defaultValue) {
-            const input = new Input(name, name, title, type, errorMessage, defaultValue)
-            return new Handlebars.SafeString(input.content)
+        // Форма профиля
+        this.profileEditFormInputs = []
+        for(let element of this.props.profileData) {
+            const input = new Input({ ...element }) 
+            this.profileEditFormInputs.push(input)
+        }
+        this.profileEditForm = new Form({
+            formElements: this.profileEditFormInputs.map(x => x.element)
+        })
+        // Форма пароля
+        this.passwordForm = new Form({
+            formElements: [
+                new Input({name: "oldPassword", title: "Старый пароль", type: "password", errorMessage: "Введите старый пароль"}).element,
+                new Input({name: "newPassword", title: "Новый пароль", type: "password", errorMessage: "Пароли не совпадают"}).element
+            ]
         })
         // Смена аватара
         this.сhangeAvatar = new ChangeAvatar()
-        Handlebars.registerPartial("сhangeAvatar", this.сhangeAvatar.content)
-        //
-        const template = Handlebars.compile(templ)
-        const result = template({
-            profileData: PROFILE_DATA,
-            profileFormName: this.profileFormName,
-            passwordChangeFormName: this.passwordChangeFormName,
-            profileIsEditable: this.profileIsEditable,
-            changePasswordFormIsShown: this.changePasswordFormIsShown
-        })
-        return result
+
+        // Вставляем в DOM
+
+        // Кнопка вернуться к чатам
+        this.profileReturn = this.element.getElementsByClassName('profile__return')[0] as HTMLElement
+        this.profileReturn.appendChild(this.returnButton.element)
+        
+        // Дествия с профилем
+        const profileActions = this.element.getElementsByClassName('profile__main-actions')[0] as HTMLElement
+        if(this.props.profileIsEditable) {
+            profileActions.appendChild(this.profileSaveButton.element)
+        }
+        else {
+            profileActions.appendChild(this.editDataButton.element)
+            profileActions.appendChild(this.changePasswordButton.element)
+            profileActions.appendChild(this.logoutButton.element)
+        }
+
+        // Форма
+        const profileMainInfo = this.element.getElementsByClassName('profile__main-info')[0] as HTMLElement
+        if(this.props.profileIsEditable) {
+            if(this.props.changePasswordFormIsShown) {
+                profileMainInfo.appendChild(this.passwordForm.element)
+            }
+            else {
+                profileMainInfo.appendChild(this.profileEditForm.element)
+            }
+        }
+
+        // Смена аватара
+        this.element.appendChild(this.сhangeAvatar.element)
     }
 
-    _switchProfileEditable = () => {
-        this.profileIsEditable = !this.profileIsEditable
-        this.page.innerHTML = this.render()
-        // this._setHandlers()
-    }
-
-    // _setHandlers = () => {
-    //     // TODO: Fix AS
-    //     const goToMain = document.getElementsByClassName('profile__return')[0] as HTMLElement
-    //     if(!goToMain.onclick) goToMain.onclick = goToMainPage
-    //     if(this.profileIsEditable) {
-    //         const saveButton = document.getElementById(this.profileSaveButton.id)
-    //         if(saveButton && !saveButton.onclick) saveButton.onclick = () => {
-    //             // Тестовый код
-    //             if(!this.changePasswordFormIsShown) {
-    //                 const form: HTMLFormElement = document.getElementById(this.profileFormName) as HTMLFormElement
-    //                 const elements = form.elements
-    //                 for(let i=0; i < elements.length; i++){
-    //                     let item = elements.item(i)
-    //                     if(!item) continue
-    //                     const field = PROFILE_DATA.find(x => x.name == item?.getAttribute('name')) 
-    //                     if(field) field.value = item?.getAttribute('value') || ''
-    //                 }
-    //             }
-    //             this.changePasswordFormIsShown = false
-    //             this._switchProfileEditable()
-    //         }
-    //     }
-    //     else {
-    //         // TODO: Fix AS
-    //         const editButton = document.getElementById(this.editDataButton.id)
-    //         if(editButton && !editButton.onclick) editButton.onclick = this._switchProfileEditable
-    //         const changPasswordButton = document.getElementById(this.changePasswordButton.id)
-    //         if(changPasswordButton && !changPasswordButton.onclick) changPasswordButton.onclick = () => {
-    //             this.changePasswordFormIsShown = true
-    //             this._switchProfileEditable()
-    //         }
-    //         const logoutButton = document.getElementById(this.logoutButton.id)
-    //         if(logoutButton && !logoutButton.onclick) logoutButton.onclick = goToLoginPage
-    //         const avatar = document.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
-    //         if(!avatar.onclick) avatar.onclick = () => {
-    //             this._showChangeAvatar()
-    //         }
-    //         this.сhangeAvatar.setOnApply()
-    //     }
-    // }
-
-    _showChangeAvatar = () => {
-        this.сhangeAvatar.show()
+    componentDidMount() {
+        // Перейти к чатам
+        if(!this.profileReturn.onclick) this.profileReturn.onclick = goToMainPage
+        // Сохранить инфо по нажатию
+        if(this.props.profileIsEditable) {
+            this.profileSaveButton.element.onclick = () => {
+                // Тестовый код
+                if(!this.props.changePasswordFormIsShown) {
+                    const elements = this.profileEditForm.formElements
+                    for(let i=0; i < elements.length; i++){
+                        // TODO: Переписать или убрать
+                        let input = Array.from(Array.from(elements[i].children)[0].children)[0] as HTMLInputElement
+                        const field = this.props.profileData.find(x => x.name == input.getAttribute('name')) 
+                        if(field) field.value = input.value || ''
+                    }
+                }
+                // Переходим в режим просмотра
+                const newProps: ProfilePageProps = {
+                    profileData: this.props.profileData,
+                    changePasswordFormIsShown: false,
+                    profileIsEditable: false
+                }
+                this.setProps(newProps)
+            }
+        }
+        else {
+            // Кнопки
+            this.editDataButton.element.onclick = () => {
+                // Переходим в режим редактирования
+                this.setProps({
+                    changePasswordFormIsShown: false,
+                    profileIsEditable: true
+                })
+            }
+            this.changePasswordButton.element.onclick = () => {
+                this.setProps({
+                    changePasswordFormIsShown: true,
+                    profileIsEditable: true
+                })
+            }
+            this.logoutButton.element.onclick = goToLoginPage
+            // Аватар
+            const avatar = this.element.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
+            if(!avatar.onclick) avatar.onclick = () => this.сhangeAvatar.show()
+        }
     }
 }
