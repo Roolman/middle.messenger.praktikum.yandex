@@ -4,6 +4,8 @@ import * as Handlebars from "handlebars"
 
 import { goToLoginPage, goToProfilePage } from './services/navigation'
 
+import {Observable} from "./utils/classes/observable"
+
 window.onload = () => {
     goToProfilePage()
 }
@@ -16,3 +18,5 @@ Handlebars.registerHelper('if_eq', function(a: unknown, b: unknown, opts: Handle
         return opts.inverse(this)
     }
 })
+
+
