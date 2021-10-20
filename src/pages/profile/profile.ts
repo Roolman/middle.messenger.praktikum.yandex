@@ -178,7 +178,7 @@ export class ProfilePage extends Component {
             this.logoutButton.element.onclick = goToLoginPage
             // Аватар
             const avatar = this.element.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
-            if(!avatar.onclick) avatar.onclick = () => this.сhangeAvatar.show()
+            avatar.onclick = () => this.сhangeAvatar.show()
         }
     }
 }

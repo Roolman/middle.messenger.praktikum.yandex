@@ -5,7 +5,7 @@ import * as Handlebars from "handlebars"
 import { goToLoginPage, goToProfilePage } from './services/navigation'
 
 window.onload = () => {
-    goToLoginPage()
+    goToProfilePage()
 }
 
 // Глобальный хэлпер

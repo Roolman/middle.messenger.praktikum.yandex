@@ -1,5 +1,5 @@
 import * as Handlebars from "handlebars"
-import './change-avatar.scss'
+import './Change-avatar.scss'
 import templ from './Change-avatar.tmpl'
 
 import { Button } from "../../../../components/Button/index"
@@ -16,6 +16,7 @@ export class ChangeAvatar extends Component {
 
     render() {
         this.element.classList.add("change-avatar")
+        this.hide()
         const template = Handlebars.compile(templ)
         const result = template({})
         return result
