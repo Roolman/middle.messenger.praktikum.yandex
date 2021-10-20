@@ -11,17 +11,24 @@ import {getShortChatDate} from "../../../../utils/helpers/date.utils"
 import {CHATS} from "../../../../mock/chats"
 import { Component } from "../../../../utils/classes/component"
 import { goToProfilePage } from "../../../../services/navigation"
+import { Inject } from "../../../../utils/decorators/inject"
+import { ChatsService } from "../../../../services/chats.service"
 
 export class Chats extends Component {
 
     profileLink: HTMLElement
     addChatButton: Button
 
+    @Inject(ChatsService)
+    private _chatsService: ChatsService
+
     constructor() {
         super("div")
     }
 
     render() {
+        console.log(this._chatsService)
+
         this.element.classList.add("chats")
         const template = Handlebars.compile(templ)
         // TODO: Fix AS

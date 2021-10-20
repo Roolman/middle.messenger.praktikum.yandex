@@ -3,9 +3,17 @@ import './styles/index.scss'
 import * as Handlebars from "handlebars"
 
 import { goToLoginPage, goToProfilePage } from './services/navigation'
+import ServiceLocator from './services/serviceLocator'
+import { ChatsService } from './services/chats.service'
 
 window.onload = () => {
+    registerServices()
+
     goToProfilePage()
+}
+
+function registerServices() {
+    ServiceLocator.registerService(ChatsService, new ChatsService())
 }
 
 // Глобальный хэлпер

@@ -1,4 +1,6 @@
-export const CHATS = [
+import { Chat } from "../services/chats.service";
+
+export const CHATS: Chat[] = [
     {
         id: 1,
         name: "Андрей",
