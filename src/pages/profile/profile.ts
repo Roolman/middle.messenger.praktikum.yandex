@@ -15,6 +15,7 @@ import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
 import { ProfileField, ProfileFieldValue, ProfileService } from "../../services/profile.service"
 import { Inject } from "../../utils/decorators/inject"
+import { Observable } from "../../utils/classes/observable"
 
 type ProfilePageProps = {
     profileData: Array<ProfileField>
@@ -59,6 +60,7 @@ export class ProfilePage extends Component {
     }
 
     componentDidInit() {
+        this._profileService.getProfile()
         this._subscriptions.push(this._profileService.profileObservable.subscribe(
             (profile: ProfileField[]) => {
                 this.setProps({
@@ -152,51 +154,75 @@ export class ProfilePage extends Component {
 
     componentDidMount() {
         // Перейти к чатам
-        if(!this.profileReturn.onclick) this.profileReturn.onclick = goToMainPage
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.profileReturn, "click")
+            .subscribe(
+                () => goToMainPage()
+        ))
         // Сохранить инфо по нажатию
-        if(this.props.profileIsEditable) {
-            this.profileSaveButton.element.onclick = () => {
-                const fieldValues: ProfileFieldValue[] = [] 
-                // Тестовый код
-                if(!this.props.changePasswordFormIsShown) {
-                    const elements = this.profileEditForm.formElements
-                    for(let i=0; i < elements.length; i++){
-                        // TODO: Переписать или убрать
-                        let input = Array.from(Array.from(elements[i].children)[0].children)[0] as HTMLInputElement
-                        fieldValues.push({
-                            name: input.getAttribute('name') as string,
-                            value: input.value
-                        })
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.profileSaveButton.element, "click")
+            .subscribe(
+                () => {
+                    const fieldValues: ProfileFieldValue[] = [] 
+                    // Тестовый код
+                    if(!this.props.changePasswordFormIsShown) {
+                        const elements = this.profileEditForm.formElements
+                        for(let i=0; i < elements.length; i++){
+                            // TODO: Переписать или убрать
+                            let input = Array.from(Array.from(elements[i].children)[0].children)[0] as HTMLInputElement
+                            fieldValues.push({
+                                name: input.getAttribute('name') as string,
+                                value: input.value
+                            })
+                        }
                     }
+                    // Меняем значения через сервис
+                    this._profileService.setProfile(fieldValues)
+                    // Переходим в режим просмотра
+                    this.setProps({
+                        changePasswordFormIsShown: false,
+                        profileIsEditable: false
+                    })
                 }
-                // Меняем значения через сервис
-                this._profileService.setProfile(fieldValues)
-                // Переходим в режим просмотра
-                this.setProps({
-                    changePasswordFormIsShown: false,
-                    profileIsEditable: false
-                })
-            }
-        }
-        else {
-            // Кнопки
-            this.editDataButton.element.onclick = () => {
+        ))
+        // Кнопки
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.editDataButton.element, "click")
+            .subscribe(() => {
                 // Переходим в режим редактирования
                 this.setProps({
                     changePasswordFormIsShown: false,
                     profileIsEditable: true
                 })
-            }
-            this.changePasswordButton.element.onclick = () => {
+            })
+        )
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.changePasswordButton.element, "click")
+            .subscribe(() => {
                 this.setProps({
                     changePasswordFormIsShown: true,
                     profileIsEditable: true
                 })
-            }
-            this.logoutButton.element.onclick = goToLoginPage
-            // Аватар
+            })
+        )
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.logoutButton.element, "click")
+            .subscribe(() => goToLoginPage())
+        )
+        // Аватар
+        if(!this.props.profileIsEditable) {
             const avatar = this.element.getElementsByClassName('profile__main-avatar-container')[0] as HTMLFormElement
-            avatar.onclick = () => this.сhangeAvatar.show()
+            this._onMountSubscriptions.push(
+                Observable
+                .fromEvent(avatar, "click")
+                .subscribe(() => this.сhangeAvatar.show())
+            )
         }
     }
 }

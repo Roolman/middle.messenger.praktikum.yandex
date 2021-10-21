@@ -33,7 +33,7 @@ export class ChangeAvatar extends Component {
     }
 
     componentDidMount() {
-        this._subscriptions.push(
+        this._onMountSubscriptions.push(
             Observable.fromEvent(this.applyButton.element, 'click')
                         .subscribe(() => this.hide())   
         )

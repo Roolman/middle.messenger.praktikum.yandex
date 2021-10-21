@@ -74,11 +74,11 @@ export class LoginPage extends Component {
     }
 
     componentDidMount() {
-        this._subscriptions.push(
+        this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.mainButton.element, 'click')
                         .subscribe(() => goToMainPage())   
         )
-        this._subscriptions.push(
+        this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.secondButton.element, 'click')
                         .subscribe(() => goToRegisterPage())   
         )

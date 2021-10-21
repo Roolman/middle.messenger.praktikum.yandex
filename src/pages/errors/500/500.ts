@@ -32,7 +32,7 @@ export class Error500Page extends Component {
     }
 
     componentDidMount() {
-        this._subscriptions.push(Observable.fromEvent(this.goToMainButton.element, 'click').subscribe(
+        this._onMountSubscriptions.push(Observable.fromEvent(this.goToMainButton.element, 'click').subscribe(
             () => goToMainPage()
         ))    
     }

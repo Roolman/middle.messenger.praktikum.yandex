@@ -63,10 +63,8 @@ export class Chats extends Component {
         this._onMountSubscriptions.push(Observable.fromEvent(this.profileLink, "click").subscribe(
             (event: MouseEvent) => {
                 event.preventDefault()
-                console.log(event)
                 goToProfilePage()
-            },
-            (err: any) => console.log(err)
+            }
         ))
     }
 

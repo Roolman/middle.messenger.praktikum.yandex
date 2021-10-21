@@ -105,11 +105,11 @@ export class RegisterPage extends Component {
     }
 
     componentDidMount() {
-        this._subscriptions.push(
+        this._onMountSubscriptions.push(
             Observable.fromEvent(this.registerBlock.mainButton.element, 'click')
                         .subscribe(() => alert("Зареган!"))   
         )
-        this._subscriptions.push(
+        this._onMountSubscriptions.push(
             Observable.fromEvent(this.registerBlock.secondButton.element, 'click')
                         .subscribe(() => goToLoginPage())   
         )
