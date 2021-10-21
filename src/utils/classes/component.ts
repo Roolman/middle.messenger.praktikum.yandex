@@ -1,4 +1,7 @@
+import { MutationsObservation } from "../../services/mutationObserver"
+import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
+import { Subscription } from "./observable"
 
 type ComponentMeta = {
     tagName: string
@@ -16,17 +19,32 @@ export abstract class Component {
         FLOW_CDR: "flow:component-did-render",
         FLOW_CDU: "flow:component-did-update",
         FLOW_CDM: "flow:component-did-mount",
+        FLOW_CDUM: "flow:component-did-unmount",
         FLOW_RENDER: "flow:render"
     }
 
     props: Object
 
+    @Inject(MutationsObservation)
+    private _mutationsObservation: MutationsObservation
     private _eventBus: EventBus
+
+    protected _subscriptions: Subscription[]
+
     private _element: HTMLElement
     private _meta: ComponentMeta
 
+    get element() {
+        return this._element
+    }
+
+    getContent() {
+        return this.element
+    }
+
     constructor(tagName: string = "div", props: Object = {}) {
         this._eventBus = new EventBus()
+        this._subscriptions = []
         this._meta = {
             tagName,
             props
@@ -57,8 +75,18 @@ export abstract class Component {
         eventBus.on(Component.EVENTS.FLOW_CDR, this._componentDidRender.bind(this))
         eventBus.on(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
         eventBus.on(Component.EVENTS.FLOW_CDI, this._componentDidInit.bind(this))
-
+        eventBus.on(Component.EVENTS.FLOW_CDUM, this._componentDidUnmount.bind(this))
         eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
+    }
+
+    private _unregisterEvents(eventBus: EventBus) {
+        eventBus.off(Component.EVENTS.INIT, this._init.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_RENDER, this._render.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_CDR, this._componentDidRender.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_CDI, this._componentDidInit.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_CDUM, this._componentDidUnmount.bind(this))
+        eventBus.off(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
     }
 
     private _createResources() {
@@ -69,6 +97,14 @@ export abstract class Component {
     // Внутренняя инициализация
     private _init() {
         this._createResources()
+        this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
+            (mutationRecords: MutationRecord[]) => {
+                if(!document.body.contains(this._element)) {
+                    console.log("Удален из дерева!")
+                    this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
+                }
+            }
+        ))
         this._eventBus.emit(Component.EVENTS.FLOW_CDI)
     }
 
@@ -81,34 +117,8 @@ export abstract class Component {
 
     componentDidInit() {}
 
-    // Компонент полностью собран
-    // Можно работать с элементами, DOM, событиями
-    private _componentDidMount() {
-        this.componentDidMount()
-    }
-
-    componentDidMount(oldProps?: Object) {}
-
-    // Компонент был обновлен
-    private _componentDidUpdate(oldProps: Object, newProps: Object) {
-        this.componentDidUpdate(oldProps, newProps)
-        this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
-    }
-
     componentDidUpdate(oldProps: Object, newProps: Object) {
         return true
-    }
-
-    setProps = (nextProps: Object) => {
-        if (!nextProps) {
-            return
-        }
-
-        Object.assign(this.props, nextProps)
-    }
-
-    get element() {
-        return this._element
     }
 
     private _render() {
@@ -131,8 +141,56 @@ export abstract class Component {
 
     componentDidRender() {}
 
-    getContent() {
-        return this.element
+    // Компонент полностью собран
+    // Можно работать с элементами, DOM, событиями
+    private _componentDidMount() {
+        this.componentDidMount()
+    }
+
+    componentDidMount(oldProps?: Object) {}
+
+    // Компонент исчез из дерева
+    // Можно закрыть подпикси. Очистить все данные
+    private _componentDidUnmount() {
+        this.componentDidUnmount()
+        // Удаляем все подписки
+        for(let sub of this._subscriptions) {
+            sub.unsubscribe()
+        }
+        // Удаляем события из EventBus
+        this._unregisterEvents(this._eventBus);
+        // Удаляем все свойства
+        // TODO: Придумать другой метод
+        for(let [key, value] of Object.entries(this)) {
+            (this as any)[key] = null;
+        }
+    }
+
+    componentDidUnmount() {}
+
+    // Компонент был обновлен
+    private _componentDidUpdate(oldProps: Object, newProps: Object) {
+        this.componentDidUpdate(oldProps, newProps)
+        this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
+    }
+
+    // TODO: Додумать обработку утечек
+    setProps = (nextProps: Object) => {
+        try{
+            if (!nextProps) {
+                return
+            }
+
+            Object.assign(this.props, nextProps)
+        }
+        catch(err) {
+            throw new Error(
+                `
+                Ошибка установки параметров компоненту.
+                Убедитесь, что все подписки были добавлены в this._subscriptions !
+                `
+            )
+        }
     }
 
     private _makePropsProxy(props: Object) {

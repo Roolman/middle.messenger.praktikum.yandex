@@ -5,6 +5,7 @@ import * as Handlebars from "handlebars"
 import { goToLoginPage, goToProfilePage } from './services/navigation'
 import ServiceLocator from './services/serviceLocator'
 import { ChatsService } from './services/chats.service'
+import { MutationsObservation } from './services/mutationObserver'
 
 window.onload = () => {
     registerServices()
@@ -14,6 +15,7 @@ window.onload = () => {
 
 function registerServices() {
     ServiceLocator.registerService(ChatsService, new ChatsService())
+    ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
 }
 
 // Глобальный хэлпер

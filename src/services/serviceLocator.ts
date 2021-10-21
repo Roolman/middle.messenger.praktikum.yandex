@@ -26,4 +26,4 @@ class ServiceLocator {
     }
 }
 
-export default (new ServiceLocator);
+export default (new ServiceLocator)

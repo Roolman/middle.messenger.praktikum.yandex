@@ -30,4 +30,8 @@ export class MainPage extends Component {
         this.element.appendChild(this.chat.element)
     }
 
+    componentDidUnmount() {
+        
+    }
+
 }

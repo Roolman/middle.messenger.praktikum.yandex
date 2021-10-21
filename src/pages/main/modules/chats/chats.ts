@@ -30,11 +30,11 @@ export class Chats extends Component {
     }
 
     componentDidInit() {
-        this._chatsService.chatsObservable.subscribe(
+        this._subscriptions.push(this._chatsService.chatsObservable.subscribe(
             (chats: Chat[]) => {
                 this.setProps({ chats })
             }
-        )
+        ))
         this._chatsService.getChats()
     }
 
@@ -63,6 +63,10 @@ export class Chats extends Component {
             event.preventDefault()
             goToProfilePage()
         }
+    }
+
+    componentDidUnmount() {
+
     }
 
 }
