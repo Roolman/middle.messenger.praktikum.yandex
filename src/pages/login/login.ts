@@ -11,6 +11,7 @@ import { Header } from "../../components/Header/index"
 import { goToRegisterPage, goToMainPage } from "../../services/navigation"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
+import { Observable } from "../../utils/classes/observable"
 
 export class LoginPage extends Component {
 
@@ -73,8 +74,14 @@ export class LoginPage extends Component {
     }
 
     componentDidMount() {
-        this.loginBlock.mainButton.element.onclick = () => goToMainPage()
-        this.loginBlock.secondButton.element.onclick = () => goToRegisterPage()
+        this._subscriptions.push(
+            Observable.fromEvent(this.loginBlock.mainButton.element, 'click')
+                        .subscribe(() => goToMainPage())   
+        )
+        this._subscriptions.push(
+            Observable.fromEvent(this.loginBlock.secondButton.element, 'click')
+                        .subscribe(() => goToRegisterPage())   
+        )
     }
 
 }

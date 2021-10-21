@@ -6,6 +6,7 @@ import { goToLoginPage, goToProfilePage } from './services/navigation'
 import ServiceLocator from './services/serviceLocator'
 import { ChatsService } from './services/chats.service'
 import { MutationsObservation } from './services/mutationObserver'
+import { ProfileService } from './services/profile.service'
 
 window.onload = () => {
     registerServices()
@@ -15,6 +16,7 @@ window.onload = () => {
 
 function registerServices() {
     ServiceLocator.registerService(ChatsService, new ChatsService())
+    ServiceLocator.registerService(ProfileService, new ProfileService())
     ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
 }
 

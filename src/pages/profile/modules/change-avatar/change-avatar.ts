@@ -4,6 +4,7 @@ import templ from './Change-avatar.tmpl'
 
 import { Button } from "../../../../components/Button/index"
 import { Component } from "../../../../utils/classes/component"
+import { Observable } from "../../../../utils/classes/observable"
 
 export class ChangeAvatar extends Component {
 
@@ -32,7 +33,10 @@ export class ChangeAvatar extends Component {
     }
 
     componentDidMount() {
-        this.applyButton.element.onclick = () => this.hide()
+        this._subscriptions.push(
+            Observable.fromEvent(this.applyButton.element, 'click')
+                        .subscribe(() => this.hide())   
+        )
     }
 
 }

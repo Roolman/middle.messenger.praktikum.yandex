@@ -29,7 +29,11 @@ export abstract class Component {
     private _mutationsObservation: MutationsObservation
     private _eventBus: EventBus
 
+    // Подписки, удаляющиеся при FLOW_CDUM
     protected _subscriptions: Subscription[]
+    // Подписки, удаляющиеся при FLOW_CDU или при FLOW_CDUM
+    // NOTE: Подумать как уйти от этой необходимости
+    protected _onMountSubscriptions: Subscription[]
 
     private _element: HTMLElement
     private _meta: ComponentMeta
@@ -45,6 +49,7 @@ export abstract class Component {
     constructor(tagName: string = "div", props: Object = {}) {
         this._eventBus = new EventBus()
         this._subscriptions = []
+        this._onMountSubscriptions = []
         this._meta = {
             tagName,
             props
@@ -65,9 +70,9 @@ export abstract class Component {
 
     /*
     Lifecycle:
-        Once:    INIT -> FLOW_CDI 
-
-        Repeted: FLOW_CDU -> FLOW_RENDER -> FLOW_INSERT_COMPONENTS -> FLOW_CDM
+        Once:     INIT -> FLOW_CDI 
+        Repetead: FLOW_CDU -> FLOW_RENDER -> FLOW_CDR -> FLOW_CDM
+        Once:     -> FLOW_CDUM
     */
     private _registerEvents(eventBus: EventBus) {
         eventBus.on(Component.EVENTS.INIT, this._init.bind(this))
@@ -100,7 +105,6 @@ export abstract class Component {
         this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
             (mutationRecords: MutationRecord[]) => {
                 if(!document.body.contains(this._element)) {
-                    console.log("Удален из дерева!")
                     this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
                 }
             }
@@ -116,6 +120,16 @@ export abstract class Component {
     }
 
     componentDidInit() {}
+    
+    // Компонент был обновлен
+    private _componentDidUpdate(oldProps: Object, newProps: Object) {
+        this.componentDidUpdate(oldProps, newProps)
+        for(let sub of this._onMountSubscriptions) {
+            sub.unsubscribe()
+        }
+        this._onMountSubscriptions = []
+        this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
+    }
 
     componentDidUpdate(oldProps: Object, newProps: Object) {
         return true
@@ -157,22 +171,20 @@ export abstract class Component {
         for(let sub of this._subscriptions) {
             sub.unsubscribe()
         }
+        for(let sub of this._onMountSubscriptions) {
+            sub.unsubscribe()
+        }
         // Удаляем события из EventBus
         this._unregisterEvents(this._eventBus);
         // Удаляем все свойства
         // TODO: Придумать другой метод
+        // NOTE: Возможно это вообще лишнее
         for(let [key, value] of Object.entries(this)) {
             (this as any)[key] = null;
         }
     }
 
     componentDidUnmount() {}
-
-    // Компонент был обновлен
-    private _componentDidUpdate(oldProps: Object, newProps: Object) {
-        this.componentDidUpdate(oldProps, newProps)
-        this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
-    }
 
     // TODO: Додумать обработку утечек
     setProps = (nextProps: Object) => {

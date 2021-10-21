@@ -10,9 +10,11 @@ import {ChangeAvatar} from "./modules/change-avatar"
 
 import {goToMainPage} from "../../services/navigation"
 import {goToLoginPage} from "../../services/navigation"
-import { ProfileField, PROFILE_DATA } from "../../mock/profile"
+import { PROFILE_DATA } from "../../mock/profile"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
+import { ProfileField, ProfileFieldValue, ProfileService } from "../../services/profile.service"
+import { Inject } from "../../utils/decorators/inject"
 
 type ProfilePageProps = {
     profileData: Array<ProfileField>
@@ -39,6 +41,9 @@ export class ProfilePage extends Component {
     passwordForm: Form
     // Модуль смены аватара
     сhangeAvatar: ChangeAvatar
+
+    @Inject(ProfileService)
+    private _profileService: ProfileService
     
     constructor() {
         super("div", {})
@@ -51,6 +56,16 @@ export class ProfilePage extends Component {
             profileIsEditable: false,
             changePasswordFormIsShown: false
         }
+    }
+
+    componentDidInit() {
+        this._subscriptions.push(this._profileService.profileObservable.subscribe(
+            (profile: ProfileField[]) => {
+                this.setProps({
+                    profileData: profile
+                })
+            }
+        ))
     }
 
     render() {
@@ -141,23 +156,26 @@ export class ProfilePage extends Component {
         // Сохранить инфо по нажатию
         if(this.props.profileIsEditable) {
             this.profileSaveButton.element.onclick = () => {
+                const fieldValues: ProfileFieldValue[] = [] 
                 // Тестовый код
                 if(!this.props.changePasswordFormIsShown) {
                     const elements = this.profileEditForm.formElements
                     for(let i=0; i < elements.length; i++){
                         // TODO: Переписать или убрать
                         let input = Array.from(Array.from(elements[i].children)[0].children)[0] as HTMLInputElement
-                        const field = this.props.profileData.find(x => x.name == input.getAttribute('name')) 
-                        if(field) field.value = input.value || ''
+                        fieldValues.push({
+                            name: input.getAttribute('name') as string,
+                            value: input.value
+                        })
                     }
                 }
+                // Меняем значения через сервис
+                this._profileService.setProfile(fieldValues)
                 // Переходим в режим просмотра
-                const newProps: ProfilePageProps = {
-                    profileData: this.props.profileData,
+                this.setProps({
                     changePasswordFormIsShown: false,
                     profileIsEditable: false
-                }
-                this.setProps(newProps)
+                })
             }
         }
         else {

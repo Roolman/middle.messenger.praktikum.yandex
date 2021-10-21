@@ -10,6 +10,7 @@ import { Component } from "../../../../utils/classes/component"
 import { goToProfilePage } from "../../../../services/navigation"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Chat, ChatsService } from "../../../../services/chats.service"
+import { Observable } from "../../../../utils/classes/observable"
 
 type ChatsProps = {
     chats: Chat[]
@@ -59,14 +60,14 @@ export class Chats extends Component {
     }
 
     componentDidMount() {
-        this.profileLink.onclick = function (event: MouseEvent) {
-            event.preventDefault()
-            goToProfilePage()
-        }
-    }
-
-    componentDidUnmount() {
-
+        this._onMountSubscriptions.push(Observable.fromEvent(this.profileLink, "click").subscribe(
+            (event: MouseEvent) => {
+                event.preventDefault()
+                console.log(event)
+                goToProfilePage()
+            },
+            (err: any) => console.log(err)
+        ))
     }
 
 }

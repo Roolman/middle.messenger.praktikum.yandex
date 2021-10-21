@@ -1,10 +1,4 @@
-export type ProfileField = {
-    name: string,
-    type: string,
-    title: string,
-    value: string,
-    errorMessage: string
-}
+import { ProfileField } from "../services/profile.service"
 
 export let PROFILE_DATA: Array<ProfileField> = [
     {

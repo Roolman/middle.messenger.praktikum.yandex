@@ -6,6 +6,7 @@ import {Button} from "../../../components/Button"
 import { BUTTON_TYPES } from "../../../constants/button"
 import { goToMainPage } from "../../../services/navigation"
 import { Component } from "../../../utils/classes/component"
+import { Observable } from "../../../utils/classes/observable"
 
 export class Error404Page extends Component {
 
@@ -31,7 +32,9 @@ export class Error404Page extends Component {
     }
 
     componentDidMount() {
-        this.goToMainButton.element.onclick = goToMainPage
+        this._subscriptions.push(Observable.fromEvent(this.goToMainButton.element, 'click').subscribe(
+            () => goToMainPage()
+        ))
     }
 
 }

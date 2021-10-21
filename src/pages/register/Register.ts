@@ -10,6 +10,7 @@ import { Header } from "../../components/Header/index"
 import { goToLoginPage } from "../../services/navigation"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
+import { Observable } from "../../utils/classes/observable"
 
 export class RegisterPage extends Component {
 
@@ -104,8 +105,14 @@ export class RegisterPage extends Component {
     }
 
     componentDidMount() {
-        this.registerBlock.mainButton.element.onclick = () => alert("Зареган!")
-        this.registerBlock.secondButton.element.onclick = () => goToLoginPage()
+        this._subscriptions.push(
+            Observable.fromEvent(this.registerBlock.mainButton.element, 'click')
+                        .subscribe(() => alert("Зареган!"))   
+        )
+        this._subscriptions.push(
+            Observable.fromEvent(this.registerBlock.secondButton.element, 'click')
+                        .subscribe(() => goToLoginPage())   
+        )
     }
 
 }
