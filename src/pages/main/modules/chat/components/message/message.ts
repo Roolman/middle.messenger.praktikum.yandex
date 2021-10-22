@@ -1,5 +1,5 @@
 import * as Handlebars from "handlebars"
-import './message.scss'
+import './Message.scss'
 import templ from './Message.tmpl'
 
 import { MESSAGE_TYPES } from "../../../../../../constants/message"

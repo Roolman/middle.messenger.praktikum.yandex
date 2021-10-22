@@ -11,8 +11,11 @@ $chats_width: 35vw;
   max-width: 310px;
   background-color: $light_gray_chat_color;
   border-right: 1px solid $light_gray_border_color;
-
   padding-bottom: 0;
+
+  @media (min-width: 1500px) {
+    max-width: 400px;
+  }
 }
 
 .chats__controls {
@@ -112,6 +115,7 @@ $chats_width: 35vw;
     .chats__chat-avatar {
       display: flex;
       width: calc($chats_width / 5);
+      max-width: 50px;
       align-items: center;
       justify-content: center;
 

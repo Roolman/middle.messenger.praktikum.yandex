@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
 
-import './register.scss'
+import './Register.scss'
 import templ from './Register.tmpl'
 
 import { LoginRegisterBlock } from "../../components/Login-register-block/index"

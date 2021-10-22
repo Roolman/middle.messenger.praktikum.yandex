@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
 
-import './chats.scss'
+import './Chats.scss'
 import templ from './Chats.tmpl'
 
 import {Button} from "../../../../components/Button/index"

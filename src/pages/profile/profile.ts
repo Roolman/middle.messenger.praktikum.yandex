@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
 
-import './profile.scss'
+import './Profile.scss'
 import templ from './Profile.tmpl'
 
 import {Input} from "../../components/Input/index"
