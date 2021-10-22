@@ -4,7 +4,7 @@ import './404.scss'
 import templ from './404.tmpl'
 import {Button} from "../../../components/Button"
 import { BUTTON_TYPES } from "../../../constants/button"
-import { goToMainPage } from "../../../services/navigation"
+import { goToMainPage } from "../../../services/core/navigation"
 import { Component } from "../../../utils/classes/component"
 import { Observable } from "../../../utils/classes/observable"
 

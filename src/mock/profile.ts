@@ -1,4 +1,4 @@
-import { ProfileField } from "../services/profile.service"
+import { ProfileField } from "../services/state/profile.service"
 
 export let PROFILE_DATA: Array<ProfileField> = [
     {

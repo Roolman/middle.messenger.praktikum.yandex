@@ -1,32 +1,29 @@
 export default
 `
-    {{#if chatIsEmpty}}
-        {{> emptyChat}}
-    {{else}}
+    {{#if id}}
         <div class="chat__header">
-            {{#if chat.avatar}}
-                <img class="chat__avatar-image" src="{{chat.avatar}}"/>
+            {{#if avatar}}
+                <img class="chat__avatar-image" src="{{avatar}}"/>
             {{else}}
                 <img class="chat__avatar-image" src="static/img/chat_default.png"/>
             {{/if}}
-            <span class="chat__name">{{ chat.name }}</span>                
+            <span class="chat__name">{{ name }}</span>                
         </div>
         <div class="chat__messages">
-            {{#each messages}}
-                {{chatMessage this.id this.type this.value this.time this.sentByUser}}
-            {{/each}}
+            {{#unless messages}}
+                <h4>Сообщений нет</h4>
+            {{/unless}}
         </div>
         <div class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
             <input type="text" id="chatMessage" name="chatMessage" class="chat__input-text" placeholder="Сообщение"/>
-        </div>
-        </div>
+        </div>    
+    {{else}}
+        {{> emptyChat}}
     {{/if}}
 `
 
 export const emptyChat = 
 `
-    <div class="chat chat_empty">
-        <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
-    </div>
+    <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
 `

@@ -1,6 +1,6 @@
-import { PROFILE_DATA } from "../mock/profile"
-import { Observable } from "../utils/classes/observable"
-import { Subject } from "../utils/classes/subject"
+import { PROFILE_DATA } from "../../mock/profile"
+import { Observable } from "../../utils/classes/observable"
+import { Subject } from "../../utils/classes/subject"
 
 export type ProfileFieldValue = {
     name: string,

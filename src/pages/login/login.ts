@@ -8,7 +8,7 @@ import { Input } from "../../components/Input/index"
 import { Checkbox } from "../../components/Сheckbox/index"
 import { Header } from "../../components/Header/index"
 
-import { goToRegisterPage, goToMainPage } from "../../services/navigation"
+import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
 import { Observable } from "../../utils/classes/observable"

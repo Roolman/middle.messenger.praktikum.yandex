@@ -28,7 +28,6 @@ export class EventBus {
         if (!events) {
             return
         }
-
         events.forEach(function(listener) {
             listener(...args)
         })

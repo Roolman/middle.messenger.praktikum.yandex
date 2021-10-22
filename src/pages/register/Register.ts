@@ -7,7 +7,7 @@ import { LoginRegisterBlock } from "../../components/Login-register-block/index"
 import { Input } from "../../components/Input/index"
 import { Header } from "../../components/Header/index"
 
-import { goToLoginPage } from "../../services/navigation"
+import { goToLoginPage } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
 import { Observable } from "../../utils/classes/observable"

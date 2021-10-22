@@ -1,5 +1,5 @@
-import { Observable } from "../utils/classes/observable"
-import { Subject } from "../utils/classes/subject"
+import { Observable } from "../../utils/classes/observable"
+import { Subject } from "../../utils/classes/subject"
 
 export class MutationsObservation {
 

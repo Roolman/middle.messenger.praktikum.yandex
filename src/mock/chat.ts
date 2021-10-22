@@ -1,4 +1,5 @@
 import { MESSAGE_TYPES } from "../constants/message"
+import { Message } from "../services/state/chats.service"
 
 export const CHAT = {
     name: "Вадим",
@@ -6,7 +7,7 @@ export const CHAT = {
     lastMessageTime: new Date()
 }
 
-export const MESSAGES = [
+export const MESSAGES: Message[] = [
     {
         id: 1,
         type: MESSAGE_TYPES.TEXT,

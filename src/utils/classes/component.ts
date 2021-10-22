@@ -1,4 +1,4 @@
-import { MutationsObservation } from "../../services/mutationObserver"
+import { MutationsObservation } from "../../services/core/mutationObserver"
 import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
 import { Subscription } from "./observable"
@@ -116,7 +116,7 @@ export abstract class Component {
     // Можно планировать события  
     private _componentDidInit() {
         this.componentDidInit()
-        this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
+        this._eventBus.emit(Component.EVENTS.FLOW_CDU)
     }
 
     componentDidInit() {}
@@ -194,8 +194,10 @@ export abstract class Component {
             }
 
             Object.assign(this.props, nextProps)
+            this._eventBus.emit(Component.EVENTS.FLOW_CDU)
         }
         catch(err) {
+            console.error(err)
             throw new Error(
                 `
                 Ошибка установки параметров компоненту.
@@ -213,9 +215,6 @@ export abstract class Component {
             },
             set: (target: ProxyObject, prop: string, value: any) => {
                 target[prop] = value
-
-                // TODO: Добавить cloneDeep
-                this._eventBus.emit(Component.EVENTS.FLOW_CDU, {...target}, target)
                 return true
             },
             deleteProperty() {

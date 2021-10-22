@@ -2,11 +2,11 @@ import '../node_modules/font-awesome/scss/font-awesome.scss'
 import './styles/index.scss'
 import * as Handlebars from "handlebars"
 
-import { goToLoginPage, goToMainPage, goToProfilePage } from './services/navigation'
-import ServiceLocator from './services/serviceLocator'
-import { ChatsService } from './services/chats.service'
-import { MutationsObservation } from './services/mutationObserver'
-import { ProfileService } from './services/profile.service'
+import { goToLoginPage, goToMainPage, goToProfilePage } from './services/core/navigation'
+import ServiceLocator from './services/core/serviceLocator'
+import { ChatsService } from './services/state/chats.service'
+import { MutationsObservation } from './services/core/mutationObserver'
+import { ProfileService } from './services/state/profile.service'
 
 window.onload = () => {
     registerServices()

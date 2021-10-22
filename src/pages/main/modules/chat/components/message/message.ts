@@ -5,20 +5,13 @@ import templ from './Message.tmpl'
 import { MESSAGE_TYPES } from "../../../../../../constants/message"
 import {getDateHoursAndMinutes} from "../../../../../../utils/helpers/date.utils"
 import { Component } from "../../../../../../utils/classes/component"
-
-type MessageProps = {
-    id: string,
-    type: string,
-    value: string,
-    time: Date,
-    sentByUser: boolean
-}
+import { MessageData } from "../../../../../../services/state/chats.service"
 
 export class Message extends Component {
 
-    props: MessageProps
+    props: MessageData
 
-    constructor(props: MessageProps) {
+    constructor(props: MessageData) {
         super("div", props)
     }
 

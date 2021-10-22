@@ -1,10 +1,10 @@
 // Тестовый код для сдачи 1 спринта !
-import { RegisterPage } from "../pages/register/index"
-import { LoginPage } from "../pages/login/index"
-import { MainPage } from "../pages/main/index"
-import { ProfilePage } from "../pages/profile/index"
-import { Error404Page } from "../pages/errors/404/index"
-import { Error500Page } from "../pages/errors/500/index"
+import { RegisterPage } from "../../pages/register/index"
+import { LoginPage } from "../../pages/login/index"
+import { MainPage } from "../../pages/main/index"
+import { ProfilePage } from "../../pages/profile/index"
+import { Error404Page } from "../../pages/errors/404/index"
+import { Error500Page } from "../../pages/errors/500/index"
 
 enum PAGES {
     REGISTER,

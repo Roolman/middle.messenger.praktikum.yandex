@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
-import { goToError404Page, goToError500Page } from "../../services/navigation"
+import { goToError404Page, goToError500Page } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
 import { Button } from "../Button"
 import './header.scss'

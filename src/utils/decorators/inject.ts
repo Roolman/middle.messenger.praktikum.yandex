@@ -1,4 +1,4 @@
-import ServiceLocator from "../../services/serviceLocator"
+import ServiceLocator from "../../services/core/serviceLocator"
 
 export function Inject(propType: Function) {
     return (target: Object, propKey: string): any => {
