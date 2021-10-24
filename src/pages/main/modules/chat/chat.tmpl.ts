@@ -16,7 +16,6 @@ export default
         </div>
         <div class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
-            <input type="text" id="chatMessage" name="chatMessage" class="chat__input-text" placeholder="Сообщение"/>
         </div>    
     {{else}}
         {{> emptyChat}}

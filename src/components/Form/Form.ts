@@ -4,6 +4,7 @@ import './Form.scss'
 import templ from './Form.tmpl'
 
 type FormProps = {
+    id: string,
     formElements: Array<HTMLElement>
 }
 
@@ -21,6 +22,7 @@ export class Form extends Component {
 
     render() {
         this.element.classList.add("form")
+        this.element.id = this.props.id
         const template = Handlebars.compile(templ)
         const result = template({ ...this.props })
         return result

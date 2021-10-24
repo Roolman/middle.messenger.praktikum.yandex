@@ -5,10 +5,16 @@ import { Subscription } from "./observable"
 
 type ComponentMeta = {
     tagName: string
-    props: Object
+    props: ComponentProps
 }
 
 type ProxyObject = {
+    [key: string]: any
+}
+
+export type ComponentProps = {
+    styles?: Object
+    attributes?: Object
     [key: string]: any
 }
 
@@ -23,7 +29,7 @@ export abstract class Component {
         FLOW_RENDER: "flow:render"
     }
 
-    props: Object
+    props: ComponentProps
 
     @Inject(MutationsObservation)
     private _mutationsObservation: MutationsObservation
@@ -33,6 +39,7 @@ export abstract class Component {
     protected _subscriptions: Subscription[]
     // Подписки, удаляющиеся при FLOW_CDU или при FLOW_CDUM
     // NOTE: Подумать как уйти от этой необходимости
+    // NOTE: Обернуть все элементы, требующие подписки в Component
     protected _onMountSubscriptions: Subscription[]
 
     private _element: HTMLElement
@@ -46,7 +53,7 @@ export abstract class Component {
         return this.element
     }
 
-    constructor(tagName: string = "div", props: Object = {}) {
+    constructor(tagName: string = "div", props: ComponentProps = {}) {
         this._eventBus = new EventBus()
         this._subscriptions = []
         this._onMountSubscriptions = []
@@ -62,7 +69,7 @@ export abstract class Component {
         this._eventBus.emit(Component.EVENTS.INIT)
     }
 
-    protected setDefaultProps(props: Object) {
+    protected setDefaultProps(props: ComponentProps) {
         return {
             ...props
         }
@@ -122,7 +129,7 @@ export abstract class Component {
     componentDidInit() {}
     
     // Компонент был обновлен
-    private _componentDidUpdate(oldProps: Object, newProps: Object) {
+    private _componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
         this.componentDidUpdate(oldProps, newProps)
         for(let sub of this._onMountSubscriptions) {
             sub.unsubscribe()
@@ -131,13 +138,35 @@ export abstract class Component {
         this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
     }
 
-    componentDidUpdate(oldProps: Object, newProps: Object) {
+    componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
         return true
     }
 
     private _render() {
         const block = this.render()
         this._element.innerHTML = block
+
+        // Устанавливаем стили
+        const styles = Object.entries(this.props.styles || {})
+        for(let [styleName, value] of styles) {
+            try {
+                this._element.style[styleName as any] = value
+            }
+            catch(err: any) {
+                throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
+            }
+        }
+        // Устанавливаем аттрибуты
+        const attributes = Object.entries(this.props.attributes || {})
+        for(let [attributeName, value] of attributes) {
+            try {
+                this._element.setAttribute(attributeName, value) 
+            }
+            catch(err: any) {
+                throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
+            }
+        }
+
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
@@ -161,7 +190,7 @@ export abstract class Component {
         this.componentDidMount()
     }
 
-    componentDidMount(oldProps?: Object) {}
+    componentDidMount(oldProps?: ComponentProps) {}
 
     // Компонент исчез из дерева
     // Можно закрыть подпикси. Очистить все данные
@@ -187,7 +216,7 @@ export abstract class Component {
     componentDidUnmount() {}
 
     // TODO: Додумать обработку утечек
-    setProps = (nextProps: Object) => {
+    setProps = (nextProps: ComponentProps) => {
         try{
             if (!nextProps) {
                 return
@@ -207,7 +236,7 @@ export abstract class Component {
         }
     }
 
-    private _makePropsProxy(props: Object) {
+    private _makePropsProxy(props: ComponentProps) {
         return new Proxy(props, {
             get: (target: ProxyObject, prop: string) => {
                 const value = target[prop]

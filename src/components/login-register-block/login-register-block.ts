@@ -44,7 +44,13 @@ export class LoginRegisterBlock extends Component {
         }
         actionsBlockParent.insertBefore(this.props.form.element, actionsBlock)
         // Вставляем кнопки
-        this.mainButton = new Button({title: this.props.mainActionTitle})
+        this.mainButton = new Button({
+            title: this.props.mainActionTitle,
+            attributes: {
+                type: "submit",
+                form: this.props.form.element.id
+            }
+        })
         this.secondButton = new Button({title: this.props.secondActionTitle, type: BUTTON_TYPES.LINK})
         actionsBlock.appendChild(this.mainButton.element)
         actionsBlock.appendChild(this.secondButton.element)

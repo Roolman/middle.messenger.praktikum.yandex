@@ -1,3 +1,4 @@
+import { MESSAGE_TYPES } from "../../constants/message"
 import { MESSAGES } from "../../mock/chat"
 import { CHATS } from "../../mock/chats"
 import { Observable } from "../../utils/classes/observable"
@@ -65,6 +66,18 @@ export class ChatsService {
 
     setMessages(chat: ChatData): void {
         chat.messages = MESSAGES
+    }
+
+    addMessage(message: string): void {
+        const messageData: MessageData = {
+            id: Math.random()*100,
+            type: MESSAGE_TYPES.TEXT,
+            value: message,
+            time: new Date(),
+            sentByUser: true
+        }
+        this._chat?.messages.push(messageData)
+        this._chatSubject.next(this._chat)
     }
 
 }

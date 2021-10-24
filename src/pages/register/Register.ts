@@ -81,6 +81,7 @@ export class RegisterPage extends Component {
         })
         // Форма
         this.form = new Form({
+            id: "registerFormId",
             formElements: [
                 this.emailInput.element,
                 this.loginInput.element,

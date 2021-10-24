@@ -12,6 +12,7 @@ import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/Form"
 import { Observable } from "../../utils/classes/observable"
+import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
 export class LoginPage extends Component {
 
@@ -23,6 +24,11 @@ export class LoginPage extends Component {
     loginInput: Input
     passwordInput: Input
     rememberMeCheckbox: Checkbox
+
+    private _valid: boolean
+    get valid(): boolean {
+        return this._valid
+    }
 
     constructor() {
         super("div")
@@ -40,19 +46,34 @@ export class LoginPage extends Component {
             name: "login",
             title: "Логин",
             type: "text",
-            errorMessage: ""
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.minLength,
+                    value: 3,
+                    error: "Не менее 3 символов"
+                },
+                {
+                    type: VALIDITY_TYPES.maxLength,
+                    value: 20,
+                    error: "Не более 20 символов"
+                }
+            ])
         })
         this.passwordInput = new Input({
             name: "password",
             title: "Пароль",
-            type: "password",
-            errorMessage: "Неверно указан пароль"
+            type: "password"
         })
         this.rememberMeCheckbox = new Checkbox({
             name: "rememberMe",
             label: "Запомнить меня"
         })
         this.form = new Form({
+            id: "loginFormId",
             formElements: [
                 this.loginInput.element,
                 this.passwordInput.element,

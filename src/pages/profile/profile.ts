@@ -108,10 +108,12 @@ export class ProfilePage extends Component {
             this.profileEditFormInputs.push(input)
         }
         this.profileEditForm = new Form({
+            id: "profileEditFormId",
             formElements: this.profileEditFormInputs.map(x => x.element)
         })
         // Форма пароля
         this.passwordForm = new Form({
+            id: "passwordFormId",
             formElements: [
                 new Input({name: "oldPassword", title: "Старый пароль", type: "password", errorMessage: "Введите старый пароль"}).element,
                 new Input({name: "newPassword", title: "Новый пароль", type: "password", errorMessage: "Пароли не совпадают"}).element

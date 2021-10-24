@@ -11,7 +11,7 @@ import { ProfileService } from './services/state/profile.service'
 window.onload = () => {
     registerServices()
 
-    goToMainPage()
+    goToLoginPage()
 }
 
 function registerServices() {
@@ -28,5 +28,12 @@ Handlebars.registerHelper('if_eq', function(a: unknown, b: unknown, opts: Handle
         return opts.inverse(this)
     }
 })
+
+// Отключаем дефолтные подсказки
+document.addEventListener('invalid', (function(){
+    return function(e: Event) {
+      e.preventDefault()
+    }
+})(), true)
 
 

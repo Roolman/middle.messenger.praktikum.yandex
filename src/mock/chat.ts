@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from "../constants/message"
-import { Message } from "../services/state/chats.service"
+import { MessageData } from "../services/state/chats.service"
 
 export const CHAT = {
     name: "Вадим",
@@ -7,7 +7,7 @@ export const CHAT = {
     lastMessageTime: new Date()
 }
 
-export const MESSAGES: Message[] = [
+export const MESSAGES: MessageData[] = [
     {
         id: 1,
         type: MESSAGE_TYPES.TEXT,
