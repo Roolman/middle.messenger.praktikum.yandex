@@ -5,6 +5,7 @@ $message_gray_color: #f8f8f8;
 
 .message {
   display: flex;
+  width: fit-content;
   max-width: 400px;
   margin: 5px 0;
   font-size: 0.96rem;
@@ -52,6 +53,7 @@ $message_gray_color: #f8f8f8;
   border-bottom-right-radius: 0;
   align-self: flex-end;
   background-color: #e4edfd;
+  padding-right: 35px;
 
   & > .message_image-value {
     border-radius: $message_radius;
