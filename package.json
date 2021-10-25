@@ -9,19 +9,27 @@
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.0.0-rc.0",
-    "handlebars": "^4.7.7"
+    "eslint": "^8.1.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "handlebars": "^4.7.7",
+    "stylelint": "^14.0.0",
+    "stylelint-config-standard": "^23.0.0"
   },
   "scripts": {
-    "copy-static-linux": "cp -r public/* dist/",
+    "copy-static-linux": "cp -r static/ dist/",
     "copy-static-windows": "xcopy /i /e static dist\\static",
-    "pre-dev": "./node_modules/.bin/parcel index.html",
+    "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
     "dev": "npm run copy-static-linux && npm run pre-dev",
     "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
-    "pre-build": "./node_modules/.bin/parcel build index.html",
+    "pre-build": "./node_modules/.bin/parcel build index.html --port 3000",
     "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
     "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
+    "start": "npm run build && node server.js",
+    "start-windows": "npm run build-windows && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

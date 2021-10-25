@@ -1,1 +1,0 @@
-export {LoginRegisterBlock} from "./login-register-block"

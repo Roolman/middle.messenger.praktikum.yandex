@@ -1,11 +1,14 @@
-@import "../../styles.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/constants.scss";
 
 .input-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   padding-top: 5px;
   padding-bottom: 10px;
   height: 60px;
+  margin: 10px 0;
 }
 
 .input-container__input-group {
@@ -18,6 +21,12 @@
   color: $secondary_color;
   font-size: small;
   transform: translateY(-45px);
+  user-select: none;
+}
+
+.input-container__required-label {
+  color: $danger_color;
+  display: none;
 }
 
 .input-container__input {
@@ -29,11 +38,11 @@
   border-bottom-color: $main_color;
   outline: 0;
   background: transparent;
-
   font-size: large;
 
   &::placeholder {
     color: transparent;
+    user-select: none;
   }
 
   &:placeholder-shown {
@@ -45,11 +54,50 @@
     cursor: text;
     transform: translateY(-25px);
   }
+
+  &:required ~ .input-container__label > .input-container__required-label {
+    display: inline;
+  }
 }
 
-.input-container__error {
-  color: $danger_color;
+.input-container__input-check-validity {
+  &:valid {
+    border-bottom-color: $success_color !important;
+  }
+
+  &:invalid {
+    border-bottom-color: $danger_color !important;
+  }
+}
+
+.input-container__message {
   margin: 0;
   font-size: small;
-  visibility: visible; // !!!!
+  visibility: hidden;
+  user-select: none;
+}
+
+.input-container__message-valid {
+  color: $success_color;
+}
+
+.input-container__message-invalid {
+  color: $danger_color;
+}
+
+.input-container__errors-block {
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  height: auto;
+  top: 40px;
+  border-radius: 4px;
+  box-shadow: $common_shadow;
+  padding: 10px;
+  font-size: 0.95rem;
+  z-index: 1;
+  color: $danger_color;
+  white-space: pre-line;
+  user-select: none;
+  visibility: hidden;
 }

@@ -1,10 +1,11 @@
-@import "../../../../../../styles.scss";
+@import "../../../../../../styles/colors.scss";
 
 $message_radius: 12px;
 $message_gray_color: #f8f8f8;
 
 .message {
   display: flex;
+  width: fit-content;
   max-width: 400px;
   margin: 5px 0;
   font-size: 0.96rem;
@@ -23,6 +24,13 @@ $message_gray_color: #f8f8f8;
 
 .message_text {
   background-color: $message_gray_color;
+}
+
+.message__time {
+  position: absolute;
+  font-size: 0.85rem;
+  bottom: 8px;
+  right: 5px;
 }
 
 .message_image {
@@ -47,11 +55,13 @@ $message_gray_color: #f8f8f8;
     color: $secondary_color;
   }
 }
+
 .message_sent-by-user {
   border-radius: $message_radius;
   border-bottom-right-radius: 0;
   align-self: flex-end;
   background-color: #e4edfd;
+  padding-right: 35px;
 
   & > .message_image-value {
     border-radius: $message_radius;
@@ -61,11 +71,4 @@ $message_gray_color: #f8f8f8;
   & > .message__time {
     color: $main_color;
   }
-}
-
-.message__time {
-  position: absolute;
-  font-size: 0.85rem;
-  bottom: 8px;
-  right: 5px;
 }

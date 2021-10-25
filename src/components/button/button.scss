@@ -1,42 +1,121 @@
-@import "../../styles.scss";
+@import "../../styles/colors.scss";
+
+$button_light_color: #fafafa;
 
 .button {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
   padding: 10px;
   border-radius: 5px;
   border: none;
   font-size: large;
-
   cursor: pointer;
 }
 
 .button_basic {
-  color: white !important;
+  color: white;
   border: 0;
   width: 100%;
+
+  &.button_primary {
+    background-color: $main_color;
+    border-color: $main_color;
+
+    &:hover {
+      background-color: $hover_main_color;
+    }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &.button_danger {
+    background-color: $danger_color;
+    border-color: $danger_color;
+
+    &:hover {
+      background-color: $hover_danger_color;
+    }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &:disabled {
+    background-color: $secondary_color;
+    cursor: not-allowed;
+  }
 }
 
 .button_stroked {
-  background-color: transparent !important;
+  background-color: transparent;
   border-style: solid;
   border-width: 1px;
 
+  &.button_primary {
+    border-color: $main_color;
+
+    &:disabled {
+      border-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &.button_danger {
+    border-color: $danger_color;
+
+    &:disabled {
+      border-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
   &:hover {
-    background-color: #fafafa !important;
+    background-color: $button_light_color;
+  }
+
+  &:disabled {
+    border-color: $secondary_color;
+    cursor: not-allowed;
   }
 }
 
 .button_link {
-  background-color: transparent !important;
+  background-color: transparent;
   border: none;
   font-size: 0.9rem;
 
+  &.button_primary {
+    color: $main_color;
+
+    &:disabled {
+      color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &.button_danger {
+    color: $danger_color;
+
+    &:disabled {
+      color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
   &:hover {
-    background-color: #fafafa !important;
+    background-color: $button_light_color;
+  }
+
+  &:disabled {
+    color: $secondary_color;
+    cursor: not-allowed;
   }
 }
 
@@ -44,29 +123,42 @@
   height: 30px;
   width: 30px;
   border-radius: 50px;
-  color: white !important;
+  color: white;
 
   i {
     font-size: medium;
   }
-}
 
-.button_primary {
-  background-color: $main_color;
-  border-color: $main_color;
-  color: $main_color;
+  &.button_primary {
+    background-color: $main_color;
+    border-color: $main_color;
 
-  &:hover {
-    background-color: $hover_main_color;
+    &:hover {
+      background-color: $hover_main_color;
+    }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
-}
 
-.button_danger {
-  background-color: $danger_color;
-  border-color: $danger_color;
-  color: $danger_color;
+  &.button_danger {
+    background-color: $danger_color;
+    border-color: $danger_color;
 
-  &:hover {
-    background-color: $hover_danger_color;
+    &:hover {
+      background-color: $hover_danger_color;
+    }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &:disabled {
+    background-color: $secondary_color;
+    cursor: not-allowed;
   }
 }
