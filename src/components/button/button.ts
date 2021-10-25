@@ -1,5 +1,5 @@
 import * as Handlebars from "handlebars"
-import './button.scss'
+import './Button.scss'
 import templ from './Button.tmpl'
 
 import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
@@ -27,6 +27,22 @@ export class Button extends Component {
             type: props.type || BUTTON_TYPES.BASIC,
             theme: props.theme || BUTTON_THEMES.PRIMARY
         }
+    }
+
+    setDisabled() {
+        this.element.setAttribute("disabled", "")
+    }
+
+    setEnabled() {
+        this.element.removeAttribute("disabled")
+    }
+
+    setVisible() {
+        this.element.style.visibility = "visible"
+    }
+
+    setInvisible() {
+        this.element.style.visibility = "hidden"
     }
 
     render() {

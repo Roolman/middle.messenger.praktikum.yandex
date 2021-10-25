@@ -8,6 +8,7 @@
   padding-top: 5px;
   padding-bottom: 10px;
   height: 60px;
+  margin: 10px 0;
 }
 
 .input-container__input-group {
@@ -20,6 +21,7 @@
   color: $secondary_color;
   font-size: small;
   transform: translateY(-45px);
+  user-select: none;
 }
 
 .input-container__required-label {
@@ -41,6 +43,7 @@
 
   &::placeholder {
     color: transparent;
+    user-select: none;
   }
 
   &:placeholder-shown {
@@ -72,6 +75,7 @@
   margin: 0;
   font-size: small;
   visibility: hidden;
+  user-select: none;
 }
 
 .input-container__message-valid {
@@ -94,6 +98,7 @@
   z-index: 1;
   color: $danger_color;
   white-space: pre-line;
+  user-select: none;
 
   visibility: hidden;
 }

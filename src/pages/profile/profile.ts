@@ -16,6 +16,7 @@ import { Form } from "../../components/Form"
 import { ProfileField, ProfileFieldValue, ProfileService } from "../../services/state/profile.service"
 import { Inject } from "../../utils/decorators/inject"
 import { Observable } from "../../utils/classes/observable"
+import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
 type ProfilePageProps = {
     profileData: Array<ProfileField>
@@ -37,9 +38,15 @@ export class ProfilePage extends Component {
     profileReturn: HTMLElement
     // Форма для данных
     profileEditForm: Form
-    profileEditFormInputs: Array<Input>
+    profileEmail: Input
+    profileFirstName: Input
+    profileSecondName: Input
+    profileDisplayName: Input
+    profilePhone: Input
     // Форма для пароля
     passwordForm: Form
+    passwordOld: Input
+    passwordNew: Input
     // Модуль смены аватара
     сhangeAvatar: ChangeAvatar
 
@@ -78,6 +85,159 @@ export class ProfilePage extends Component {
     }
 
     componentDidRender() {
+        // Форма профиля
+        this.profileEmail = new Input({
+            name: "email",
+            title: "Почта",
+            type: "email",
+            value: this.props.profileData.find(x => x.name == "email")?.value,
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^.+@[A-Za-z]+\\.[A-za-z]+$',
+                    error: 'Введите e-mail корректно'
+                }
+            ])
+        })
+        this.profileFirstName = new Input({
+            name: "first_name",
+            title: "Имя",
+            type: "text",
+            value: this.props.profileData.find(x => x.name == "first_name")?.value,
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$',
+                    error: 'Латиница или кириллица. Допустим дефис. Первая буква заглавная'
+                }
+            ])
+        })
+        this.profileSecondName = new Input({
+            name: "second_name",
+            title: "Фамилия",
+            type: "text",
+            value: this.props.profileData.find(x => x.name == "second_name")?.value,
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$',
+                    error: 'Латиница или кириллица. Допустим дефис. Первая буква заглавная'
+                }
+            ])
+        })
+        this.profileDisplayName = new Input({
+            name: "dispalay_name",
+            title: "Имя в чате",
+            type: "text",
+            value: this.props.profileData.find(x => x.name == "dispalay_name")?.value,
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$',
+                    error: 'Латиница или кириллица. Допустим дефис. Первая буква заглавная'
+                }
+            ])
+        })
+        this.profilePhone = new Input({
+            name: "phone",
+            title: "Телефон",
+            type: "text",
+            value: this.props.profileData.find(x => x.name == "phone")?.value,
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.minLength,
+                    value: 10,
+                    error: "Не менее 10 символов"
+                },
+                {
+                    type: VALIDITY_TYPES.maxLength,
+                    value: 15,
+                    error: "Не более 15 символов"
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^\\+{0,1}[0-9]+$',
+                    error: 'Только цифры. Может начинаться с +'
+                }
+            ])
+        })
+        this.profileEditForm = new Form({
+            id: "profileEditFormId",
+            formElements: [
+                this.profileEmail,
+                this.profileFirstName,
+                this.profileSecondName,
+                this.profileDisplayName,
+                this.profilePhone
+            ]
+        })
+        // Форма пароля
+        this.passwordOld = new Input({
+            name: "oldPassword", 
+            title: "Старый пароль", 
+            type: "password",
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                }
+            ])
+        })
+        this.passwordNew = new Input({
+            name: "newPassword", 
+            title: "Новый пароль", 
+            type: "password",
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                },
+                {
+                    type: VALIDITY_TYPES.minLength,
+                    value: 8,
+                    error: "Не менее 8 символов"
+                },
+                {
+                    type: VALIDITY_TYPES.maxLength,
+                    value: 40,
+                    error: "Не более 40 символов"
+                },
+                {
+                    type: VALIDITY_TYPES.pattern,
+                    value: '^(?=.*[\\p{Lu}])(?=.*\\d).*$',
+                    error: 'Обязательно хотя бы одна заглавная буква и цифра'
+                }
+            ])
+        })
+        this.passwordForm = new Form({
+            id: "passwordFormId",
+            formElements: [
+                this.passwordOld,
+                this.passwordNew
+            ]
+        })
+        // Смена аватара
+        this.сhangeAvatar = new ChangeAvatar()
         // Кнопочки
         this.returnButton = new Button({
             title: '',
@@ -99,28 +259,12 @@ export class ProfilePage extends Component {
             theme: BUTTON_THEMES.DANGER
         })
         this.profileSaveButton = new Button({
-            title: "Сохранить"
+            title: "Сохранить",
+            attributes: {
+                type: "submit",
+                form: this.profileEditForm.props.id
+            }
         })
-        // Форма профиля
-        this.profileEditFormInputs = []
-        for(let element of this.props.profileData) {
-            const input = new Input({ ...element }) 
-            this.profileEditFormInputs.push(input)
-        }
-        this.profileEditForm = new Form({
-            id: "profileEditFormId",
-            formElements: this.profileEditFormInputs.map(x => x.element)
-        })
-        // Форма пароля
-        this.passwordForm = new Form({
-            id: "passwordFormId",
-            formElements: [
-                new Input({name: "oldPassword", title: "Старый пароль", type: "password", errorMessage: "Введите старый пароль"}).element,
-                new Input({name: "newPassword", title: "Новый пароль", type: "password", errorMessage: "Пароли не совпадают"}).element
-            ]
-        })
-        // Смена аватара
-        this.сhangeAvatar = new ChangeAvatar()
 
         // Вставляем в DOM
 
@@ -169,18 +313,16 @@ export class ProfilePage extends Component {
             .subscribe(
                 () => {
                     const fieldValues: ProfileFieldValue[] = [] 
-                    // Тестовый код
                     if(!this.props.changePasswordFormIsShown) {
                         const elements = this.profileEditForm.formElements
-                        for(let i=0; i < elements.length; i++){
-                            // TODO: Переписать или убрать
-                            let input = Array.from(Array.from(elements[i].children)[0].children)[0] as HTMLInputElement
+                        for(let el of elements) {
                             fieldValues.push({
-                                name: input.getAttribute('name') as string,
-                                value: input.value
+                                name: el.name,
+                                value: el.value
                             })
                         }
                     }
+                    console.log(fieldValues)
                     // Меняем значения через сервис
                     this._profileService.setProfile(fieldValues)
                     // Переходим в режим просмотра
@@ -190,6 +332,12 @@ export class ProfilePage extends Component {
                     })
                 }
         ))
+        // Валидация кнопки сохранения
+        this._onMountSubscriptions.push(
+            this.profileEditForm.onValidityChange.subscribe(
+                (isValid: boolean) => this._setSaveButtonValidity(isValid)
+            )  
+        )
         // Кнопки
         this._onMountSubscriptions.push(
             Observable
@@ -226,5 +374,11 @@ export class ProfilePage extends Component {
                 .subscribe(() => this.сhangeAvatar.show())
             )
         }
+    }
+
+    
+    _setSaveButtonValidity(isValid: boolean) {
+        isValid ? this.profileSaveButton.setEnabled() :
+                    this.profileSaveButton.setDisabled()
     }
 }

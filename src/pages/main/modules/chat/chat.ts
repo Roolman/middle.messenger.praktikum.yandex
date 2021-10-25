@@ -12,13 +12,14 @@ import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/Form"
 import { MessageInput } from "./components/Message-Input/Message-input"
 import { Observable } from "../../../../utils/classes/observable"
+import { Validators, VALIDITY_TYPES } from "../../../../utils/classes/validators"
 
 export class Chat extends Component {
 
     props: ChatData
 
     sendForm: Form
-    sendInput: HTMLInputElement
+    sendInput: MessageInput
     sendButton: Button
 
     messagesContainer: HTMLElement
@@ -67,7 +68,14 @@ export class Chat extends Component {
     componentDidRender() {
         if(this.props.id) {
             // Создаем форму для инпута сообщения
-            this.sendInput = new MessageInput().element as HTMLInputElement
+            this.sendInput = new MessageInput({
+                validators: new Validators([
+                    {
+                        type: VALIDITY_TYPES.required,
+                        value: ''
+                    }
+                ])
+            })
             this.sendForm = new Form({
                 id: "sendMessageFormId",
                 formElements: [
@@ -83,6 +91,9 @@ export class Chat extends Component {
                 attributes: {
                     form: this.sendForm.element.id,
                     type: "submit"
+                },
+                styles: {
+                    visibility: "hidden"
                 }
             })
             const chat_input = this.element.getElementsByClassName("chat__input")[0] as HTMLElement
@@ -101,21 +112,32 @@ export class Chat extends Component {
     // TODO: Добавление сообщения со скролом
     componentDidMount() {
         if(this.props.id) { 
-            console.log(this.messagesContainer.scrollHeight)
-
             this._onMountSubscriptions.push(
                 Observable.fromEvent(this.sendButton.element, "click")
                           .subscribe(
                               (e: Event) => {
                                   e.preventDefault()
-                                  let message = this.sendInput.value
-                                  console.log(message)
-                                  // this._chatsService.addMessage(message)
-                                  message = ""
+
+                                  if(this.sendForm.isValid) {
+                                    let message = this.sendInput.value
+                                    console.log(message)
+                                    // this._chatsService.addMessage(message)
+                                    message = ""
+                                  }
                               }
                           )
             )
+            this._onMountSubscriptions.push(
+                this.sendForm.onValidityChange.subscribe(
+                    (isValid: boolean) => this._setSendButtonVisibility(isValid)
+                )  
+            )
         }
+    }
+
+    _setSendButtonVisibility(visible: boolean) {
+        visible ? this.sendButton.setVisible() :
+                  this.sendButton.setInvisible()
     }
 
 }

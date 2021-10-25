@@ -1,7 +1,9 @@
 import * as Handlebars from "handlebars"
 import { Component, ComponentProps } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
+import { Subject } from "../../utils/classes/subject"
 import { Validators } from "../../utils/classes/validators"
+import { FormElement } from "../Form/Form"
 import './Input.scss'
 import templ from './Input.tmpl'
 
@@ -9,19 +11,38 @@ type InputProps = ComponentProps & {
     name: string,
     title: string,
     type: string,
-    value?: string,
-    validators?: Validators
+    value?: string | boolean | number,
+    validators?: Validators,
+    hideValidation?: boolean
 }
 
-export class Input extends Component {
+export class Input extends Component implements FormElement {
 
     props: InputProps
 
     input: HTMLInputElement
     messageContainer: HTMLElement
     errorsContainer: HTMLElement
+    requiredSymbol: HTMLElement
 
     touched: boolean
+
+    private _onValueChange: Subject<string | number | boolean>
+    private _onValueChangeObservable: Observable
+
+    get isValid(): boolean {
+        return this._checkInputValidity()
+    }
+    get name(): string {
+        return this.input.name
+    }
+    get value(): string | number | boolean {
+        return this.input.value
+    }
+
+    get onValueChange(): Observable {
+        return this._onValueChangeObservable
+    }
 
     constructor(props: InputProps) {
         super("div", props)
@@ -32,6 +53,11 @@ export class Input extends Component {
             ...props,
             value: props.value || ''
         }
+    }
+
+    componentDidInit() {
+        this._onValueChange = new Subject()
+        this._onValueChangeObservable = this._onValueChange.asObservable()
     }
 
     render() {
@@ -47,23 +73,19 @@ export class Input extends Component {
 
         this.messageContainer = this.element.getElementsByClassName("input-container__message")[0] as HTMLElement
         this.errorsContainer = this.element.getElementsByClassName("input-container__errors-block")[0] as HTMLElement
+        this.requiredSymbol = this.element.getElementsByClassName("input-container__required-label")[0] as HTMLElement
+
+        if(this.props.hideValidation) {
+            this.requiredSymbol.style.display = "none"
+        }
     }
 
     componentDidMount() {
-        const checkInputValidity = (): boolean => {
-            if(!this.props.validators) return true
-            if(!this.input.checkValidity()) {
-                this.props.validators.checkValidity(this.input)
-                this.setErrors(this.props.validators.getInvalidities())
-                return false
-            }
-            return true
-        }
         if(!this.input) return
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.input, "focus")
                     .subscribe(() => {
-                        if(!checkInputValidity() && this.touched) {
+                        if(!this._checkInputValidity() && this.touched && !this.props.hideValidation) {
                             this.showErrors()
                         }
                     })
@@ -71,27 +93,37 @@ export class Input extends Component {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.input, "blur")
                     .subscribe(() => {
-                        this.setMessage(checkInputValidity())
-                        this.hideErrors()
+                        if(!this.props.hideValidation) {
+                            this.setMessage(this._checkInputValidity())
+                            this.hideErrors()
+                        }
                     })
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.input, "input")
                     .subscribe(() => {
-                        if(!this.touched) {
-                            this.touched = true
-                            this.input.classList.add("input-container__input-check-validity")
+                        if(!this.props.hideValidation) {
+                            if(!this.touched) {
+                                this.touched = true
+                                this.input.classList.add("input-container__input-check-validity")
+                            }
+                            let isValid = this._checkInputValidity()
+                            this.setMessage(isValid)
+                            if(isValid) {
+                                this.hideErrors()
+                            }
+                            else {
+                                this.showErrors()
+                            }
                         }
-                        let isValid = checkInputValidity()
-                        this.setMessage(isValid)
-                        if(isValid) {
-                            this.hideErrors()
-                        }
-                        else {
-                            this.showErrors()
-                        }
+                        this._onValueChange.next(this.input.value)
                     })
         )
+    }
+
+    componentDidUpdate() {
+        this.touched = false
+        return true
     }
 
     setMessage(isValid: boolean) {
@@ -116,6 +148,16 @@ export class Input extends Component {
 
     hideErrors() {
         this.errorsContainer.style.visibility = "hidden"
+    }
+
+    private _checkInputValidity(): boolean {
+        if(!this.props.validators) return true
+        if(!this.input.checkValidity()) {
+            this.props.validators.checkValidity(this.input)
+            this.setErrors(this.props.validators.getInvalidities())
+            return false
+        }
+        return true
     }
 
 }

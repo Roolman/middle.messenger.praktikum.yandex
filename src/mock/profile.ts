@@ -5,42 +5,36 @@ export let PROFILE_DATA: Array<ProfileField> = [
         name: "email",
         type: "email",
         title: "Почта",
-        value: "pochta@yandex.ru",
-        errorMessage: "Неверно указана почта"
+        value: "pochta@yandex.ru"
     },
     {
         name: "login",
         type: "text",
         title: "Логин",
-        value: "ivanovivan",
-        errorMessage: "Укажите логин"
+        value: "ivanovivan"
     },
     {
         name: "first_name",
         type: "text",
         title: "Имя",
-        value: "Иван",
-        errorMessage: "Укажите имя"
+        value: "Иван"
     },
     {
         name: "second_name",
         type: "text",
         title: "Фамилия",
-        value: "Иванов",
-        errorMessage: "Укажите фамилию"
+        value: "Иванов"
     },
     {
         name: "dispalay_name",
         type: "text",
         title: "Имя в чате",
-        value: "Иван",
-        errorMessage: "Укажите имя в чате"
+        value: "Иван"
     },
     {
         name: "phone",
         type: "text",
         title: "Телефон",
-        value: "+7 (909) 967 30 30",
-        errorMessage: "Укажите телефон"
+        value: "+7444234123"
     }
 ]

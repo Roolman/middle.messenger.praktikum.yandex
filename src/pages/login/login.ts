@@ -50,23 +50,21 @@ export class LoginPage extends Component {
                 {
                     type: VALIDITY_TYPES.required,
                     value: ''
-                },
-                {
-                    type: VALIDITY_TYPES.minLength,
-                    value: 3,
-                    error: "Не менее 3 символов"
-                },
-                {
-                    type: VALIDITY_TYPES.maxLength,
-                    value: 20,
-                    error: "Не более 20 символов"
                 }
-            ])
+            ]),
+            hideValidation: true
         })
         this.passwordInput = new Input({
             name: "password",
             title: "Пароль",
-            type: "password"
+            type: "password",
+            validators: new Validators([
+                {
+                    type: VALIDITY_TYPES.required,
+                    value: ''
+                }
+            ]),
+            hideValidation: true
         })
         this.rememberMeCheckbox = new Checkbox({
             name: "rememberMe",
@@ -75,9 +73,9 @@ export class LoginPage extends Component {
         this.form = new Form({
             id: "loginFormId",
             formElements: [
-                this.loginInput.element,
-                this.passwordInput.element,
-                this.rememberMeCheckbox.element
+                this.loginInput,
+                this.passwordInput,
+                this.rememberMeCheckbox
             ]
         })
         // Объединяем в один компонент
@@ -87,6 +85,8 @@ export class LoginPage extends Component {
             mainActionTitle: "Авторизоваться",
             secondActionTitle: "Ещё не зарегистрированы?",
         })
+        // Определяем состояние кнопки по валидности формы
+        this._setLoginButtonValidity(this.form.isValid)
         // Создаем хедер
         this.header = new Header()
         // Вставляем в элемент
@@ -97,12 +97,31 @@ export class LoginPage extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.mainButton.element, 'click')
-                        .subscribe(() => goToMainPage())   
+                        .subscribe(() => {
+                            if(this.form.isValid) {
+                                let values = []
+                                for(let formElement of this.form.formElements) {
+                                    values.push({name: formElement.name, value: formElement.value})
+                                }
+                                console.log(values)
+                                goToMainPage()
+                            }
+                        })   
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.secondButton.element, 'click')
                         .subscribe(() => goToRegisterPage())   
         )
+        this._onMountSubscriptions.push(
+            this.form.onValidityChange.subscribe(
+                (isValid: boolean) => this._setLoginButtonValidity(isValid)
+            )  
+        )
+    }
+
+    _setLoginButtonValidity(isValid: boolean) {
+        isValid ? this.loginBlock.mainButton.setEnabled() :
+                    this.loginBlock.mainButton.setDisabled()
     }
 
 }

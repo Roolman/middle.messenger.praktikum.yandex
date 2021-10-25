@@ -5,6 +5,7 @@ export enum VALIDITY_TYPES {
     min = "min",
     maxLength = "maxLength",
     minLength = "minLength",
+    type = "type"
 }
 
 export type Validator = {
@@ -27,6 +28,14 @@ export class Validators {
     }
 
     setValidators(input: HTMLInputElement): void {
+        // Тип всегда проверяется
+        if(!this._validators.map(x => x.type).includes(VALIDITY_TYPES.type)) {
+            this._validators.push({
+                type: VALIDITY_TYPES.type,
+                value: input.type
+            })
+        }
+
         for(let validator of this._validators) {
             input.setAttribute(validator.type, validator.value.toString())
         }
@@ -59,11 +68,15 @@ export class Validators {
                     case VALIDITY_TYPES.pattern:
                         this.addInvalidity(validator.error || "Значение не совпадает с шаблоном")
                         break 
+                    case VALIDITY_TYPES.type:
+                        this.addInvalidity(validator.error || "Значение не соответствует типу поля")
+                        break                         
                     default: 
                         break
                 }
             }
         }
+
     }
 
     addInvalidity(message: string): void {
@@ -71,7 +84,7 @@ export class Validators {
     }
 
     getInvalidities(): string {
-        return this._invalidities.join('. \n') || ''
+        return this._invalidities.join('\n') || ''
     }
 
     _checkValidators(validators: Validator[]): void {
@@ -91,6 +104,7 @@ export class Validators {
         this._validityFields.set(VALIDITY_TYPES.min, "rangeUnderflow")
         this._validityFields.set(VALIDITY_TYPES.maxLength, "tooLong")
         this._validityFields.set(VALIDITY_TYPES.minLength, "tooShort")
+        this._validityFields.set(VALIDITY_TYPES.type, "typeMismatch")
     }
 
     _getValidityField(validityType: string): string {

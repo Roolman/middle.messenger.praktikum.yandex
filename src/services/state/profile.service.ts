@@ -4,15 +4,14 @@ import { Subject } from "../../utils/classes/subject"
 
 export type ProfileFieldValue = {
     name: string,
-    value: string
+    value: string | boolean | number
 }
 
 export type ProfileField = {
     name: string,
     type: string,
     title: string,
-    value: string,
-    errorMessage: string
+    value: string | boolean | number
 }
 
 // NOTE: Это все тестовый код. В будущем будет переписано

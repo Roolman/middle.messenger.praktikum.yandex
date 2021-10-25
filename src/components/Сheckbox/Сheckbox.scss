@@ -11,12 +11,12 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover input ~ .checkbox-container__checkmark {
+  &:hover .checkbox__input:not(:checked) ~ .checkbox-container__checkmark {
     background-color: $light_main_color;
   }
 }
 
-.checkbox-container input {
+.checkbox__input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
