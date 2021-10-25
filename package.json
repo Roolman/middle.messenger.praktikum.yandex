@@ -1,0 +1,39 @@
+{
+  "name": "vanillajs-messenger",
+  "version": "1.0.0",
+  "description": "VanillaJS messenger with component approach",
+  "dependencies": {
+    "express": "^4.17.1",
+    "font-awesome": "^4.7.0",
+    "parcel": "^2.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0-rc.0",
+    "handlebars": "^4.7.7"
+  },
+  "scripts": {
+    "copy-static-linux": "cp -r static/ dist/",
+    "copy-static-windows": "xcopy /i /e static dist\\static",
+    "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
+    "dev": "npm run copy-static-linux && npm run pre-dev",
+    "dev-windows": "npm run copy-static-windows && npm run pre-dev",
+    "remove-dist-linux": "rm -rf dist",
+    "remove-dist-windows": "rmdir /q /s dist",
+    "pre-build": "./node_modules/.bin/parcel build index.html --port 3000",
+    "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
+    "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
+    "start": "npm run build && node server.js",
+    "start-windows": "npm run build-windows && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roolman/vanillajs-messenger.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Roolman/vanillajs-messenger/issues"
+  },
+  "homepage": "https://github.com/Roolman/vanillajs-messenger#readme"
+}
