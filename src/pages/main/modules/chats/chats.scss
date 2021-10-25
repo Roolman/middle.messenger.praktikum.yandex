@@ -30,7 +30,6 @@ $chats_width: 35vw;
 .chats__actions {
   display: flex;
   flex-direction: row;
-
   justify-content: space-between;
   align-items: center;
 }
@@ -56,6 +55,15 @@ $chats_width: 35vw;
   align-items: center;
   justify-content: center;
 
+  .chats__search__label {
+    display: none;
+    position: absolute;
+    transition: 0.2s;
+    color: $secondary_color;
+    font-size: 0.9rem;
+    cursor: text;
+  }
+
   input {
     padding: 10px;
     height: 32px;
@@ -74,15 +82,6 @@ $chats_width: 35vw;
     &:placeholder-shown ~ .chats__search__label {
       display: block;
     }
-  }
-
-  .chats__search__label {
-    display: none;
-    position: absolute;
-    transition: 0.2s;
-    color: $secondary_color;
-    font-size: 0.9rem;
-    cursor: text;
   }
 }
 

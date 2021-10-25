@@ -38,7 +38,6 @@
   border-bottom-color: $main_color;
   outline: 0;
   background: transparent;
-
   font-size: large;
 
   &::placeholder {
@@ -81,6 +80,7 @@
 .input-container__message-valid {
   color: $success_color;
 }
+
 .input-container__message-invalid {
   color: $danger_color;
 }
@@ -99,6 +99,5 @@
   color: $danger_color;
   white-space: pre-line;
   user-select: none;
-
   visibility: hidden;
 }

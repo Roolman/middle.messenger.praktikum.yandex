@@ -26,6 +26,13 @@ $message_gray_color: #f8f8f8;
   background-color: $message_gray_color;
 }
 
+.message__time {
+  position: absolute;
+  font-size: 0.85rem;
+  bottom: 8px;
+  right: 5px;
+}
+
 .message_image {
   & > .message__time {
     background-color: $secondary_color;
@@ -48,6 +55,7 @@ $message_gray_color: #f8f8f8;
     color: $secondary_color;
   }
 }
+
 .message_sent-by-user {
   border-radius: $message_radius;
   border-bottom-right-radius: 0;
@@ -63,11 +71,4 @@ $message_gray_color: #f8f8f8;
   & > .message__time {
     color: $main_color;
   }
-}
-
-.message__time {
-  position: absolute;
-  font-size: 0.85rem;
-  bottom: 8px;
-  right: 5px;
 }
