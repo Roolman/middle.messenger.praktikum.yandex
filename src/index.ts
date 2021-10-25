@@ -11,7 +11,7 @@ import { ProfileService } from './services/state/profile.service'
 window.onload = () => {
     registerServices()
 
-    goToMainPage()
+    goToLoginPage()
 }
 
 function registerServices() {
