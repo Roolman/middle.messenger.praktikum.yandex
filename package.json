@@ -1,6 +1,6 @@
 {
   "name": "vanillajs-messenger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VanillaJS messenger with component approach",
   "dependencies": {
     "express": "^4.17.1",
@@ -25,7 +25,7 @@
     "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
-    "pre-build": "./node_modules/.bin/parcel build index.html --port 3000",
+    "pre-build": "./node_modules/.bin/parcel build index.html",
     "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
     "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
     "start": "npm run build && node server.js",
