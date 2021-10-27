@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
-import './button.scss'
-import templ from './button.tmpl'
+import "./button.scss"
+import templ from "./button.tmpl"
 
 import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
 import { Component } from "../../utils/classes/component"
@@ -13,9 +13,8 @@ type ButtonProps = {
 }
 
 export class Button extends Component {
-
     props: ButtonProps
-    
+
     constructor(props: ButtonProps) {
         super("button", props)
     }
@@ -23,9 +22,9 @@ export class Button extends Component {
     setDefaultProps(props: ButtonProps): ButtonProps {
         return {
             ...props,
-            title: props.title || '',
+            title: props.title || "",
             type: props.type || BUTTON_TYPES.BASIC,
-            theme: props.theme || BUTTON_THEMES.PRIMARY
+            theme: props.theme || BUTTON_THEMES.PRIMARY,
         }
     }
 
@@ -49,15 +48,15 @@ export class Button extends Component {
         this._defineClass()
         const template = Handlebars.compile(templ)
         const result = template({
-            ...this.props
+            ...this.props,
         })
         return result
     }
 
     private _defineClass() {
         this.element.classList.add("button")
-        let typeClass: string = ''
-        switch(this.props.type) {
+        let typeClass: string = ""
+        switch (this.props.type) {
             case BUTTON_TYPES.BASIC:
                 typeClass = "button_basic"
                 break
@@ -70,14 +69,14 @@ export class Button extends Component {
             case BUTTON_TYPES.ROUND:
                 typeClass = "button_round"
                 break
-            default: 
+            default:
                 break
         }
-        if(typeClass) {
+        if (typeClass) {
             this.element.classList.add(typeClass)
         }
-        let themeClass: string = ''
-        switch(this.props.theme) {
+        let themeClass: string = ""
+        switch (this.props.theme) {
             case BUTTON_THEMES.PRIMARY:
                 themeClass = "button_primary"
                 break
@@ -87,12 +86,11 @@ export class Button extends Component {
             case BUTTON_THEMES.BASIC:
                 themeClass = "button_basic"
                 break
-            default: 
+            default:
                 break
         }
-        if(themeClass) {
+        if (themeClass) {
             this.element.classList.add(themeClass)
         }
     }
-
 }

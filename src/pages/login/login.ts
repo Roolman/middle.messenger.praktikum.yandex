@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars"
 
-import './login.scss'
-import templ from './login.tmpl'
+import "./login.scss"
+import templ from "./login.tmpl"
 
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
@@ -15,7 +15,6 @@ import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
 export class LoginPage extends Component {
-
     // Компоненты
     loginBlock: LoginRegisterBlock
     header: Header
@@ -50,10 +49,10 @@ export class LoginPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
-                }
+                    value: "",
+                },
             ]),
-            hideValidation: true
+            hideValidation: true,
         })
         this.passwordInput = new Input({
             name: "password",
@@ -62,22 +61,22 @@ export class LoginPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
-                }
+                    value: "",
+                },
             ]),
-            hideValidation: true
+            hideValidation: true,
         })
         this.rememberMeCheckbox = new Checkbox({
             name: "rememberMe",
-            label: "Запомнить меня"
+            label: "Запомнить меня",
         })
         this.form = new Form({
             id: "loginFormId",
             formElements: [
                 this.loginInput,
                 this.passwordInput,
-                this.rememberMeCheckbox
-            ]
+                this.rememberMeCheckbox,
+            ],
         })
         // Объединяем в один компонент
         this.loginBlock = new LoginRegisterBlock({
@@ -97,32 +96,34 @@ export class LoginPage extends Component {
 
     componentDidMount() {
         this._onMountSubscriptions.push(
-            Observable.fromEvent(this.loginBlock.mainButton.element, 'click')
-                        .subscribe(() => {
-                            if(this.form.isValid) {
-                                let values = []
-                                for(let formElement of this.form.formElements) {
-                                    values.push({name: formElement.name, value: formElement.value})
-                                }
-                                console.log(values)
-                                goToMainPage()
-                            }
-                        })   
+            Observable.fromEvent(this.loginBlock.mainButton.element, "click")
+                .subscribe(() => {
+                    if (this.form.isValid) {
+                        const values = []
+                        for (const formElement of this.form.formElements) {
+                            values.push({ name: formElement.name, value: formElement.value })
+                        }
+                        console.log(values)
+                        goToMainPage()
+                    }
+                }),
         )
         this._onMountSubscriptions.push(
-            Observable.fromEvent(this.loginBlock.secondButton.element, 'click')
-                        .subscribe(() => goToRegisterPage())   
+            Observable.fromEvent(this.loginBlock.secondButton.element, "click")
+                .subscribe(() => goToRegisterPage()),
         )
         this._onMountSubscriptions.push(
             this.form.onValidityChange.subscribe(
-                (isValid: boolean) => this._setLoginButtonValidity(isValid)
-            )  
+                (isValid: boolean) => this._setLoginButtonValidity(isValid),
+            ),
         )
     }
 
     _setLoginButtonValidity(isValid: boolean) {
-        isValid ? this.loginBlock.mainButton.setEnabled() :
-                    this.loginBlock.mainButton.setDisabled()
+        if (isValid) {
+            this.loginBlock.mainButton.setEnabled()
+        } else {
+            this.loginBlock.mainButton.setDisabled()
+        }
     }
-
 }

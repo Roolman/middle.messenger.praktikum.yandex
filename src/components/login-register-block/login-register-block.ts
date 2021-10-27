@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
-import './login-register-block.scss'
-import templ from './login-register-block.tmpl'
+import "./login-register-block.scss"
+import templ from "./login-register-block.tmpl"
 
 import { Button } from "../button/index"
 import { BUTTON_TYPES } from "../../constants/button"
@@ -16,7 +16,6 @@ type LoginRegisterBlockProps = {
 }
 
 export class LoginRegisterBlock extends Component {
-
     props: LoginRegisterBlockProps
     mainButton: Button
     secondButton: Button
@@ -35,11 +34,11 @@ export class LoginRegisterBlock extends Component {
     componentDidRender() {
         // Вставляем форму
         const actionsBlock = this.element.getElementsByClassName("login-register-block__actions")[0]
-        if(!actionsBlock) {
+        if (!actionsBlock) {
             throw new Error("Ошибка рендеринга LoginRegisterBlock")
         }
         const actionsBlockParent = actionsBlock.parentElement
-        if(!actionsBlockParent) {
+        if (!actionsBlockParent) {
             throw new Error("Ошибка рендеринга LoginRegisterBlock")
         }
         actionsBlockParent.insertBefore(this.props.form.element, actionsBlock)
@@ -48,13 +47,11 @@ export class LoginRegisterBlock extends Component {
             title: this.props.mainActionTitle,
             attributes: {
                 type: "submit",
-                form: this.props.form.element.id
-            }
+                form: this.props.form.element.id,
+            },
         })
-        this.secondButton = new Button({title: this.props.secondActionTitle, type: BUTTON_TYPES.LINK})
+        this.secondButton = new Button({ title: this.props.secondActionTitle, type: BUTTON_TYPES.LINK })
         actionsBlock.appendChild(this.mainButton.element)
         actionsBlock.appendChild(this.secondButton.element)
-
     }
-
 }

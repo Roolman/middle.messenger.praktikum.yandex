@@ -1,4 +1,4 @@
 export const MESSAGE_TYPES = {
-    TEXT: 'TEXT',
-    IMAGE: 'IMAGE'
+    TEXT: "TEXT",
+    IMAGE: "IMAGE",
 }

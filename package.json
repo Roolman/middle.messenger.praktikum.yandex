@@ -1,19 +1,24 @@
 {
   "name": "middle.messenger.praktikum.yandex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VanillaTS messenger with component approach",
   "dependencies": {
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
-    "parcel": "^2.0.0-rc.0"
+    "parcel": "^2.0.0-rc.0",
+    "typescript": "^4.4.4",
+    "handlebars": "^4.7.7"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.0.0-rc.0",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "@typescript-eslint/typescript-estree": "^5.2.0",
     "eslint": "^8.1.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.1",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "handlebars": "^4.7.7",
     "stylelint": "^14.0.0",
     "stylelint-config-standard": "^23.0.0"
   },
@@ -22,17 +27,14 @@
     "copy-static-windows": "xcopy /i /e static dist\\static",
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
-  
     "parcel-dev": "./node_modules/.bin/parcel index.html --port 3000",
     "dev": "npm run copy-static-linux && npm run parcel-dev",
     "dev-windows": "npm run copy-static-windows && npm run parcel-dev",
-
     "pre-build-linux": "npm run remove-dist-linux && npm run copy-static-linux",
     "pre-build-windows": "npm run remove-dist-windows && npm run copy-static-windows",
     "parcel-build": "./node_modules/.bin/parcel build index.html",
     "build": "npm run pre-build-linux && npm run parcel-build",
     "build-windows": "npm run pre-build-windows && npm run pre-build",
-
     "start": "npm run build && node server.js",
     "start-windows": "npm run build-windows && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

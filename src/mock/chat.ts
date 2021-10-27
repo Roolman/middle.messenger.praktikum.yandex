@@ -4,9 +4,10 @@ import { MessageData } from "../services/state/chats.service"
 export const CHAT = {
     name: "Вадим",
     avatar: "",
-    lastMessageTime: new Date()
+    lastMessageTime: new Date(),
 }
 
+/* eslint max-len: [2, 500] */
 export const MESSAGES: MessageData[] = [
     {
         id: 1,
@@ -15,20 +16,20 @@ export const MESSAGES: MessageData[] = [
 
         Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро.`,
         time: new Date(),
-        sentByUser: false
+        sentByUser: false,
     },
     {
         id: 2,
         type: MESSAGE_TYPES.IMAGE,
-        value:  "static/img/camera.png",
+        value: "static/img/camera.png",
         time: new Date(),
-        sentByUser: false
+        sentByUser: false,
     },
     {
         id: 3,
         type: MESSAGE_TYPES.TEXT,
-        value:  "Круто !",
+        value: "Круто !",
         time: new Date(),
-        sentByUser: true
-    }
+        sentByUser: true,
+    },
 ]

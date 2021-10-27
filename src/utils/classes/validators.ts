@@ -5,7 +5,7 @@ export enum VALIDITY_TYPES {
     min = "min",
     maxLength = "maxLength",
     minLength = "minLength",
-    type = "type"
+    type = "type",
 }
 
 export type Validator = {
@@ -29,14 +29,14 @@ export class Validators {
 
     setValidators(input: HTMLInputElement): void {
         // Тип всегда проверяется
-        if(!this._validators.map(x => x.type).includes(VALIDITY_TYPES.type)) {
+        if (!this._validators.map((x) => x.type).includes(VALIDITY_TYPES.type)) {
             this._validators.push({
                 type: VALIDITY_TYPES.type,
-                value: input.type
+                value: input.type,
             })
         }
 
-        for(let validator of this._validators) {
+        for (const validator of this._validators) {
             input.setAttribute(validator.type, validator.value.toString())
         }
     }
@@ -44,12 +44,12 @@ export class Validators {
     checkValidity(input: HTMLInputElement): void {
         this._invalidities = []
 
-        let validity = input.validity
+        const { validity } = input
 
-        for(let validator of this._validators) {
+        for (const validator of this._validators) {
             const validityField = this._getValidityField(validator.type)
-            if((validity as any)[validityField]) {
-                switch(validator.type) {
+            if ((validity as any)[validityField]) {
+                switch (validator.type) {
                     case VALIDITY_TYPES.required:
                         this.addInvalidity(validator.error || "Это поле обязательное")
                         break
@@ -64,19 +64,18 @@ export class Validators {
                         break
                     case VALIDITY_TYPES.minLength:
                         this.addInvalidity(validator.error || "Символов недостаточно")
-                        break                        
+                        break
                     case VALIDITY_TYPES.pattern:
                         this.addInvalidity(validator.error || "Значение не совпадает с шаблоном")
-                        break 
+                        break
                     case VALIDITY_TYPES.type:
                         this.addInvalidity(validator.error || "Значение не соответствует типу поля")
-                        break                         
-                    default: 
+                        break
+                    default:
                         break
                 }
             }
         }
-
     }
 
     addInvalidity(message: string): void {
@@ -84,13 +83,13 @@ export class Validators {
     }
 
     getInvalidities(): string {
-        return this._invalidities.join('\n') || ''
+        return this._invalidities.join("\n") || ""
     }
 
     _checkValidators(validators: Validator[]): void {
-        for(let validator of validators) {
+        for (const validator of validators) {
             const validityOptions = Object.values(VALIDITY_TYPES) as Array<string>
-            if(!validityOptions.includes(validator.type)){
+            if (!validityOptions.includes(validator.type)) {
                 throw new Error(`Не существует валидатора ${validator.type}`)
             }
         }
@@ -108,7 +107,6 @@ export class Validators {
     }
 
     _getValidityField(validityType: string): string {
-        return this._validityFields.get(validityType) || ''
+        return this._validityFields.get(validityType) || ""
     }
-
 }

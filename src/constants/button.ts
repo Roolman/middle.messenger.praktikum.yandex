@@ -2,11 +2,11 @@ export enum BUTTON_TYPES {
     BASIC = "BASIC",
     STROKED = "STROKED",
     LINK = "LINK",
-    ROUND = "ROUND"
+    ROUND = "ROUND",
 }
 
 export enum BUTTON_THEMES {
     PRIMARY = "PRIMARY",
     DANGER = "DANGER",
-    BASIC = "BASIC"
+    BASIC = "BASIC",
 }

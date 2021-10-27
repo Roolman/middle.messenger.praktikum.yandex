@@ -2,14 +2,14 @@ export const getShortChatDate = (date: Date) => {
     // Сравниваем с сегодня
     const now = new Date()
     const diff = Math.abs(date.getTime() - now.getTime())
-    const day = 60*60*24
-    const week = day*7
+    const day = 60 * 60 * 24
+    const week = day * 7
     // Если сегодня, то время
-    if(diff < day) return getDateHoursAndMinutes(date)
+    if (diff < day) return getDateHoursAndMinutes(date)
     // Если до недели, то день недели
-    if(diff < week) return `${date.toLocaleString("ru-Ru", { weekday: "long" })}`
+    if (diff < week) return `${date.toLocaleString("ru-Ru", { weekday: "long" })}`
     // Иначе дату в формате: "1 января 2021"
-    return `${date.toLocaleString("ru-Ru", {day: 'numeric', month: 'numeric', year: 'numeric' })}`
+    return `${date.toLocaleString("ru-Ru", { day: "numeric", month: "numeric", year: "numeric" })}`
 }
 
 export const getDateHoursAndMinutes = (date: Date) => {

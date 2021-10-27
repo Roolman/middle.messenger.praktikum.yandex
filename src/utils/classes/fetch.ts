@@ -1,10 +1,12 @@
-import { InternalObserver, InternalSubscribe, Observable, Subscription } from "./observable"
+import {
+    InternalObserver, Observable, Subscription,
+} from "./observable"
 
 export enum HTTP_METHODS {
-    GET = 'GET',
-    PUT = 'PUT',
-    POST = 'POST',
-    DELETE = 'DELETE'
+    GET = "GET",
+    PUT = "PUT",
+    POST = "POST",
+    DELETE = "DELETE",
 }
 
 type HTTP_OPTIONS = {
@@ -16,47 +18,41 @@ type HTTP_OPTIONS = {
 
 function queryStringify(data: Object): string {
     const entriesArray = Object.entries(data)
-    if(!entriesArray.length) {
-        return ''
+    if (!entriesArray.length) {
+        return ""
     }
-    let output = '?'
-    for(let [index, [key, value]] of entriesArray.entries()) {
+    let output = "?"
+    for (const [index, [key, value]] of entriesArray.entries()) {
         output += `${key}=${value.toString()}`
-        if(index !== entriesArray.length - 1) output += "&"
+        if (index !== entriesArray.length - 1) output += "&"
     }
     return output
 }
 
 export class HttpClient {
     get = (url: string, options?: HTTP_OPTIONS) => {
-
-        return this.request(url, {...options, method: HTTP_METHODS.GET}, options?.timeout)
+        this.request(url, { ...options, method: HTTP_METHODS.GET }, options?.timeout)
     }
 
     put = (url: string, options?: HTTP_OPTIONS) => {
-
-        return this.request(url, {...options, method: HTTP_METHODS.PUT}, options?.timeout)
+        this.request(url, { ...options, method: HTTP_METHODS.PUT }, options?.timeout)
     }
 
     post = (url: string, options?: HTTP_OPTIONS) => {
-
-        return this.request(url, {...options, method: HTTP_METHODS.POST}, options?.timeout)
+        this.request(url, { ...options, method: HTTP_METHODS.POST }, options?.timeout)
     }
 
     delete = (url: string, options?: HTTP_OPTIONS) => {
-
-        return this.request(url, {...options, method: HTTP_METHODS.DELETE}, options?.timeout)
+        this.request(url, { ...options, method: HTTP_METHODS.DELETE }, options?.timeout)
     }
 
     request(url: string, options: HTTP_OPTIONS, timeout?: number): Observable {
         return new Observable((observer: InternalObserver): Subscription => {
-
             this._request(url, options, timeout)
                 .then((xhr: XMLHttpRequest) => {
-                    if(xhr.status < 400){
+                    if (xhr.status < 400) {
                         observer.onNext(JSON.parse(xhr.response))
-                    }
-                    else {
+                    } else {
                         observer.onError(JSON.parse(xhr.response))
                     }
                 })
@@ -72,60 +68,55 @@ export class HttpClient {
                     observer = {
                         onNext: () => {},
                         onError: () => {},
-                        onCompleted: () => {}
+                        onCompleted: () => {},
                     }
-                }
+                },
             }
         })
     }
 
-    private _request = (url: string, options: HTTP_OPTIONS, timeout?: number): Promise<unknown> => {
+    private _request = (url: string, options: HTTP_OPTIONS, timeout?: number): Promise<unknown> => new Promise((resolve, reject) => {
+        if (!options.method) {
+            throw new Error("Укажите метод HTTP запроса")
+        }
 
-        return new Promise((resolve, reject) => {
-            
-            if(!options.method) {
-                throw new Error("Укажите метод HTTP запроса")
+        const xhr = new XMLHttpRequest()
+
+        // Получаем полный URL
+        const xhrURL: string = options.method === HTTP_METHODS.GET
+            ? url + queryStringify(options.data || {})
+            : url
+        // Устанавливаем headers
+        if (options.headers) {
+            for (const [key, value] of Object.entries(options.headers)) {
+                xhr.setRequestHeader(key, value.toString())
             }
+        }
+        // Открываем запрос
+        xhr.open(options.method, xhrURL)
 
-            let xhr = new XMLHttpRequest()
+        xhr.onload = () => {
+            resolve(xhr)
+        }
 
-            // Получаем полный URL
-            let xhrURL: string = options.method === HTTP_METHODS.GET ? 
-                                 url + queryStringify(options.data || {}) : 
-                                 url
-            // Устанавливаем headers
-            if(options.headers) {
-                for(let [key, value] of Object.entries(options.headers)) {
-                    xhr.setRequestHeader(key, value.toString())
+        xhr.onabort = reject
+        xhr.onerror = reject
+        xhr.ontimeout = reject
+
+        if (options.method === HTTP_METHODS.GET || !options.data) {
+            xhr.send()
+        } else {
+            const body = options.data as XMLHttpRequestBodyInit | null | undefined
+            xhr.send(body)
+        }
+
+        if (timeout) {
+            setTimeout(() => {
+                if (xhr.readyState !== 4) {
+                    reject(xhr)
+                    console.warn("Таймаут запроса ", url)
                 }
-            }
-            // Открываем запрос
-            xhr.open(options.method, xhrURL)
-
-            xhr.onload = () => {
-                resolve(xhr)
-            }
-
-            xhr.onabort = reject
-            xhr.onerror = reject
-            xhr.ontimeout = reject
-
-            if (options.method === HTTP_METHODS.GET || !options.data) {
-                xhr.send()
-            } else {
-                const body = options.data as XMLHttpRequestBodyInit | null | undefined
-                xhr.send(body)
-            }
-
-            if(timeout) {
-                setTimeout(() => {
-                    if(xhr.readyState !== 4) {
-                        reject(xhr)
-                        console.warn("Таймаут запроса " , url)
-                    }
-                }, timeout)
-            }
-        })
-
-    }
+            }, timeout)
+        }
+    })
 }

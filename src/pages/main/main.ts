@@ -1,14 +1,13 @@
 import * as Handlebars from "handlebars"
 
-import './main.scss'
-import templ from './main.tmpl'
+import "./main.scss"
+import templ from "./main.tmpl"
 
-import {Chats} from "./modules/chats/chats"
-import {Chat} from "./modules/chat/chat"
+import { Chats } from "./modules/chats/chats"
+import { Chat } from "./modules/chat/chat"
 import { Component } from "../../utils/classes/component"
 
 export class MainPage extends Component {
-
     chats: Chats
     chat: Chat
 
@@ -31,7 +30,6 @@ export class MainPage extends Component {
     }
 
     componentDidUnmount() {
-        
-    }
 
+    }
 }

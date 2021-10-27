@@ -1,13 +1,13 @@
 import * as Handlebars from "handlebars"
 
-import './chat.scss'
-import templ, {emptyChat} from './chat.tmpl'
+import "./chat.scss"
+import templ, { emptyChat } from "./chat.tmpl"
 
-import {Button} from "../../../../components/button/index"
+import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
 import { Component } from "../../../../utils/classes/component"
-import { ChatData, ChatsService, } from "../../../../services/state/chats.service"
+import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
 import { MessageInput } from "./components/message-input"
@@ -15,7 +15,6 @@ import { Observable } from "../../../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../../../utils/classes/validators"
 
 export class Chat extends Component {
-
     props: ChatData
 
     sendForm: Form
@@ -40,9 +39,9 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
-                        this.setProps({...chat})
-                    }
-                )
+                        this.setProps({ ...chat })
+                    },
+                ),
         )
         Handlebars.registerPartial("emptyChat", emptyChat)
     }
@@ -54,10 +53,9 @@ export class Chat extends Component {
 
     render() {
         this.element.classList.add("chat")
-        if(!this.props.id) {
+        if (!this.props.id) {
             this.element.classList.add("chat_empty")
-        }
-        else {
+        } else {
             this.element.classList.remove("chat_empty")
         }
         const template = Handlebars.compile(templ)
@@ -66,21 +64,21 @@ export class Chat extends Component {
     }
 
     componentDidRender() {
-        if(this.props.id) {
+        if (this.props.id) {
             // Создаем форму для инпута сообщения
             this.sendInput = new MessageInput({
                 validators: new Validators([
                     {
                         type: VALIDITY_TYPES.required,
-                        value: ''
-                    }
-                ])
+                        value: "",
+                    },
+                ]),
             })
             this.sendForm = new Form({
                 id: "sendMessageFormId",
                 formElements: [
-                    this.sendInput
-                ]
+                    this.sendInput,
+                ],
             })
             this.sendForm.element.classList.add("chat__input-width")
             // Кнопка отправки
@@ -90,18 +88,18 @@ export class Chat extends Component {
                 iconClass: "fa fa-arrow-right",
                 attributes: {
                     form: this.sendForm.element.id,
-                    type: "submit"
+                    type: "submit",
                 },
                 styles: {
-                    visibility: "hidden"
-                }
+                    visibility: "hidden",
+                },
             })
-            const chat_input = this.element.getElementsByClassName("chat__input")[0] as HTMLElement
-            chat_input.appendChild(this.sendForm.element)
-            chat_input.appendChild(this.sendButton.element)
+            const chatInput = this.element.getElementsByClassName("chat__input")[0] as HTMLElement
+            chatInput.appendChild(this.sendForm.element)
+            chatInput.appendChild(this.sendButton.element)
             // Сообщения
             this.messagesContainer = this.element.getElementsByClassName("chat__messages")[0] as HTMLElement
-            for(let message of this.props.messages) {
+            for (const message of this.props.messages) {
                 const mes = new Message(message)
                 this.messages.push(mes)
                 this.messagesContainer.appendChild(mes.element)
@@ -111,33 +109,35 @@ export class Chat extends Component {
 
     // TODO: Добавление сообщения со скролом
     componentDidMount() {
-        if(this.props.id) { 
+        if (this.props.id) {
             this._onMountSubscriptions.push(
                 Observable.fromEvent(this.sendButton.element, "click")
-                          .subscribe(
-                              (e: Event) => {
-                                  e.preventDefault()
+                    .subscribe(
+                        (e: Event) => {
+                            e.preventDefault()
 
-                                  if(this.sendForm.isValid) {
-                                    let message = this.sendInput.value
-                                    console.log(message)
-                                    // this._chatsService.addMessage(message)
-                                    message = ""
-                                  }
-                              }
-                          )
+                            if (this.sendForm.isValid) {
+                                let message = this.sendInput.value
+                                console.log(message)
+                                // this._chatsService.addMessage(message)
+                                message = ""
+                            }
+                        },
+                    ),
             )
             this._onMountSubscriptions.push(
                 this.sendForm.onValidityChange.subscribe(
-                    (isValid: boolean) => this._setSendButtonVisibility(isValid)
-                )  
+                    (isValid: boolean) => this._setSendButtonVisibility(isValid),
+                ),
             )
         }
     }
 
     _setSendButtonVisibility(visible: boolean) {
-        visible ? this.sendButton.setVisible() :
-                  this.sendButton.setInvisible()
+        if (visible) {
+            this.sendButton.setVisible()
+        } else {
+            this.sendButton.setInvisible()
+        }
     }
-
 }

@@ -9,8 +9,6 @@ type MessageInputProps = {
 }
 
 export class MessageInput extends Component implements FormElement {
-
-
     get name(): string {
         return this.element.getAttribute("name") || "chatMessage"
     }
@@ -38,15 +36,15 @@ export class MessageInput extends Component implements FormElement {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.element, "input")
-                    .subscribe(() => {
-                        this._checkInputValidity()
-                    })
+                .subscribe(() => {
+                    this._checkInputValidity()
+                }),
         )
     }
 
     private _checkInputValidity(): boolean {
         const element = this.element as HTMLInputElement
-        if(!element.checkValidity()) {
+        if (!element.checkValidity()) {
             this.props.validators.checkValidity(this.element)
             return false
         }

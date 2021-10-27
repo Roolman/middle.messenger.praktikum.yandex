@@ -11,26 +11,25 @@ export type InternalObserver = {
 export type InternalSubscribe = (obs: InternalObserver) => Subscription
 
 export class Observable {
-
     protected _subscribe: InternalSubscribe
 
     constructor(subcribe?: InternalSubscribe) {
-        if(subcribe) {
+        if (subcribe) {
             this._subscribe = subcribe
         }
     }
 
     subscribe(onNext: Function, onError?: Function, onCompleted?: Function): Subscription {
         return this._subscribe({
-            onNext: onNext,
+            onNext,
             onError: onError || (() => {}),
-            onCompleted: onCompleted || (() => {})
+            onCompleted: onCompleted || (() => {}),
         })
     }
 
     static of(...args: any[]): Observable {
         return new Observable((observer: InternalObserver): Subscription => {
-            args.forEach(val => observer.onNext(val))
+            args.forEach((val) => observer.onNext(val))
             observer.onCompleted()
 
             return {
@@ -38,28 +37,28 @@ export class Observable {
                     observer = {
                         onNext: () => {},
                         onError: () => {},
-                        onCompleted: () => {}
+                        onCompleted: () => {},
                     }
-                }
+                },
             }
         })
     }
 
     static from(iterable: Iterable<any>): Observable {
         return new Observable((observer: InternalObserver): Subscription => {
-            for (let item of iterable) {
+            for (const item of iterable) {
                 observer.onNext(item)
-            }            
+            }
             observer.onCompleted()
-    
+
             return {
                 unsubscribe: () => {
                     observer = {
                         onNext: () => {},
                         onError: () => {},
-                        onCompleted: () => {}
+                        onCompleted: () => {},
                     }
-                }
+                },
             }
         })
     }
@@ -71,9 +70,8 @@ export class Observable {
             source.addEventListener(eventName, callbackFn)
 
             return {
-                unsubscribe: () => source.removeEventListener(eventName, callbackFn)
+                unsubscribe: () => source.removeEventListener(eventName, callbackFn),
             }
         })
     }
 }
-

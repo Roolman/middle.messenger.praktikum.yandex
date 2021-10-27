@@ -16,7 +16,6 @@ export type ProfileField = {
 
 // NOTE: Это все тестовый код. В будущем будет переписано
 export class ProfileService {
-
     public profileObservable: Observable
     private _profileSubject: Subject<ProfileField[]>
     private _profile: ProfileField[]
@@ -33,11 +32,10 @@ export class ProfileService {
     }
 
     setProfile(fieldValues: ProfileFieldValue[]): void {
-        for(let fieldValue of fieldValues) {
-            let field = this._profile.find(f => f.name === fieldValue.name)
-            if(field) field.value = fieldValue.value
+        for (const fieldValue of fieldValues) {
+            const field = this._profile.find((f) => f.name === fieldValue.name)
+            if (field) field.value = fieldValue.value
         }
         this._profileSubject.next(this._profile)
     }
-
 }

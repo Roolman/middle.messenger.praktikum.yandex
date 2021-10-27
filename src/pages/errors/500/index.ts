@@ -1,1 +1,1 @@
-export {Error500Page} from "./500"
+export { Error500Page } from "./500"

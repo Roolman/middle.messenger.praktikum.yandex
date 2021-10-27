@@ -1,8 +1,8 @@
 import * as Handlebars from "handlebars"
 import { Component } from "../../utils/classes/component"
 import { FormElement } from "../form/form"
-import './checkbox.scss'
-import templ from './checkbox.tmpl'
+import "./checkbox.scss"
+import templ from "./checkbox.tmpl"
 
 type CheckboxProps = {
     name: string
@@ -10,7 +10,6 @@ type CheckboxProps = {
 }
 
 export class Checkbox extends Component implements FormElement {
-
     input: HTMLInputElement
 
     get name(): string {
@@ -37,5 +36,4 @@ export class Checkbox extends Component implements FormElement {
     componentDidRender() {
         this.input = this.element.getElementsByClassName("checkbox__input")[0] as HTMLInputElement
     }
-
 }

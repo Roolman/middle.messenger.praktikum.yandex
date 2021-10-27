@@ -2,8 +2,8 @@ import * as Handlebars from "handlebars"
 import { Component } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
-import './form.scss'
-import templ from './form.tmpl'
+import "./form.scss"
+import templ from "./form.tmpl"
 
 type FormProps = {
     id: string,
@@ -17,7 +17,6 @@ export interface FormElement extends Component {
 }
 
 export class Form extends Component {
-
     props: FormProps
     isValid: boolean
 
@@ -53,7 +52,7 @@ export class Form extends Component {
     }
 
     componentDidRender() {
-        for(let formElement of this.props.formElements) {
+        for (const formElement of this.props.formElements) {
             this.element.appendChild(formElement.element)
         }
     }
@@ -61,29 +60,28 @@ export class Form extends Component {
     componentDidMount() {
         // TODO: Сделать более эффективно
         // Навешиваем обработчик валидации
-        for(let formElement of this.props.formElements) {
+        for (const formElement of this.props.formElements) {
             // TODO: Добавить единый интерфейс FormElement // if((formElement instanceof Input)) {}
             this._onMountSubscriptions.push(
                 Observable.fromEvent(formElement.element, "input")
-                            .subscribe(
-                                () => {
-                                    const isValid = this._checkValidity()
-                                    if(this.isValid != isValid) {
-                                        this.isValid = isValid
-                                        this._onValidityChange.next(this.isValid)
-                                    }
-                                }
-                            )
+                    .subscribe(
+                        () => {
+                            const isValid = this._checkValidity()
+                            if (this.isValid !== isValid) {
+                                this.isValid = isValid
+                                this._onValidityChange.next(this.isValid)
+                            }
+                        },
+                    ),
             )
         }
     }
 
     private _checkValidity(): boolean {
         let isValid = true
-        for(let formElement of this.props.formElements) {
-            if(!formElement.isValid) isValid = false
-        }    
+        for (const formElement of this.props.formElements) {
+            if (!formElement.isValid) isValid = false
+        }
         return isValid
     }
-
 }

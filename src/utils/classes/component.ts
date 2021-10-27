@@ -26,7 +26,7 @@ export abstract class Component {
         FLOW_CDU: "flow:component-did-update",
         FLOW_CDM: "flow:component-did-mount",
         FLOW_CDUM: "flow:component-did-unmount",
-        FLOW_RENDER: "flow:render"
+        FLOW_RENDER: "flow:render",
     }
 
     props: ComponentProps
@@ -59,7 +59,7 @@ export abstract class Component {
         this._onMountSubscriptions = []
         this._meta = {
             tagName,
-            props
+            props,
         }
 
         const defaultProps = this.setDefaultProps(props)
@@ -71,13 +71,13 @@ export abstract class Component {
 
     protected setDefaultProps(props: ComponentProps) {
         return {
-            ...props
+            ...props,
         }
     }
 
     /*
     Lifecycle:
-        Once:     INIT -> FLOW_CDI 
+        Once:     INIT -> FLOW_CDI
         Repetead: FLOW_CDU -> FLOW_RENDER -> FLOW_CDR -> FLOW_CDM
         Once:     -> FLOW_CDUM
     */
@@ -110,28 +110,28 @@ export abstract class Component {
     private _init() {
         this._createResources()
         this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
-            (mutationRecords: MutationRecord[]) => {
-                if(!document.body.contains(this._element)) {
+            () => {
+                if (!document.body.contains(this._element)) {
                     this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
                 }
-            }
+            },
         ))
         this._eventBus.emit(Component.EVENTS.FLOW_CDI)
     }
 
     // Компонент проинициализирован
-    // Можно планировать события  
+    // Можно планировать события
     private _componentDidInit() {
         this.componentDidInit()
         this._eventBus.emit(Component.EVENTS.FLOW_CDU)
     }
 
     componentDidInit() {}
-    
+
     // Компонент был обновлен
     private _componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
         this.componentDidUpdate(oldProps, newProps)
-        for(let sub of this._onMountSubscriptions) {
+        for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
         this._onMountSubscriptions = []
@@ -148,21 +148,19 @@ export abstract class Component {
 
         // Устанавливаем стили
         const styles = Object.entries(this.props.styles || {})
-        for(let [styleName, value] of styles) {
+        for (const [styleName, value] of styles) {
             try {
                 this._element.style[styleName as any] = value
-            }
-            catch(err: any) {
+            } catch (err: any) {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
         // Устанавливаем аттрибуты
         const attributes = Object.entries(this.props.attributes || {})
-        for(let [attributeName, value] of attributes) {
+        for (const [attributeName, value] of attributes) {
             try {
-                this._element.setAttribute(attributeName, value) 
-            }
-            catch(err: any) {
+                this._element.setAttribute(attributeName, value)
+            } catch (err: any) {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
@@ -171,7 +169,7 @@ export abstract class Component {
     }
 
     render(): string {
-        return ''
+        return ""
     }
 
     // TODO: Разобраться с контекстом при вызове
@@ -197,19 +195,19 @@ export abstract class Component {
     private _componentDidUnmount() {
         this.componentDidUnmount()
         // Удаляем все подписки
-        for(let sub of this._subscriptions) {
+        for (const sub of this._subscriptions) {
             sub.unsubscribe()
         }
-        for(let sub of this._onMountSubscriptions) {
+        for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
         // Удаляем события из EventBus
-        this._unregisterEvents(this._eventBus);
+        this._unregisterEvents(this._eventBus)
         // Удаляем все свойства
         // TODO: Придумать другой метод
         // NOTE: Возможно это вообще лишнее
-        for(let [key, value] of Object.entries(this)) {
-            (this as any)[key] = null;
+        for (const [key, _] of Object.entries(this)) {
+            (this as any)[key] = null
         }
     }
 
@@ -217,21 +215,20 @@ export abstract class Component {
 
     // TODO: Додумать обработку утечек
     setProps = (nextProps: ComponentProps) => {
-        try{
+        try {
             if (!nextProps) {
                 return
             }
 
             Object.assign(this.props, nextProps)
             this._eventBus.emit(Component.EVENTS.FLOW_CDU)
-        }
-        catch(err) {
+        } catch (err) {
             console.error(err)
             throw new Error(
                 `
                 Ошибка установки параметров компоненту.
                 Убедитесь, что все подписки были добавлены в this._subscriptions !
-                `
+                `,
             )
         }
     }
@@ -248,7 +245,7 @@ export abstract class Component {
             },
             deleteProperty() {
                 throw new Error("Нельзя удалять свойства блока")
-            }
+            },
         })
     }
 

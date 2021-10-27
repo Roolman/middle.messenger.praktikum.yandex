@@ -1,14 +1,13 @@
 import * as Handlebars from "handlebars"
-import './message.scss'
-import templ from './message.tmpl'
+import "./message.scss"
+import templ from "./message.tmpl"
 
 import { MESSAGE_TYPES } from "../../../../../../constants/message"
-import {getDateHoursAndMinutes} from "../../../../../../utils/helpers/date.utils"
+import { getDateHoursAndMinutes } from "../../../../../../utils/helpers/date.utils"
 import { Component } from "../../../../../../utils/classes/component"
 import { MessageData } from "../../../../../../services/state/chats.service"
 
 export class Message extends Component {
-
     props: MessageData
 
     constructor(props: MessageData) {
@@ -27,28 +26,26 @@ export class Message extends Component {
 
     _defineClass() {
         this.element.classList.add("message")
-        let typeClass: string = ''
-        switch(this.props.type) {
+        let typeClass: string = ""
+        switch (this.props.type) {
             case MESSAGE_TYPES.TEXT:
                 typeClass = "message_text"
                 break
             case MESSAGE_TYPES.IMAGE:
                 typeClass = "message_image"
                 break
-            default: 
+            default:
                 break
         }
-        if(typeClass) {
+        if (typeClass) {
             this.element.classList.add(typeClass)
         }
-        let sentByClass: string = ''
-        if(this.props.sentByUser) {
+        let sentByClass: string = ""
+        if (this.props.sentByUser) {
             sentByClass = "message_sent-by-user"
-        }
-        else {
+        } else {
             sentByClass = "message_sent-not-by-user"
         }
         this.element.classList.add(sentByClass)
     }
-
 }

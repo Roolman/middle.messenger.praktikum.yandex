@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars"
 
-import './register.scss'
-import templ from './register.tmpl'
+import "./register.scss"
+import templ from "./register.tmpl"
 
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
@@ -14,7 +14,6 @@ import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
 export class RegisterPage extends Component {
-
     registerBlock: LoginRegisterBlock
     // Форма
     form: Form
@@ -25,7 +24,7 @@ export class RegisterPage extends Component {
     phoneInput: Input
     passwordInput: Input
     passwordCheckInput: Input
-    
+
     constructor() {
         super("div")
     }
@@ -46,14 +45,14 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^.+@[A-Za-z]+\\.[A-za-z]+$',
-                    error: 'Введите e-mail корректно'
-                }
-            ])
+                    value: "^.+@[A-Za-z]+\\.[A-za-z]+$",
+                    error: "Введите e-mail корректно",
+                },
+            ]),
         })
         this.loginInput = new Input({
             name: "login",
@@ -62,24 +61,24 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.minLength,
                     value: 3,
-                    error: "Не менее 3 символов"
+                    error: "Не менее 3 символов",
                 },
                 {
                     type: VALIDITY_TYPES.maxLength,
                     value: 20,
-                    error: "Не более 20 символов"
+                    error: "Не более 20 символов",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я0-9\_\-]+$',
-                    error: 'Логин должен содержать только символы [A-z][0-9]-_ и начинаться с буквы'
-                }
-            ])
+                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я0-9\_\-]+$",
+                    error: "Логин должен содержать только символы [A-z][0-9]-_ и начинаться с буквы",
+                },
+            ]),
         })
         this.firstNameInput = new Input({
             name: "first_name",
@@ -88,14 +87,14 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$',
-                    error: 'Латиница или кириллица. Допустим дефис. Первая буква заглавная'
-                }
-            ])
+                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$",
+                    error: "Латиница или кириллица. Допустим дефис. Первая буква заглавная",
+                },
+            ]),
         })
         this.secondNameInput = new Input({
             name: "second_name",
@@ -104,14 +103,14 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$',
-                    error: 'Латиница или кириллица. Допустим дефис. Первая буква заглавная'
-                }
-            ])
+                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$",
+                    error: "Латиница или кириллица. Допустим дефис. Первая буква заглавная",
+                },
+            ]),
         })
         this.phoneInput = new Input({
             name: "phone",
@@ -120,24 +119,24 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.minLength,
                     value: 10,
-                    error: "Не менее 10 символов"
+                    error: "Не менее 10 символов",
                 },
                 {
                     type: VALIDITY_TYPES.maxLength,
                     value: 15,
-                    error: "Не более 15 символов"
+                    error: "Не более 15 символов",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^\\+{0,1}[0-9]+$',
-                    error: 'Только цифры. Может начинаться с +'
-                }
-            ])
+                    value: "^\\+{0,1}[0-9]+$",
+                    error: "Только цифры. Может начинаться с +",
+                },
+            ]),
         })
         this.passwordInput = new Input({
             name: "password",
@@ -146,24 +145,24 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.minLength,
                     value: 8,
-                    error: "Не менее 8 символов"
+                    error: "Не менее 8 символов",
                 },
                 {
                     type: VALIDITY_TYPES.maxLength,
                     value: 40,
-                    error: "Не более 40 символов"
+                    error: "Не более 40 символов",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '^(?=.*[\\p{Lu}])(?=.*\\d).*$',
-                    error: 'Обязательно хотя бы одна заглавная буква и цифра'
-                }
-            ])
+                    value: "^(?=.*[\\p{Lu}])(?=.*\\d).*$",
+                    error: "Обязательно хотя бы одна заглавная буква и цифра",
+                },
+            ]),
         })
         this.passwordCheckInput = new Input({
             name: "password_check",
@@ -172,14 +171,14 @@ export class RegisterPage extends Component {
             validators: new Validators([
                 {
                     type: VALIDITY_TYPES.required,
-                    value: ''
+                    value: "",
                 },
                 {
                     type: VALIDITY_TYPES.pattern,
-                    value: '',
-                    error: 'Пароли не совпадают'
-                }
-            ])
+                    value: "",
+                    error: "Пароли не совпадают",
+                },
+            ]),
         })
         // Форма
         this.form = new Form({
@@ -191,8 +190,8 @@ export class RegisterPage extends Component {
                 this.secondNameInput,
                 this.phoneInput,
                 this.passwordInput,
-                this.passwordCheckInput
-            ]
+                this.passwordCheckInput,
+            ],
         })
         const header = new Header()
         // Объединяем в один компонент
@@ -211,28 +210,28 @@ export class RegisterPage extends Component {
 
     componentDidMount() {
         this._onMountSubscriptions.push(
-            Observable.fromEvent(this.registerBlock.mainButton.element, 'click')
-                        .subscribe((e: Event) => {
-                            e.preventDefault()
+            Observable.fromEvent(this.registerBlock.mainButton.element, "click")
+                .subscribe((e: Event) => {
+                    e.preventDefault()
 
-                            if(this.form.isValid) {
-                                let values = []
-                                for(let formElement of this.form.formElements) {
-                                    values.push({name: formElement.name, value: formElement.value})
-                                }
-                                console.log(values)
-                                alert("Зареган!")
-                            }
-                        })   
+                    if (this.form.isValid) {
+                        const values = []
+                        for (const formElement of this.form.formElements) {
+                            values.push({ name: formElement.name, value: formElement.value })
+                        }
+                        console.log(values)
+                        alert("Зареган!")
+                    }
+                }),
         )
         this._onMountSubscriptions.push(
-            Observable.fromEvent(this.registerBlock.secondButton.element, 'click')
-                        .subscribe(() => goToLoginPage())   
+            Observable.fromEvent(this.registerBlock.secondButton.element, "click")
+                .subscribe(() => goToLoginPage()),
         )
         this._onMountSubscriptions.push(
             this.form.onValidityChange.subscribe(
-                (isValid: boolean) => this._setRegisterButtonValidity(isValid)
-            )  
+                (isValid: boolean) => this._setRegisterButtonValidity(isValid),
+            ),
         )
         this._onMountSubscriptions.push(
             this.passwordInput.onValueChange.subscribe(
@@ -241,23 +240,22 @@ export class RegisterPage extends Component {
                         validators: new Validators([
                             {
                                 type: VALIDITY_TYPES.required,
-                                value: ''
+                                value: "",
                             },
                             {
                                 type: VALIDITY_TYPES.pattern,
-                                value: value,
-                                error: 'Пароли не совпадают'
-                            }
-                        ]) 
+                                value,
+                                error: "Пароли не совпадают",
+                            },
+                        ]),
                     })
-                }
-            )  
+                },
+            ),
         )
     }
 
     _setRegisterButtonValidity(isValid: boolean) {
-        isValid ? this.registerBlock.mainButton.setEnabled() :
-                    this.registerBlock.mainButton.setDisabled()
+        isValid ? this.registerBlock.mainButton.setEnabled()
+            : this.registerBlock.mainButton.setDisabled()
     }
-
 }

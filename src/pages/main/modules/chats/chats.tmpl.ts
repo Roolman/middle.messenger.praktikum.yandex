@@ -8,7 +8,13 @@ export default
             </a>                   
         </div>
         <div class="chats__search">
-            <input type="search" id="chatSearch" name="chatSearch" class="chats__search__input" placeholder="Поиск"/>
+            <input 
+                type="search" 
+                id="chatSearch"
+                name="chatSearch" 
+                class="chats__search__input" 
+                placeholder="Поиск"
+            />
             <label for="chatSearch" class="chats__search__label">
                 <i class="fa fa-search"></i>
                 Поиск

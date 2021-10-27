@@ -22,7 +22,6 @@ export default
     {{/if}}
 `
 
-export const emptyChat = 
-`
+export const emptyChat = `
     <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
 `
