@@ -133,8 +133,9 @@ export abstract class Component {
     componentDidInit() {}
 
     // Компонент был обновлен
-    private _componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
-        this.componentDidUpdate(oldProps, newProps)
+    private _componentDidUpdate() {
+        // oldProps: ComponentProps, newProps: ComponentProps
+        this.componentDidUpdate() // oldProps, newProps
         for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
@@ -142,7 +143,8 @@ export abstract class Component {
         this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
     }
 
-    componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
+    componentDidUpdate() {
+        // oldProps: ComponentProps, newProps: ComponentProps
         return true
     }
 
@@ -150,7 +152,7 @@ export abstract class Component {
         const block = this.render()
         this._element.innerHTML = block
         // Добавляем класс для элемента компонента (если есть)
-        if(this.props.componentClassName) {
+        if (this.props.componentClassName) {
             this._element.classList.add(this.props.componentClassName)
         }
         // Устанавливаем стили
@@ -158,8 +160,7 @@ export abstract class Component {
         for (const [styleName, value] of styles) {
             try {
                 this._element.style[styleName as any] = value
-            } 
-            catch (err: any) {
+            } catch (err: any) {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
@@ -168,8 +169,7 @@ export abstract class Component {
         for (const [attributeName, value] of attributes) {
             try {
                 this._element.setAttribute(attributeName, value)
-            } 
-            catch (err: any) {
+            } catch (err: any) {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
@@ -201,8 +201,8 @@ export abstract class Component {
         this.componentDidMount()
     }
 
-    componentDidMount(oldProps?: ComponentProps) {}
-
+    componentDidMount() {}
+    // oldProps?: ComponentProps
     // Компонент исчез из дерева
     // Можно закрыть подпикси. Очистить все данные
     private _componentDidUnmount() {
@@ -219,7 +219,7 @@ export abstract class Component {
         // Удаляем все свойства
         // TODO: Придумать другой метод
         // NOTE: Возможно это вообще лишнее
-        for (const [key, _] of Object.entries(this)) {
+        for (const [key] of Object.entries(this)) {
             (this as any)[key] = null
         }
     }
@@ -269,9 +269,9 @@ export abstract class Component {
     // Получить ссылки на дочерние компоненты внутри
     private _getComponentChildrenReferences() {
         const childrenComponents = this._element.querySelectorAll("[data-ref]")
-        for(const child of Array.from(childrenComponents)) {
+        for (const child of Array.from(childrenComponents)) {
             const childName = child.getAttribute("data-ref")
-            if(childName) {
+            if (childName) {
                 (this as any)[childName] = child
             }
         }

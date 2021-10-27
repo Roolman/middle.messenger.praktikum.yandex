@@ -16,7 +16,7 @@ export class ChangeAvatar extends Component {
     setDefaultProps(props: ComponentProps): ComponentProps {
         return {
             ...props,
-            componentClassName: "change-avatar"
+            componentClassName: "change-avatar",
         }
     }
 

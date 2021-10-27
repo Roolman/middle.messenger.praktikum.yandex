@@ -16,7 +16,7 @@ export class Error500Page extends Component {
     setDefaultProps(props: ComponentProps): ComponentProps {
         return {
             ...props,
-            componentClassName: "error500"
+            componentClassName: "error500",
         }
     }
 
@@ -31,7 +31,7 @@ export class Error500Page extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToMainButton.element, "click")
-            .subscribe(goToMainPage)
+                .subscribe(goToMainPage),
         )
     }
 }

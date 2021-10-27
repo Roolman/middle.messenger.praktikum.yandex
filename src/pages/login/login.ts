@@ -35,7 +35,7 @@ export class LoginPage extends Component {
     setDefaultProps(props: ComponentProps): ComponentProps {
         return {
             ...props,
-            componentClassName: "login"
+            componentClassName: "login",
         }
     }
 
@@ -66,8 +66,8 @@ export class LoginPage extends Component {
                 this.rememberMeCheckbox,
             ],
             attributes: {
-                id: "loginFormId"
-            }
+                id: "loginFormId",
+            },
         })
         // Объединяем в один компонент
         this.loginBlock = new LoginRegisterBlock({

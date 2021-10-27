@@ -55,13 +55,13 @@ export class ChatsService {
         this._chatsSubject.next(this._chats)
     }
 
-    setChat(id: number): void {
-        this._chat = this._chats.find(x => x.id == id) || null
-        if(this._chat) {
-            const id = this._chat.id
+    setChat(chatId: number): void {
+        this._chat = this._chats.find((x) => x.id === chatId) || null
+        if (this._chat) {
+            const { id } = this._chat
             this.setMessages(this._chat)
-            this._chats = this._chats.map(x => ({...x, selected: x.id === id}))
-    
+            this._chats = this._chats.map((x) => ({ ...x, selected: x.id === id }))
+
             this._chatsSubject.next(this._chats)
             this._chatSubject.next(this._chat)
         }

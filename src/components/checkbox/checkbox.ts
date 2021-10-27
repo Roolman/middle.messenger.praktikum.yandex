@@ -28,8 +28,7 @@ export class Checkbox extends Component implements FormElement {
     setDefaultProps(props: CheckboxProps): CheckboxProps {
         return {
             ...props,
-            componentClassName: "checkbox-container"
+            componentClassName: "checkbox-container",
         }
     }
-
 }

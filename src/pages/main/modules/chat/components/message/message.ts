@@ -9,7 +9,6 @@ import { MessageData } from "../../../../../../services/state/chats.service"
 type MessageProps = MessageData & ComponentProps
 
 export class Message extends Component {
-
     props: MessageProps
 
     constructor(props: MessageProps) {
@@ -33,8 +32,7 @@ export class Message extends Component {
         let sentByClass: string = ""
         if (this.props.sentByUser) {
             sentByClass = "message_sent-by-user"
-        } 
-        else {
+        } else {
             sentByClass = "message_sent-not-by-user"
         }
         this.element.classList.add(messageTypeClass)

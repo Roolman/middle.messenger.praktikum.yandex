@@ -21,7 +21,6 @@ export const BUTTON_TYPE_CLASS: ButtonClass = {
     [BUTTON_TYPES.ROUND]: "button_round",
 }
 
-
 export const BUTTON_THEME_CLASS: ButtonClass = {
     [BUTTON_THEMES.PRIMARY]: "button_primary",
     [BUTTON_THEMES.DANGER]: "button_danger",

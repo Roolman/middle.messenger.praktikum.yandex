@@ -74,11 +74,12 @@ export class Chats extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.profileLink, "click")
-            .subscribe(
-                (event: MouseEvent) => {
-                    event.preventDefault()
-                    goToProfilePage()
-                },
-        ))
+                .subscribe(
+                    (event: MouseEvent) => {
+                        event.preventDefault()
+                        goToProfilePage()
+                    },
+                ),
+        )
     }
 }

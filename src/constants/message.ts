@@ -1,4 +1,4 @@
-export enum MESSAGE_TYPES  {
+export enum MESSAGE_TYPES {
     TEXT = "TEXT",
     IMAGE = "IMAGE",
 }

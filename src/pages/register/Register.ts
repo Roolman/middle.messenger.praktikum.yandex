@@ -10,10 +10,11 @@ import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
-import { EMAIL_VALIDATOR, LOGIN_MAX_LENGTH_VALIDATOR, LOGIN_MIN_LENGTH_VALIDATOR, 
-    LOGIN_PATTERN_VALIDATOR, NAME_PATTERN_VALIDATOR, PASSWORD_MAX_LENGTH_VALIDATOR, 
-    PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR, 
-    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR 
+import {
+    EMAIL_VALIDATOR, LOGIN_MAX_LENGTH_VALIDATOR, LOGIN_MIN_LENGTH_VALIDATOR,
+    LOGIN_PATTERN_VALIDATOR, NAME_PATTERN_VALIDATOR, PASSWORD_MAX_LENGTH_VALIDATOR,
+    PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
+    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
 
 export class RegisterPage extends Component {
@@ -41,7 +42,7 @@ export class RegisterPage extends Component {
             type: "email",
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                EMAIL_VALIDATOR
+                EMAIL_VALIDATOR,
             ]),
         })
         this.loginInput = new Input({
@@ -61,7 +62,7 @@ export class RegisterPage extends Component {
             type: "text",
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR
+                NAME_PATTERN_VALIDATOR,
             ]),
         })
         this.secondNameInput = new Input({
@@ -70,7 +71,7 @@ export class RegisterPage extends Component {
             type: "text",
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR
+                NAME_PATTERN_VALIDATOR,
             ]),
         })
         this.phoneInput = new Input({
@@ -121,7 +122,7 @@ export class RegisterPage extends Component {
             ],
             attributes: {
                 id: "registerFormId",
-            }
+            },
         })
         const header = new Header()
         // Объединяем в один компонент
@@ -182,7 +183,10 @@ export class RegisterPage extends Component {
     }
 
     _setRegisterButtonValidity(isValid: boolean) {
-        isValid ? this.registerBlock.mainButton.setEnabled()
-            : this.registerBlock.mainButton.setDisabled()
+        if (isValid) {
+            this.registerBlock.mainButton.setEnabled()
+        } else {
+            this.registerBlock.mainButton.setDisabled()
+        }
     }
 }

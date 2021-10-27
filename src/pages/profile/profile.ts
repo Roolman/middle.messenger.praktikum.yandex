@@ -17,9 +17,10 @@ import {
 import { Inject } from "../../utils/decorators/inject"
 import { Observable } from "../../utils/classes/observable"
 import { Validators } from "../../utils/classes/validators"
-import { EMAIL_VALIDATOR, NAME_PATTERN_VALIDATOR, PASSWORD_MAX_LENGTH_VALIDATOR,
-     PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
-      PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR 
+import {
+    EMAIL_VALIDATOR, NAME_PATTERN_VALIDATOR, PASSWORD_MAX_LENGTH_VALIDATOR,
+    PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
+    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
 
 type ProfilePageProps = ComponentProps & {
@@ -69,7 +70,7 @@ export class ProfilePage extends Component {
             profileData: PROFILE_DATA,
             profileIsEditable: false,
             changePasswordFormIsShown: false,
-            componentClassName: "profile"
+            componentClassName: "profile",
         }
     }
 
@@ -93,7 +94,7 @@ export class ProfilePage extends Component {
             value: this.props.profileData.find((x) => x.name === "email")?.value,
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                EMAIL_VALIDATOR
+                EMAIL_VALIDATOR,
             ]),
         })
         this.profileFirstName = new Input({
@@ -103,7 +104,7 @@ export class ProfilePage extends Component {
             value: this.props.profileData.find((x) => x.name === "first_name")?.value,
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR
+                NAME_PATTERN_VALIDATOR,
             ]),
         })
         this.profileSecondName = new Input({
@@ -113,7 +114,7 @@ export class ProfilePage extends Component {
             value: this.props.profileData.find((x) => x.name === "second_name")?.value,
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR
+                NAME_PATTERN_VALIDATOR,
             ]),
         })
         this.profileDisplayName = new Input({
@@ -123,7 +124,7 @@ export class ProfilePage extends Component {
             value: this.props.profileData.find((x) => x.name === "dispalay_name")?.value,
             validators: new Validators([
                 REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR
+                NAME_PATTERN_VALIDATOR,
             ]),
         })
         this.profilePhone = new Input({
@@ -147,8 +148,8 @@ export class ProfilePage extends Component {
                 this.profilePhone,
             ],
             attributes: {
-                id: "profileEditFormId"
-            }
+                id: "profileEditFormId",
+            },
         })
         // Форма пароля
         this.passwordOld = new Input({
@@ -156,7 +157,7 @@ export class ProfilePage extends Component {
             title: "Старый пароль",
             type: "password",
             validators: new Validators([
-                REQUIRED_VALIDATOR
+                REQUIRED_VALIDATOR,
             ]),
         })
         this.passwordNew = new Input({
@@ -167,7 +168,7 @@ export class ProfilePage extends Component {
                 REQUIRED_VALIDATOR,
                 PASSWORD_MIN_LENGTH_VALIDATOR,
                 PASSWORD_MAX_LENGTH_VALIDATOR,
-                PASSWORD_PATTERN_VALIDATOR
+                PASSWORD_PATTERN_VALIDATOR,
             ]),
         })
         this.passwordForm = new Form({
@@ -177,7 +178,7 @@ export class ProfilePage extends Component {
             ],
             attributes: {
                 id: "passwordFormId",
-            }
+            },
         })
         // Смена аватара
         this.сhangeAvatar = new ChangeAvatar()
@@ -313,10 +314,9 @@ export class ProfilePage extends Component {
     }
 
     _setSaveButtonValidity(isValid: boolean) {
-        if(isValid) {
+        if (isValid) {
             this.profileSaveButton.setEnabled()
-        }
-        else {
+        } else {
             this.profileSaveButton.setDisabled()
         }
     }

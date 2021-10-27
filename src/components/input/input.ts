@@ -49,7 +49,7 @@ export class Input extends Component implements FormElement {
         return {
             ...props,
             value: props.value || "",
-            componentClassName: "input-container"
+            componentClassName: "input-container",
         }
     }
 
@@ -71,7 +71,10 @@ export class Input extends Component implements FormElement {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.input, "focus")
                 .subscribe(() => {
-                    if (!this._checkInputValidity() && this.touched && !this.props.isValidationHidden) {
+                    if (!this._checkInputValidity()
+                        && this.touched
+                        && !this.props.isValidationHidden
+                    ) {
                         this.showErrors()
                     }
                 }),
@@ -117,11 +120,10 @@ export class Input extends Component implements FormElement {
         this.messageContainer.classList.remove("input-container__message-valid")
         this.messageContainer.classList.remove("input-container__message-invalid")
 
-        if(isValid) {
+        if (isValid) {
             this.messageContainer.classList.add("input-container__message-valid")
             this.messageContainer.textContent = "Все хорошо"
-        }
-        else {
+        } else {
             this.messageContainer.classList.add("input-container__message-invalid")
             this.messageContainer.textContent = "Поле содержит ошибку"
         }

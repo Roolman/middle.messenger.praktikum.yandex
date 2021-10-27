@@ -16,7 +16,7 @@ export class MainPage extends Component {
     setDefaultProps(props: ComponentProps): ComponentProps {
         return {
             ...props,
-            componentClassName: "main"
+            componentClassName: "main",
         }
     }
 
@@ -26,5 +26,4 @@ export class MainPage extends Component {
         this.element.appendChild(this.chats.element)
         this.element.appendChild(this.chat.element)
     }
-
 }

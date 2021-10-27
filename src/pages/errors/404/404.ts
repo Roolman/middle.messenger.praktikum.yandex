@@ -16,7 +16,7 @@ export class Error404Page extends Component {
     setDefaultProps(props: ComponentProps): ComponentProps {
         return {
             ...props,
-            componentClassName: "error404"
+            componentClassName: "error404",
         }
     }
 
@@ -31,7 +31,7 @@ export class Error404Page extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToMainButton.element, "click")
-            .subscribe(goToMainPage)
+                .subscribe(goToMainPage),
         )
     }
 }

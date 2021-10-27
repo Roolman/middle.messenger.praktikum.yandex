@@ -75,7 +75,9 @@ export class HttpClient {
         })
     }
 
+    /* eslint-disable */
     private _request = (url: string, options: HTTP_OPTIONS, timeout?: number): Promise<unknown> => new Promise((resolve, reject) => {
+    /* eslint-enable */
         if (!options.method) {
             throw new Error("Укажите метод HTTP запроса")
         }
@@ -86,7 +88,7 @@ export class HttpClient {
         const xhrURL: string = options.method === HTTP_METHODS.GET
             ? url + queryStringify(options.data || {})
             : url
-        // Устанавливаем headers
+            // Устанавливаем headers
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
                 xhr.setRequestHeader(key, value.toString())

@@ -19,7 +19,7 @@ export class Header extends Component {
         return {
             ...props,
             title: "Fast messenger",
-            componentClassName: "header"
+            componentClassName: "header",
         }
     }
 
@@ -41,11 +41,11 @@ export class Header extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToError404.element, "click")
-                .subscribe(goToError404Page)
+                .subscribe(goToError404Page),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToError500.element, "click")
-                .subscribe(goToError500Page)
+                .subscribe(goToError500Page),
         )
     }
 }

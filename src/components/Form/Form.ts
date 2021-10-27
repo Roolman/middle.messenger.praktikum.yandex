@@ -40,7 +40,7 @@ export class Form extends Component {
     setDefaultProps(props: FormProps): FormProps {
         return {
             ...props,
-            componentClassName: "form"
+            componentClassName: "form",
         }
     }
 

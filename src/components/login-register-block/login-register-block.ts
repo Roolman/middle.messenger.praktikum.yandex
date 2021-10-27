@@ -28,7 +28,7 @@ export class LoginRegisterBlock extends Component {
     setDefaultProps(props: LoginRegisterBlockProps): LoginRegisterBlockProps {
         return {
             ...props,
-            componentClassName: "login-register-block"
+            componentClassName: "login-register-block",
         }
     }
 
@@ -43,7 +43,10 @@ export class LoginRegisterBlock extends Component {
                 form: this.props.form.element.id,
             },
         })
-        this.secondButton = new Button({ title: this.props.secondActionTitle, type: BUTTON_TYPES.LINK })
+        this.secondButton = new Button({
+            title: this.props.secondActionTitle,
+            type: BUTTON_TYPES.LINK,
+        })
         this.actionsBlock.appendChild(this.mainButton.element)
         this.actionsBlock.appendChild(this.secondButton.element)
     }

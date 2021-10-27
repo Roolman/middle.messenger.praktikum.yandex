@@ -66,8 +66,7 @@ export class Chat extends Component {
     componentDidRender() {
         if (!this.props.id) {
             this.element.classList.add("chat_empty")
-        } 
-        else {
+        } else {
             this.element.classList.remove("chat_empty")
             // Создаем форму для инпута сообщения
             this.sendInput = new MessageInput({
@@ -79,7 +78,7 @@ export class Chat extends Component {
                 ],
                 attributes: {
                     id: "sendMessageFormId",
-                }
+                },
             })
             this.sendForm.element.classList.add("chat__input-width")
             // Кнопка отправки

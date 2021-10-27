@@ -20,12 +20,12 @@ export class ChatPreview extends Component {
     setDefaultProps(props: ChatPreviewProps): ChatPreviewProps {
         return {
             ...props,
-            componentClassName: "chats__chat-container"
+            componentClassName: "chats__chat-container",
         }
     }
 
     componentDidRender() {
-        if(this.props.selected) {
+        if (this.props.selected) {
             this.element.classList.add("chats__chat-selected")
         }
     }

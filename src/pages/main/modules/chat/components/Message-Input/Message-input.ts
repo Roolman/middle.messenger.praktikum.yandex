@@ -27,7 +27,7 @@ export class MessageInput extends Component implements FormElement {
     setDefaultProps(props: MessageInputProps): MessageInputProps {
         return {
             ...props,
-            componentClassName: "chat__input-text"
+            componentClassName: "chat__input-text",
         }
     }
 
