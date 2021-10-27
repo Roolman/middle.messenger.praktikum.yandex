@@ -1,7 +1,7 @@
 {
-  "name": "vanillajs-messenger",
+  "name": "middle.messenger.praktikum.yandex",
   "version": "1.0.0",
-  "description": "VanillaJS messenger with component approach",
+  "description": "VanillaTS messenger with component approach",
   "dependencies": {
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
@@ -20,26 +20,31 @@
   "scripts": {
     "copy-static-linux": "cp -r static/ dist/",
     "copy-static-windows": "xcopy /i /e static dist\\static",
-    "pre-dev": "./node_modules/.bin/parcel index.html --port 3000",
-    "dev": "npm run copy-static-linux && npm run pre-dev",
-    "dev-windows": "npm run copy-static-windows && npm run pre-dev",
     "remove-dist-linux": "rm -rf dist",
     "remove-dist-windows": "rmdir /q /s dist",
-    "pre-build": "./node_modules/.bin/parcel build index.html",
-    "build": "npm run remove-dist-linux && npm run copy-static-linux && npm run pre-build",
-    "build-windows": "npm run remove-dist-windows && npm run copy-static-windows && npm run pre-build",
+  
+    "parcel-dev": "./node_modules/.bin/parcel index.html --port 3000",
+    "dev": "npm run copy-static-linux && npm run parcel-dev",
+    "dev-windows": "npm run copy-static-windows && npm run parcel-dev",
+
+    "pre-build-linux": "npm run remove-dist-linux && npm run copy-static-linux",
+    "pre-build-windows": "npm run remove-dist-windows && npm run copy-static-windows",
+    "parcel-build": "./node_modules/.bin/parcel build index.html",
+    "build": "npm run pre-build-linux && npm run parcel-build",
+    "build-windows": "npm run pre-build-windows && npm run pre-build",
+
     "start": "npm run build && node server.js",
     "start-windows": "npm run build-windows && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Roolman/vanillajs-messenger.git"
+    "url": "git+https://github.com/Roolman/middle.messenger.praktikum.yandex.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Roolman/vanillajs-messenger/issues"
+    "url": "https://github.com/Roolman/middle.messenger.praktikum.yandex/issues"
   },
-  "homepage": "https://github.com/Roolman/vanillajs-messenger#readme"
+  "homepage": "https://github.com/Roolman/middle.messenger.praktikum.yandex#readme"
 }
