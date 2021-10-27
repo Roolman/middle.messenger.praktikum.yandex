@@ -1,10 +1,10 @@
 import * as Handlebars from "handlebars"
 
-import './Profile.scss'
-import templ from './Profile.tmpl'
+import './profile.scss'
+import templ from './profile.tmpl'
 
-import {Input} from "../../components/Input/index"
-import {Button} from "../../components/Button/index"
+import {Input} from "../../components/input/index"
+import {Button} from "../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import {ChangeAvatar} from "./modules/change-avatar"
 
@@ -12,7 +12,7 @@ import {goToMainPage} from "../../services/core/navigation"
 import {goToLoginPage} from "../../services/core/navigation"
 import { PROFILE_DATA } from "../../mock/profile"
 import { Component } from "../../utils/classes/component"
-import { Form } from "../../components/Form"
+import { Form } from "../../components/form"
 import { ProfileField, ProfileFieldValue, ProfileService } from "../../services/state/profile.service"
 import { Inject } from "../../utils/decorators/inject"
 import { Observable } from "../../utils/classes/observable"

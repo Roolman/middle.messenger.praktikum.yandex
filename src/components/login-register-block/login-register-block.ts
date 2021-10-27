@@ -2,10 +2,10 @@ import * as Handlebars from "handlebars"
 import './login-register-block.scss'
 import templ from './login-register-block.tmpl'
 
-import { Button } from "../Button/index"
+import { Button } from "../button/index"
 import { BUTTON_TYPES } from "../../constants/button"
 import { Component } from "../../utils/classes/component"
-import { Form } from "../Form"
+import { Form } from "../form"
 
 type LoginRegisterBlockProps = {
     title: string,

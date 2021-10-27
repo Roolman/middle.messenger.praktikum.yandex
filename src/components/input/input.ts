@@ -3,9 +3,9 @@ import { Component, ComponentProps } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import { Validators } from "../../utils/classes/validators"
-import { FormElement } from "../Form/Form"
-import './Input.scss'
-import templ from './Input.tmpl'
+import { FormElement } from "../form/form"
+import './input.scss'
+import templ from './input.tmpl'
 
 type InputProps = ComponentProps & {
     name: string,

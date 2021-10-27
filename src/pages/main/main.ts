@@ -1,10 +1,10 @@
 import * as Handlebars from "handlebars"
 
-import './Main.scss'
-import templ from './Main.tmpl'
+import './main.scss'
+import templ from './main.tmpl'
 
-import {Chats} from "./modules/chats/Chats"
-import {Chat} from "./modules/chat/Chat"
+import {Chats} from "./modules/chats/chats"
+import {Chat} from "./modules/chat/chat"
 import { Component } from "../../utils/classes/component"
 
 export class MainPage extends Component {

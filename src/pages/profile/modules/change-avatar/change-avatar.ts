@@ -1,8 +1,8 @@
 import * as Handlebars from "handlebars"
-import './Change-avatar.scss'
-import templ from './Change-avatar.tmpl'
+import './change-avatar.scss'
+import templ from './change-avatar.tmpl'
 
-import { Button } from "../../../../components/Button/index"
+import { Button } from "../../../../components/button/index"
 import { Component } from "../../../../utils/classes/component"
 import { Observable } from "../../../../utils/classes/observable"
 

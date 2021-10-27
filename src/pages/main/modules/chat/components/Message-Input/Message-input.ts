@@ -1,8 +1,8 @@
-import { FormElement } from "../../../../../../components/Form/Form"
+import { FormElement } from "../../../../../../components/form/form"
 import { Component } from "../../../../../../utils/classes/component"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Validators } from "../../../../../../utils/classes/validators"
-import "./Message-input.scss"
+import "./message-input.scss"
 
 type MessageInputProps = {
     validators: Validators

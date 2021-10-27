@@ -1,15 +1,15 @@
 import * as Handlebars from "handlebars"
 
-import './Register.scss'
-import templ from './Register.tmpl'
+import './register.scss'
+import templ from './register.tmpl'
 
-import { LoginRegisterBlock } from "../../components/Login-register-block/index"
-import { Input } from "../../components/Input/index"
-import { Header } from "../../components/Header/index"
+import { LoginRegisterBlock } from "../../components/login-register-block/index"
+import { Input } from "../../components/input/index"
+import { Header } from "../../components/header/index"
 
 import { goToLoginPage } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
-import { Form } from "../../components/Form"
+import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
@@ -37,6 +37,7 @@ export class RegisterPage extends Component {
     }
 
     componentDidRender() {
+        this.element.classList.add("register")
         // Создаем компоненты формы
         this.emailInput = new Input({
             name: "email",

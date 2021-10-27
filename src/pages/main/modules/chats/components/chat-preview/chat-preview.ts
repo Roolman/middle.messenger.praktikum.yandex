@@ -1,10 +1,10 @@
-import { Component } from "../../../../../utils/classes/component"
-import templ from "./Chat-preview.tmpl"
-import './Chat-preview.scss'
-import { ChatData, ChatsService } from "../../../../../services/state/chats.service"
+import { Component } from "../../../../../../utils/classes/component"
+import templ from "./chat-preview.tmpl"
+import './chat-preview.scss'
+import { ChatData, ChatsService } from "../../../../../../services/state/chats.service"
 import * as Handlebars from "handlebars"
-import { Observable } from "../../../../../utils/classes/observable"
-import { Inject } from "../../../../../utils/decorators/inject"
+import { Observable } from "../../../../../../utils/classes/observable"
+import { Inject } from "../../../../../../utils/decorators/inject"
 
 export class ChatPreview extends Component {
 

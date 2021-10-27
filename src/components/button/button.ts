@@ -1,6 +1,6 @@
 import * as Handlebars from "handlebars"
-import './Button.scss'
-import templ from './Button.tmpl'
+import './button.scss'
+import templ from './button.tmpl'
 
 import { BUTTON_TYPES, BUTTON_THEMES } from "../../constants/button"
 import { Component } from "../../utils/classes/component"

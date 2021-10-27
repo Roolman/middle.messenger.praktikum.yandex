@@ -2,9 +2,8 @@ import * as Handlebars from "handlebars"
 import { Component } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
-import { Input } from "../Input"
-import './Form.scss'
-import templ from './Form.tmpl'
+import './form.scss'
+import templ from './form.tmpl'
 
 type FormProps = {
     id: string,

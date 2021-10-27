@@ -1,16 +1,16 @@
 import * as Handlebars from "handlebars"
 
 import './login.scss'
-import templ from './Login.tmpl'
+import templ from './login.tmpl'
 
-import { LoginRegisterBlock } from "../../components/Login-register-block/index"
-import { Input } from "../../components/Input/index"
-import { Checkbox } from "../../components/Сheckbox/index"
-import { Header } from "../../components/Header/index"
+import { LoginRegisterBlock } from "../../components/login-register-block/index"
+import { Input } from "../../components/input/index"
+import { Checkbox } from "../../components/checkbox/index"
+import { Header } from "../../components/header/index"
 
 import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
 import { Component } from "../../utils/classes/component"
-import { Form } from "../../components/Form"
+import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
 
@@ -41,6 +41,7 @@ export class LoginPage extends Component {
     }
 
     componentDidRender() {
+        this.element.classList.add("login")
         // Создаем форму
         this.loginInput = new Input({
             name: "login",

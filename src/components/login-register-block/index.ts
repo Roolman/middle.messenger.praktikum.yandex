@@ -1,1 +1,1 @@
-export {LoginRegisterBlock} from "./Login-register-block"
+export {LoginRegisterBlock} from "./login-register-block"

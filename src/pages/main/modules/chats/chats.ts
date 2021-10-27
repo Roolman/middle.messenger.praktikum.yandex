@@ -1,9 +1,9 @@
 import * as Handlebars from "handlebars"
 
-import './Chats.scss'
-import templ from './Chats.tmpl'
+import './chats.scss'
+import templ from './chats.tmpl'
 
-import {Button} from "../../../../components/Button/index"
+import {Button} from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
 import { Component } from "../../../../utils/classes/component"
@@ -11,7 +11,7 @@ import { goToProfilePage } from "../../../../services/core/navigation"
 import { Inject } from "../../../../utils/decorators/inject"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Observable } from "../../../../utils/classes/observable"
-import { ChatPreview } from "./components"
+import { ChatPreview } from "./components/chat-preview"
 
 type ChatsProps = {
     chats: ChatData[]

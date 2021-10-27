@@ -2,7 +2,7 @@ import * as Handlebars from "handlebars"
 
 import './500.scss'
 import templ from './500.tmpl'
-import {Button} from "../../../components/Button"
+import {Button} from "../../../components/button"
 import { BUTTON_TYPES } from "../../../constants/button"
 import { goToMainPage } from "../../../services/core/navigation"
 import { Component } from "../../../utils/classes/component"

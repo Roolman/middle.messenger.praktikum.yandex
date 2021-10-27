@@ -1,1 +1,11 @@
 @import "../../styles/colors.scss";
+
+.login {
+  .login-register-block {
+    overflow-y: hidden;
+  }
+  .login-register-block__container {
+    min-height: 460px;
+    align-self: center;
+  }
+}

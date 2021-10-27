@@ -1,8 +1,8 @@
 import * as Handlebars from "handlebars"
 import { Component } from "../../utils/classes/component"
-import { FormElement } from "../Form/Form"
-import './Сheckbox.scss'
-import templ from './Сheckbox.tmpl'
+import { FormElement } from "../form/form"
+import './checkbox.scss'
+import templ from './checkbox.tmpl'
 
 type CheckboxProps = {
     name: string

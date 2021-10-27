@@ -1,16 +1,16 @@
 import * as Handlebars from "handlebars"
 
-import './Chat.scss'
-import templ, {emptyChat} from './Chat.tmpl'
+import './chat.scss'
+import templ, {emptyChat} from './chat.tmpl'
 
-import {Button} from "../../../../components/Button/index"
+import {Button} from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
-import { Message } from "./components/Message/index"
+import { Message } from "./components/message/index"
 import { Component } from "../../../../utils/classes/component"
-import { ChatData, ChatsService, MessageData } from "../../../../services/state/chats.service"
+import { ChatData, ChatsService, } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
-import { Form } from "../../../../components/Form"
-import { MessageInput } from "./components/Message-Input/Message-input"
+import { Form } from "../../../../components/form"
+import { MessageInput } from "./components/message-input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../../../utils/classes/validators"
 
