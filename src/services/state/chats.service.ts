@@ -14,7 +14,8 @@ export type ChatData = {
     lastMessageTime: Date,
     lastMessageTimeShort?: string,
     unreadCount: number,
-    messages: MessageData[]
+    messages: MessageData[],
+    selected?: boolean
 }
 
 export type MessageData = {
@@ -54,11 +55,16 @@ export class ChatsService {
         this._chatsSubject.next(this._chats)
     }
 
-    setChat(chatData: ChatData): void {
-        this._chat = chatData
-        this.setMessages(this._chat)
-
-        this._chatSubject.next(this._chat)
+    setChat(id: number): void {
+        this._chat = this._chats.find(x => x.id == id) || null
+        if(this._chat) {
+            const id = this._chat.id
+            this.setMessages(this._chat)
+            this._chats = this._chats.map(x => ({...x, selected: x.id === id}))
+    
+            this._chatsSubject.next(this._chats)
+            this._chatSubject.next(this._chat)
+        }
     }
 
     setMessages(chat: ChatData): void {

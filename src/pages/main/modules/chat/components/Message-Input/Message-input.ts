@@ -1,10 +1,11 @@
 import { FormElement } from "../../../../../../components/form/form"
-import { Component } from "../../../../../../utils/classes/component"
+import { Component, ComponentProps } from "../../../../../../utils/classes/component"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Validators } from "../../../../../../utils/classes/validators"
 import "./message-input.scss"
+import templ from "./message-input.tmpl"
 
-type MessageInputProps = {
+type MessageInputProps = ComponentProps & {
     validators: Validators
 }
 
@@ -20,11 +21,18 @@ export class MessageInput extends Component implements FormElement {
     }
 
     constructor(props: MessageInputProps) {
-        super("input", props)
+        super("input", props, templ)
+    }
+
+    setDefaultProps(props: MessageInputProps): MessageInputProps {
+        return {
+            ...props,
+            componentClassName: "chat__input-text"
+        }
     }
 
     componentDidRender() {
-        this.element.classList.add("chat__input-text")
+        // TODO: Fix
         this.element.setAttribute("type", "text")
         this.element.setAttribute("id", "chatMessage")
         this.element.setAttribute("name", "chatMessage")

@@ -1,12 +1,14 @@
-import * as Handlebars from "handlebars"
-import { Component } from "../../utils/classes/component"
+import { Component, ComponentProps } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import "./form.scss"
 import templ from "./form.tmpl"
 
-type FormProps = {
-    id: string,
+type FormProps = ComponentProps & {
+    attributes: {
+        id: string
+        [key: string]: any
+    }
     formElements: Array<FormElement>
 }
 
@@ -23,10 +25,6 @@ export class Form extends Component {
     private _onValidityChange: Subject<boolean>
     private _onValidityChangeObservable: Observable
 
-    constructor(props: FormProps) {
-        super("form", props)
-    }
-
     get formElements(): Array<FormElement> {
         return this.props.formElements
     }
@@ -35,20 +33,23 @@ export class Form extends Component {
         return this._onValidityChangeObservable
     }
 
+    constructor(props: FormProps) {
+        super("form", props, templ)
+    }
+
+    setDefaultProps(props: FormProps): FormProps {
+        return {
+            ...props,
+            componentClassName: "form"
+        }
+    }
+
     componentDidInit() {
         this._onValidityChange = new Subject()
         this._onValidityChangeObservable = this._onValidityChange.asObservable()
 
         this.isValid = this._checkValidity()
         this._onValidityChange.next(this.isValid)
-    }
-
-    render() {
-        this.element.classList.add("form")
-        this.element.id = this.props.id
-        const template = Handlebars.compile(templ)
-        const result = template({ ...this.props })
-        return result
     }
 
     componentDidRender() {
@@ -61,7 +62,6 @@ export class Form extends Component {
         // TODO: Сделать более эффективно
         // Навешиваем обработчик валидации
         for (const formElement of this.props.formElements) {
-            // TODO: Добавить единый интерфейс FormElement // if((formElement instanceof Input)) {}
             this._onMountSubscriptions.push(
                 Observable.fromEvent(formElement.element, "input")
                     .subscribe(

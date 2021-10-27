@@ -1,10 +1,9 @@
-import * as Handlebars from "handlebars"
-import { Component } from "../../utils/classes/component"
+import { Component, ComponentProps } from "../../utils/classes/component"
 import { FormElement } from "../form/form"
 import "./checkbox.scss"
 import templ from "./checkbox.tmpl"
 
-type CheckboxProps = {
+type CheckboxProps = ComponentProps & {
     name: string
     label: string
 }
@@ -23,17 +22,14 @@ export class Checkbox extends Component implements FormElement {
     }
 
     constructor(props: CheckboxProps) {
-        super("label", props)
+        super("label", props, templ)
     }
 
-    render() {
-        this.element.classList.add("checkbox-container")
-        const template = Handlebars.compile(templ)
-        const result = template({ ...this.props })
-        return result
+    setDefaultProps(props: CheckboxProps): CheckboxProps {
+        return {
+            ...props,
+            componentClassName: "checkbox-container"
+        }
     }
 
-    componentDidRender() {
-        this.input = this.element.getElementsByClassName("checkbox__input")[0] as HTMLInputElement
-    }
 }

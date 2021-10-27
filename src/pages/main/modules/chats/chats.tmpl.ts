@@ -1,8 +1,8 @@
 export default
 `
     <div class="chats__controls">
-        <div class="chats__actions">
-            <a href="" class="chats__profile-link">
+        <div data-ref="chatsActions" class="chats__actions">
+            <a data-ref="profileLink" href="" class="chats__profile-link">
                 Профиль
                 <i class="fa fa-chevron-right"></i>
             </a>                   
@@ -21,6 +21,6 @@ export default
             </label>
         </div>
     </div>
-    <ul class="chats__chats-list">
+    <ul data-ref="chatsContainer" class="chats__chats-list">
     </ul>
 `

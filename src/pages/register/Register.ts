@@ -1,5 +1,3 @@
-import * as Handlebars from "handlebars"
-
 import "./register.scss"
 import templ from "./register.tmpl"
 
@@ -12,6 +10,11 @@ import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
+import { EMAIL_VALIDATOR, LOGIN_MAX_LENGTH_VALIDATOR, LOGIN_MIN_LENGTH_VALIDATOR, 
+    LOGIN_PATTERN_VALIDATOR, NAME_PATTERN_VALIDATOR, PASSWORD_MAX_LENGTH_VALIDATOR, 
+    PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR, 
+    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR 
+} from "../../constants/validators"
 
 export class RegisterPage extends Component {
     registerBlock: LoginRegisterBlock
@@ -26,13 +29,7 @@ export class RegisterPage extends Component {
     passwordCheckInput: Input
 
     constructor() {
-        super("div")
-    }
-
-    render() {
-        const template = Handlebars.compile(templ)
-        const result = template({})
-        return result
+        super("div", {}, templ)
     }
 
     componentDidRender() {
@@ -43,15 +40,8 @@ export class RegisterPage extends Component {
             title: "Почта",
             type: "email",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^.+@[A-Za-z]+\\.[A-za-z]+$",
-                    error: "Введите e-mail корректно",
-                },
+                REQUIRED_VALIDATOR,
+                EMAIL_VALIDATOR
             ]),
         })
         this.loginInput = new Input({
@@ -59,25 +49,10 @@ export class RegisterPage extends Component {
             title: "Логин",
             type: "text",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.minLength,
-                    value: 3,
-                    error: "Не менее 3 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.maxLength,
-                    value: 20,
-                    error: "Не более 20 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я0-9\_\-]+$",
-                    error: "Логин должен содержать только символы [A-z][0-9]-_ и начинаться с буквы",
-                },
+                REQUIRED_VALIDATOR,
+                LOGIN_PATTERN_VALIDATOR,
+                LOGIN_MIN_LENGTH_VALIDATOR,
+                LOGIN_MAX_LENGTH_VALIDATOR,
             ]),
         })
         this.firstNameInput = new Input({
@@ -85,15 +60,8 @@ export class RegisterPage extends Component {
             title: "Имя",
             type: "text",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$",
-                    error: "Латиница или кириллица. Допустим дефис. Первая буква заглавная",
-                },
+                REQUIRED_VALIDATOR,
+                NAME_PATTERN_VALIDATOR
             ]),
         })
         this.secondNameInput = new Input({
@@ -101,15 +69,8 @@ export class RegisterPage extends Component {
             title: "Фамилия",
             type: "text",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я\-]+$",
-                    error: "Латиница или кириллица. Допустим дефис. Первая буква заглавная",
-                },
+                REQUIRED_VALIDATOR,
+                NAME_PATTERN_VALIDATOR
             ]),
         })
         this.phoneInput = new Input({
@@ -117,25 +78,10 @@ export class RegisterPage extends Component {
             title: "Телефон",
             type: "text",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.minLength,
-                    value: 10,
-                    error: "Не менее 10 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.maxLength,
-                    value: 15,
-                    error: "Не более 15 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^\\+{0,1}[0-9]+$",
-                    error: "Только цифры. Может начинаться с +",
-                },
+                REQUIRED_VALIDATOR,
+                PHONE_MIN_LENGTH_VALIDATOR,
+                PHONE_MAX_LENGTH_VALIDATOR,
+                PHONE_PATTERN_VALIDATOR,
             ]),
         })
         this.passwordInput = new Input({
@@ -143,25 +89,10 @@ export class RegisterPage extends Component {
             title: "Пароль",
             type: "password",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-                {
-                    type: VALIDITY_TYPES.minLength,
-                    value: 8,
-                    error: "Не менее 8 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.maxLength,
-                    value: 40,
-                    error: "Не более 40 символов",
-                },
-                {
-                    type: VALIDITY_TYPES.pattern,
-                    value: "^(?=.*[\\p{Lu}])(?=.*\\d).*$",
-                    error: "Обязательно хотя бы одна заглавная буква и цифра",
-                },
+                REQUIRED_VALIDATOR,
+                PASSWORD_MAX_LENGTH_VALIDATOR,
+                PASSWORD_MIN_LENGTH_VALIDATOR,
+                PASSWORD_PATTERN_VALIDATOR,
             ]),
         })
         this.passwordCheckInput = new Input({
@@ -169,10 +100,7 @@ export class RegisterPage extends Component {
             title: "Пароль еще раз",
             type: "password",
             validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
+                REQUIRED_VALIDATOR,
                 {
                     type: VALIDITY_TYPES.pattern,
                     value: "",
@@ -182,7 +110,6 @@ export class RegisterPage extends Component {
         })
         // Форма
         this.form = new Form({
-            id: "registerFormId",
             formElements: [
                 this.emailInput,
                 this.loginInput,
@@ -192,6 +119,9 @@ export class RegisterPage extends Component {
                 this.passwordInput,
                 this.passwordCheckInput,
             ],
+            attributes: {
+                id: "registerFormId",
+            }
         })
         const header = new Header()
         // Объединяем в один компонент
@@ -238,10 +168,7 @@ export class RegisterPage extends Component {
                 (value: string) => {
                     this.passwordCheckInput.setProps({
                         validators: new Validators([
-                            {
-                                type: VALIDITY_TYPES.required,
-                                value: "",
-                            },
+                            REQUIRED_VALIDATOR,
                             {
                                 type: VALIDITY_TYPES.pattern,
                                 value,

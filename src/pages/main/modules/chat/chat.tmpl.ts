@@ -9,12 +9,12 @@ export default
             {{/if}}
             <span class="chat__name">{{ name }}</span>                
         </div>
-        <div class="chat__messages">
+        <div data-ref="messagesContainer" class="chat__messages">
             {{#unless messages}}
                 <h4>Сообщений нет</h4>
             {{/unless}}
         </div>
-        <div class="chat__input">
+        <div data-ref="chatInput" class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
         </div>    
     {{else}}

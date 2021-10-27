@@ -1,25 +1,23 @@
-import * as Handlebars from "handlebars"
-
 import "./main.scss"
 import templ from "./main.tmpl"
 
 import { Chats } from "./modules/chats/chats"
 import { Chat } from "./modules/chat/chat"
-import { Component } from "../../utils/classes/component"
+import { Component, ComponentProps } from "../../utils/classes/component"
 
 export class MainPage extends Component {
     chats: Chats
     chat: Chat
 
     constructor() {
-        super("main")
+        super("main", {}, templ)
     }
 
-    render() {
-        this.element.classList.add("main")
-        const template = Handlebars.compile(templ)
-        const result = template({})
-        return result
+    setDefaultProps(props: ComponentProps): ComponentProps {
+        return {
+            ...props,
+            componentClassName: "main"
+        }
     }
 
     componentDidRender() {
@@ -29,7 +27,4 @@ export class MainPage extends Component {
         this.element.appendChild(this.chat.element)
     }
 
-    componentDidUnmount() {
-
-    }
 }

@@ -1,27 +1,33 @@
-import * as Handlebars from "handlebars"
-
-import { Component } from "../../../../../../utils/classes/component"
+import { Component, ComponentProps } from "../../../../../../utils/classes/component"
 import templ from "./chat-preview.tmpl"
 import "./chat-preview.scss"
 import { ChatData, ChatsService } from "../../../../../../services/state/chats.service"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Inject } from "../../../../../../utils/decorators/inject"
 
+type ChatPreviewProps = ComponentProps & ChatData
+
 export class ChatPreview extends Component {
-    props: ChatData
+    props: ChatPreviewProps
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
 
-    constructor(props: ChatData) {
-        super("li", props)
+    constructor(props: ChatPreviewProps) {
+        super("li", props, templ)
     }
 
-    render() {
-        this.element.classList.add("chats__chat-container")
-        const template = Handlebars.compile(templ)
-        const result = template(this.props)
-        return result
+    setDefaultProps(props: ChatPreviewProps): ChatPreviewProps {
+        return {
+            ...props,
+            componentClassName: "chats__chat-container"
+        }
+    }
+
+    componentDidRender() {
+        if(this.props.selected) {
+            this.element.classList.add("chats__chat-selected")
+        }
     }
 
     componentDidMount() {
@@ -29,17 +35,9 @@ export class ChatPreview extends Component {
             Observable.fromEvent(this.element, "click")
                 .subscribe(
                     () => {
-                        this._chatsService.setChat(this.props as ChatData)
+                        this._chatsService.setChat(this.props.id)
                     },
                 ),
         )
-    }
-
-    setSelected() {
-        this.element.classList.add("chats__chat-selected")
-    }
-
-    resetSelected() {
-        this.element.classList.remove("chats__chat-selected")
     }
 }

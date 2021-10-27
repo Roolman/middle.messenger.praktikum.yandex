@@ -6,21 +6,27 @@ import templ, { emptyChat } from "./chat.tmpl"
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
-import { Component } from "../../../../utils/classes/component"
+import { Component, ComponentProps } from "../../../../utils/classes/component"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
 import { MessageInput } from "./components/message-input"
 import { Observable } from "../../../../utils/classes/observable"
-import { Validators, VALIDITY_TYPES } from "../../../../utils/classes/validators"
+import { Validators } from "../../../../utils/classes/validators"
+import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
+
+Handlebars.registerPartial("emptyChat", emptyChat)
+
+type ChatProps = ComponentProps & ChatData
 
 export class Chat extends Component {
-    props: ChatData
+    props: ChatProps
 
     sendForm: Form
     sendInput: MessageInput
     sendButton: Button
 
+    chatInput: HTMLElement
     messagesContainer: HTMLElement
     messages: Message[]
 
@@ -28,7 +34,14 @@ export class Chat extends Component {
     private _chatsService: ChatsService
 
     constructor() {
-        super("div")
+        super("div", {}, templ)
+    }
+
+    setDefaultProps(props: ChatProps): ChatProps {
+        return {
+            ...props,
+            componentClassName: "chat",
+        }
     }
 
     componentDidInit() {
@@ -39,11 +52,10 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
-                        this.setProps({ ...chat })
+                        this.setProps(chat)
                     },
                 ),
         )
-        Handlebars.registerPartial("emptyChat", emptyChat)
     }
 
     componentDidUpdate() {
@@ -51,34 +63,23 @@ export class Chat extends Component {
         return true
     }
 
-    render() {
-        this.element.classList.add("chat")
+    componentDidRender() {
         if (!this.props.id) {
             this.element.classList.add("chat_empty")
-        } else {
+        } 
+        else {
             this.element.classList.remove("chat_empty")
-        }
-        const template = Handlebars.compile(templ)
-        const result = template(this.props)
-        return result
-    }
-
-    componentDidRender() {
-        if (this.props.id) {
             // Создаем форму для инпута сообщения
             this.sendInput = new MessageInput({
-                validators: new Validators([
-                    {
-                        type: VALIDITY_TYPES.required,
-                        value: "",
-                    },
-                ]),
+                validators: new Validators([REQUIRED_VALIDATOR]),
             })
             this.sendForm = new Form({
-                id: "sendMessageFormId",
                 formElements: [
                     this.sendInput,
                 ],
+                attributes: {
+                    id: "sendMessageFormId",
+                }
             })
             this.sendForm.element.classList.add("chat__input-width")
             // Кнопка отправки
@@ -94,11 +95,9 @@ export class Chat extends Component {
                     visibility: "hidden",
                 },
             })
-            const chatInput = this.element.getElementsByClassName("chat__input")[0] as HTMLElement
-            chatInput.appendChild(this.sendForm.element)
-            chatInput.appendChild(this.sendButton.element)
+            this.chatInput.appendChild(this.sendForm.element)
+            this.chatInput.appendChild(this.sendButton.element)
             // Сообщения
-            this.messagesContainer = this.element.getElementsByClassName("chat__messages")[0] as HTMLElement
             for (const message of this.props.messages) {
                 const mes = new Message(message)
                 this.messages.push(mes)

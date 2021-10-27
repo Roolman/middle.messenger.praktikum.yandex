@@ -4,6 +4,6 @@ export default
         <i class="header__icon fa fa-paper-plane"></i>
         <p class="header__title">{{ title }}</p>
     </div>
-    <div class="header__page-links">
+    <div data-ref="linksBlock" class="header__page-links">
     </div>
 `

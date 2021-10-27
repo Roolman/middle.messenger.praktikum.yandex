@@ -1,3 +1,4 @@
+import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../services/core/mutationObserver"
 import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
@@ -13,6 +14,7 @@ type ProxyObject = {
 }
 
 export type ComponentProps = {
+    componentClassName?: string
     styles?: Object
     attributes?: Object
     [key: string]: any
@@ -44,6 +46,7 @@ export abstract class Component {
 
     private _element: HTMLElement
     private _meta: ComponentMeta
+    private _template: string
 
     get element() {
         return this._element
@@ -53,7 +56,7 @@ export abstract class Component {
         return this.element
     }
 
-    constructor(tagName: string = "div", props: ComponentProps = {}) {
+    constructor(tagName: string = "div", props: ComponentProps = {}, template: string = "") {
         this._eventBus = new EventBus()
         this._subscriptions = []
         this._onMountSubscriptions = []
@@ -61,6 +64,7 @@ export abstract class Component {
             tagName,
             props,
         }
+        this._template = template
 
         const defaultProps = this.setDefaultProps(props)
         this.props = this._makePropsProxy(defaultProps)
@@ -145,13 +149,17 @@ export abstract class Component {
     private _render() {
         const block = this.render()
         this._element.innerHTML = block
-
+        // Добавляем класс для элемента компонента (если есть)
+        if(this.props.componentClassName) {
+            this._element.classList.add(this.props.componentClassName)
+        }
         // Устанавливаем стили
         const styles = Object.entries(this.props.styles || {})
         for (const [styleName, value] of styles) {
             try {
                 this._element.style[styleName as any] = value
-            } catch (err: any) {
+            } 
+            catch (err: any) {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
@@ -160,16 +168,21 @@ export abstract class Component {
         for (const [attributeName, value] of attributes) {
             try {
                 this._element.setAttribute(attributeName, value)
-            } catch (err: any) {
+            } 
+            catch (err: any) {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
-
+        // Получаем ссылки на компоненты
+        this._getComponentChildrenReferences()
+        // Вызываем FLOW_CDR
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
     render(): string {
-        return ""
+        const template = Handlebars.compile(this._template)
+        const result = template(this.props)
+        return result
     }
 
     // TODO: Разобраться с контекстом при вызове
@@ -253,11 +266,38 @@ export abstract class Component {
         return document.createElement(tagName)
     }
 
+    // Получить ссылки на дочерние компоненты внутри
+    private _getComponentChildrenReferences() {
+        const childrenComponents = this._element.querySelectorAll("[data-ref]")
+        for(const child of Array.from(childrenComponents)) {
+            const childName = child.getAttribute("data-ref")
+            if(childName) {
+                (this as any)[childName] = child
+            }
+        }
+    }
+
     show() {
         this.getContent().style.display = "flex"
     }
 
     hide() {
         this.getContent().style.display = "none"
+    }
+
+    setDisabled() {
+        this.getContent().setAttribute("disabled", "")
+    }
+
+    setEnabled() {
+        this.getContent().removeAttribute("disabled")
+    }
+
+    setVisible() {
+        this.getContent().style.visibility = "visible"
+    }
+
+    setInvisible() {
+        this.getContent().style.visibility = "hidden"
     }
 }

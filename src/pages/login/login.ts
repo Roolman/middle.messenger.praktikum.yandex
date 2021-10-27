@@ -1,5 +1,3 @@
-import * as Handlebars from "handlebars"
-
 import "./login.scss"
 import templ from "./login.tmpl"
 
@@ -9,10 +7,11 @@ import { Checkbox } from "../../components/checkbox/index"
 import { Header } from "../../components/header/index"
 
 import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
-import { Component } from "../../utils/classes/component"
+import { Component, ComponentProps } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
-import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
+import { Validators } from "../../utils/classes/validators"
+import { REQUIRED_VALIDATOR } from "../../constants/validators"
 
 export class LoginPage extends Component {
     // Компоненты
@@ -30,53 +29,45 @@ export class LoginPage extends Component {
     }
 
     constructor() {
-        super("div")
+        super("div", {}, templ)
     }
 
-    render() {
-        const template = Handlebars.compile(templ)
-        const result = template({})
-        return result
+    setDefaultProps(props: ComponentProps): ComponentProps {
+        return {
+            ...props,
+            componentClassName: "login"
+        }
     }
 
     componentDidRender() {
-        this.element.classList.add("login")
         // Создаем форму
         this.loginInput = new Input({
             name: "login",
             title: "Логин",
             type: "text",
-            validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-            ]),
-            hideValidation: true,
+            validators: new Validators([REQUIRED_VALIDATOR]),
+            isValidationHidden: true,
         })
         this.passwordInput = new Input({
             name: "password",
             title: "Пароль",
             type: "password",
-            validators: new Validators([
-                {
-                    type: VALIDITY_TYPES.required,
-                    value: "",
-                },
-            ]),
-            hideValidation: true,
+            validators: new Validators([REQUIRED_VALIDATOR]),
+            isValidationHidden: true,
         })
         this.rememberMeCheckbox = new Checkbox({
             name: "rememberMe",
             label: "Запомнить меня",
         })
         this.form = new Form({
-            id: "loginFormId",
             formElements: [
                 this.loginInput,
                 this.passwordInput,
                 this.rememberMeCheckbox,
             ],
+            attributes: {
+                id: "loginFormId"
+            }
         })
         // Объединяем в один компонент
         this.loginBlock = new LoginRegisterBlock({
