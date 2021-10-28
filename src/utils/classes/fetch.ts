@@ -31,7 +31,10 @@ function queryStringify(data: Object): string {
 
 export class HttpClient {
     get = (url: string, options?: HTTP_OPTIONS) => {
-        this.request(url, { ...options, method: HTTP_METHODS.GET }, options?.timeout)
+        this.request(
+            url + queryStringify(options?.data || {}), 
+            { ...options, method: HTTP_METHODS.GET }, options?.timeout
+        )
     }
 
     put = (url: string, options?: HTTP_OPTIONS) => {
@@ -84,18 +87,14 @@ export class HttpClient {
 
         const xhr = new XMLHttpRequest()
 
-        // Получаем полный URL
-        const xhrURL: string = options.method === HTTP_METHODS.GET
-            ? url + queryStringify(options.data || {})
-            : url
-            // Устанавливаем headers
+        // Устанавливаем headers
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
                 xhr.setRequestHeader(key, value.toString())
             }
         }
         // Открываем запрос
-        xhr.open(options.method, xhrURL)
+        xhr.open(options.method, url)
 
         xhr.onload = () => {
             resolve(xhr)

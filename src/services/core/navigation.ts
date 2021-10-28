@@ -16,9 +16,7 @@ enum PAGES {
 }
 
 const removeAllChildNodes = (myNode: HTMLElement) => {
-    while (myNode.lastElementChild) {
-        myNode.removeChild(myNode.lastElementChild)
-    }
+    myNode.innerHTML = ""
 }
 
 const goToAnyPage = (page: number) => {

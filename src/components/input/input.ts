@@ -142,7 +142,7 @@ export class Input extends Component implements FormElement {
     }
 
     private _checkInputValidity(): boolean {
-        if (!this.props.validators) return true
+        if (this.props.validators === undefined) return true
         if (!this.input.checkValidity()) {
             this.props.validators.checkValidity(this.input)
             this.setErrors(this.props.validators.getInvalidities())

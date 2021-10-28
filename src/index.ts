@@ -14,11 +14,11 @@ function registerServices() {
     ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
 }
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
     registerServices()
 
     goToLoginPage()
-}
+})
 
 // Глобальный хэлпер
 Handlebars.registerHelper(

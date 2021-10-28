@@ -31,7 +31,7 @@
   width: 0;
 
   &:checked ~ .checkbox-container__checkmark {
-    background-color: #2196f3;
+    background-color: $main_color;
   }
 
   &:checked ~ .checkbox-container__checkmark::after {
