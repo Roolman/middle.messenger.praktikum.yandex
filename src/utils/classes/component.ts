@@ -95,16 +95,6 @@ export abstract class Component {
         eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
     }
 
-    private _unregisterEvents(eventBus: EventBus) {
-        eventBus.off(Component.EVENTS.INIT, this._init.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_RENDER, this._render.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDR, this._componentDidRender.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDI, this._componentDidInit.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDUM, this._componentDidUnmount.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
-    }
-
     private _createResources() {
         const { tagName } = this._meta
         this._element = this._createDocumentElement(tagName)
@@ -204,7 +194,7 @@ export abstract class Component {
     componentDidMount() {}
     // oldProps?: ComponentProps
     // Компонент исчез из дерева
-    // Можно закрыть подпикси. Очистить все данные
+    // Нужно закрыть подпикси
     private _componentDidUnmount() {
         this.componentDidUnmount()
         // Удаляем все подписки
@@ -213,14 +203,6 @@ export abstract class Component {
         }
         for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
-        }
-        // Удаляем события из EventBus
-        this._unregisterEvents(this._eventBus)
-        // Удаляем все свойства
-        // TODO: Придумать другой метод
-        // NOTE: Возможно это вообще лишнее
-        for (const [key] of Object.entries(this)) {
-            (this as any)[key] = null
         }
     }
 

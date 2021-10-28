@@ -32,8 +32,8 @@ function queryStringify(data: Object): string {
 export class HttpClient {
     get = (url: string, options?: HTTP_OPTIONS) => {
         this.request(
-            url + queryStringify(options?.data || {}), 
-            { ...options, method: HTTP_METHODS.GET }, options?.timeout
+            url + queryStringify(options?.data || {}),
+            { ...options, method: HTTP_METHODS.GET }, options?.timeout,
         )
     }
 
