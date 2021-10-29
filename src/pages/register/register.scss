@@ -1,1 +1,15 @@
 @import "../../styles/colors.scss";
+
+.register {
+  .login-register-block {
+    @media (min-height: 900px) {
+      overflow-y: hidden;
+    }
+  }
+
+  .login-register-block__container {
+    @media (max-height: 900px) {
+      min-height: 730px;
+    }
+  }
+}

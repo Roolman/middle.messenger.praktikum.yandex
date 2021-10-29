@@ -1,56 +1,53 @@
-import * as Handlebars from "handlebars"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { goToError404Page, goToError500Page } from "../../services/core/navigation"
-import { Component } from "../../utils/classes/component"
-import { Button } from "../Button"
-import './Header.scss'
-import templ from './Header.tmpl'
+import { Component, ComponentProps } from "../../utils/classes/component"
+import { Observable } from "../../utils/classes/observable"
+import { Button } from "../button"
+import "./header.scss"
+import templ from "./header.tmpl"
 
 export class Header extends Component {
-
-    title: string
     goToError404: Button
     goToError500: Button
 
     constructor() {
-        super("header")
+        super("header", {}, templ)
     }
 
-    render() {
-        this.element.classList.add("header")
-        const template = Handlebars.compile(templ)
-        const result = template({title: 'Fast messenger'})
-        return result
-    }
-
-    componentDidRender() {
-        this.goToError404 = new Button({
-            title: "Ошибка 404",
-            type: BUTTON_TYPES.LINK,
-            theme: BUTTON_THEMES.DANGER
-        })
-        this.goToError500 = new Button({
-            title: "Ошибка 500",
-            type: BUTTON_TYPES.LINK,
-            theme: BUTTON_THEMES.DANGER
-        })
-        
-        const linksBlock = this.element.getElementsByClassName("header__page-links")[0]
-        if(!linksBlock) {
-            throw new Error("Ошибка рендеринга Header")
+    setDefaultProps(props: ComponentProps): ComponentProps {
+        return {
+            ...props,
+            title: "Fast messenger",
+            componentClassName: "header",
+            children: [
+                {
+                    name: "goToError404",
+                    component: new Button({
+                        title: "Ошибка 404",
+                        type: BUTTON_TYPES.LINK,
+                        theme: BUTTON_THEMES.DANGER,
+                    }),
+                },
+                {
+                    name: "goToError500",
+                    component: new Button({
+                        title: "Ошибка 500",
+                        type: BUTTON_TYPES.LINK,
+                        theme: BUTTON_THEMES.DANGER,
+                    }),
+                },
+            ],
         }
-        
-        linksBlock.appendChild(this.goToError404.element)
-        linksBlock.appendChild(this.goToError500.element)
     }
 
     componentDidMount() {
-        this._setHandlers()
+        this._onMountSubscriptions.push(
+            Observable.fromEvent(this.goToError404.element, "click")
+                .subscribe(goToError404Page),
+        )
+        this._onMountSubscriptions.push(
+            Observable.fromEvent(this.goToError500.element, "click")
+                .subscribe(goToError500Page),
+        )
     }
-
-    private _setHandlers() {
-        this.goToError404.element.onclick = goToError404Page
-        this.goToError500.element.onclick = goToError500Page
-    }
-
 }

@@ -1,5 +1,4 @@
 export class EventBus {
-
     private _listeners: Map<string, Array<Function>>
 
     constructor() {
@@ -19,7 +18,7 @@ export class EventBus {
             return
         }
 
-        this._listeners.set(event, events.filter(listener => listener !== callback))
+        this._listeners.set(event, events.filter((listener) => listener !== callback))
     }
 
     emit(event: string, ...args: unknown[]) {
@@ -28,7 +27,7 @@ export class EventBus {
         if (!events) {
             return
         }
-        events.forEach(function(listener) {
+        events.forEach((listener) => {
             listener(...args)
         })
     }

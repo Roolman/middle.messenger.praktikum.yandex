@@ -1,42 +1,35 @@
-import * as Handlebars from "handlebars"
-import './Change-avatar.scss'
-import templ from './Change-avatar.tmpl'
+import "./change-avatar.scss"
+import templ from "./change-avatar.tmpl"
 
-import { Button } from "../../../../components/Button/index"
-import { Component } from "../../../../utils/classes/component"
+import { Button } from "../../../../components/button/index"
+import { Component, ComponentProps } from "../../../../utils/classes/component"
 import { Observable } from "../../../../utils/classes/observable"
 
 export class ChangeAvatar extends Component {
-
-    // Аргументы входные
     applyButton: Button
+    block: HTMLElement
 
     constructor() {
-        super("div")
+        super("div", {}, templ)
     }
 
-    render() {
-        this.element.classList.add("change-avatar")
-        this.hide()
-        const template = Handlebars.compile(templ)
-        const result = template({})
-        return result
+    setDefaultProps(props: ComponentProps): ComponentProps {
+        return {
+            ...props,
+            componentClassName: "change-avatar",
+        }
     }
 
     componentDidRender() {
-        this.applyButton = new Button({title: "Изменить"})
-        const block = this.element.getElementsByClassName('change-avatar__elements')[0] as HTMLElement
-        if(!block) {
-            throw new Error("Ошибка рендеринга ChangeAvatar")
-        }
-        block.appendChild(this.applyButton.element)
+        this.applyButton = new Button({ title: "Изменить" })
+        this.block.appendChild(this.applyButton.element)
+        this.hide()
     }
 
     componentDidMount() {
         this._onMountSubscriptions.push(
-            Observable.fromEvent(this.applyButton.element, 'click')
-                        .subscribe(() => this.hide())   
+            Observable.fromEvent(this.applyButton.element, "click")
+                .subscribe(() => this.hide()),
         )
     }
-
 }

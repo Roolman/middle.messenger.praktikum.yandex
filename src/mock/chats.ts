@@ -1,5 +1,6 @@
 import { ChatData } from "../services/state/chats.service"
 
+/* eslint max-len: [2, 500] */
 export const CHATS: ChatData[] = [
     {
         id: 1,
@@ -9,7 +10,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(),
         unreadCount: 2,
-        messages: []
+        messages: [],
     },
     {
         id: 2,
@@ -19,7 +20,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: true,
         lastMessageTime: new Date(new Date().setDate(3)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 3,
@@ -29,7 +30,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setDate(3)),
         unreadCount: 4,
-        messages: []
+        messages: [],
     },
     {
         id: 4,
@@ -39,7 +40,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: true,
         lastMessageTime: new Date(new Date().setDate(2)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 5,
@@ -49,7 +50,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setDate(1)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 6,
@@ -59,7 +60,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setDate(0)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 7,
@@ -69,7 +70,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setMonth(8)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 8,
@@ -79,7 +80,7 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setMonth(8)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
     {
         id: 9,
@@ -89,7 +90,6 @@ export const CHATS: ChatData[] = [
         lastMessageSentByUser: false,
         lastMessageTime: new Date(new Date().setMonth(7)),
         unreadCount: 0,
-        messages: []
+        messages: [],
     },
 ]
-

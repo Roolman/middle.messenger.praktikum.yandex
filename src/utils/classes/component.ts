@@ -1,3 +1,4 @@
+import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../services/core/mutationObserver"
 import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
@@ -12,9 +13,16 @@ type ProxyObject = {
     [key: string]: any
 }
 
+export type ComponentChild = {
+    name: string
+    component: Component
+}
+
 export type ComponentProps = {
+    componentClassName?: string
     styles?: Object
     attributes?: Object
+    children?: Array<ComponentChild>
     [key: string]: any
 }
 
@@ -26,7 +34,7 @@ export abstract class Component {
         FLOW_CDU: "flow:component-did-update",
         FLOW_CDM: "flow:component-did-mount",
         FLOW_CDUM: "flow:component-did-unmount",
-        FLOW_RENDER: "flow:render"
+        FLOW_RENDER: "flow:render",
     }
 
     props: ComponentProps
@@ -44,6 +52,9 @@ export abstract class Component {
 
     private _element: HTMLElement
     private _meta: ComponentMeta
+    private _template: string
+    // Вкл/выкл удаление подписок при unmount
+    private _isDefaultDestroyLogicEnabled: boolean
 
     get element() {
         return this._element
@@ -53,14 +64,15 @@ export abstract class Component {
         return this.element
     }
 
-    constructor(tagName: string = "div", props: ComponentProps = {}) {
+    constructor(tagName: string = "div", props: ComponentProps = {}, template: string = "") {
         this._eventBus = new EventBus()
         this._subscriptions = []
         this._onMountSubscriptions = []
         this._meta = {
             tagName,
-            props
+            props,
         }
+        this._template = template
 
         const defaultProps = this.setDefaultProps(props)
         this.props = this._makePropsProxy(defaultProps)
@@ -71,13 +83,13 @@ export abstract class Component {
 
     protected setDefaultProps(props: ComponentProps) {
         return {
-            ...props
+            ...props,
         }
     }
 
     /*
     Lifecycle:
-        Once:     INIT -> FLOW_CDI 
+        Once:     INIT -> FLOW_CDI
         Repetead: FLOW_CDU -> FLOW_RENDER -> FLOW_CDR -> FLOW_CDM
         Once:     -> FLOW_CDUM
     */
@@ -91,16 +103,6 @@ export abstract class Component {
         eventBus.on(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
     }
 
-    private _unregisterEvents(eventBus: EventBus) {
-        eventBus.off(Component.EVENTS.INIT, this._init.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_RENDER, this._render.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDR, this._componentDidRender.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDI, this._componentDidInit.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDUM, this._componentDidUnmount.bind(this))
-        eventBus.off(Component.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this))
-    }
-
     private _createResources() {
         const { tagName } = this._meta
         this._element = this._createDocumentElement(tagName)
@@ -108,70 +110,85 @@ export abstract class Component {
 
     // Внутренняя инициализация
     private _init() {
+        this._isDefaultDestroyLogicEnabled = true
         this._createResources()
+        // Компонент должен быть удален если его нет в дереве
         this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
-            (mutationRecords: MutationRecord[]) => {
-                if(!document.body.contains(this._element)) {
+            () => {
+                if (!document.body.contains(this._element) && this._isDefaultDestroyLogicEnabled) {
                     this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
                 }
-            }
+            },
         ))
+        // Отключаем дефолтное уничтожение при отсутствии в дереве для детей
+        for (const child of this.props.children || []) {
+            child.component.disableDefaultDestroyLogic()
+        }
         this._eventBus.emit(Component.EVENTS.FLOW_CDI)
     }
 
     // Компонент проинициализирован
-    // Можно планировать события  
+    // Можно планировать события
     private _componentDidInit() {
         this.componentDidInit()
         this._eventBus.emit(Component.EVENTS.FLOW_CDU)
     }
 
     componentDidInit() {}
-    
+
     // Компонент был обновлен
-    private _componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
-        this.componentDidUpdate(oldProps, newProps)
-        for(let sub of this._onMountSubscriptions) {
+    private _componentDidUpdate() {
+        // oldProps: ComponentProps, newProps: ComponentProps
+        this.componentDidUpdate() // oldProps, newProps
+        for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
         this._onMountSubscriptions = []
         this._eventBus.emit(Component.EVENTS.FLOW_RENDER)
     }
 
-    componentDidUpdate(oldProps: ComponentProps, newProps: ComponentProps) {
+    componentDidUpdate() {
+        // oldProps: ComponentProps, newProps: ComponentProps
         return true
     }
 
     private _render() {
         const block = this.render()
         this._element.innerHTML = block
-
+        // Добавляем класс для элемента компонента (если есть)
+        if (this.props.componentClassName) {
+            this._element.classList.add(this.props.componentClassName)
+        }
         // Устанавливаем стили
         const styles = Object.entries(this.props.styles || {})
-        for(let [styleName, value] of styles) {
+        for (const [styleName, value] of styles) {
             try {
                 this._element.style[styleName as any] = value
-            }
-            catch(err: any) {
+            } catch (err: any) {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
         // Устанавливаем аттрибуты
         const attributes = Object.entries(this.props.attributes || {})
-        for(let [attributeName, value] of attributes) {
+        for (const [attributeName, value] of attributes) {
             try {
-                this._element.setAttribute(attributeName, value) 
-            }
-            catch(err: any) {
+                this._element.setAttribute(attributeName, value)
+            } catch (err: any) {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
-
+        // Получаем ссылки на компоненты
+        this._getComponentChildrenReferences()
+        // Заменяем заглушки на дочерние компоненты
+        this._replaceComponentChildren()
+        // Вызываем FLOW_CDR
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
     render(): string {
-        return ''
+        const template = Handlebars.compile(this._template)
+        const result = template(this.props)
+        return result
     }
 
     // TODO: Разобраться с контекстом при вызове
@@ -190,26 +207,22 @@ export abstract class Component {
         this.componentDidMount()
     }
 
-    componentDidMount(oldProps?: ComponentProps) {}
+    componentDidMount() {}
 
     // Компонент исчез из дерева
-    // Можно закрыть подпикси. Очистить все данные
+    // Нужно закрыть подпикси
     private _componentDidUnmount() {
         this.componentDidUnmount()
         // Удаляем все подписки
-        for(let sub of this._subscriptions) {
+        for (const sub of this._subscriptions) {
             sub.unsubscribe()
         }
-        for(let sub of this._onMountSubscriptions) {
+        for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
-        // Удаляем события из EventBus
-        this._unregisterEvents(this._eventBus);
-        // Удаляем все свойства
-        // TODO: Придумать другой метод
-        // NOTE: Возможно это вообще лишнее
-        for(let [key, value] of Object.entries(this)) {
-            (this as any)[key] = null;
+        // Уничтожаем подписки детей
+        for (const child of this.props.children || []) {
+            child.component.destroy()
         }
     }
 
@@ -217,21 +230,20 @@ export abstract class Component {
 
     // TODO: Додумать обработку утечек
     setProps = (nextProps: ComponentProps) => {
-        try{
+        try {
             if (!nextProps) {
                 return
             }
 
             Object.assign(this.props, nextProps)
             this._eventBus.emit(Component.EVENTS.FLOW_CDU)
-        }
-        catch(err) {
+        } catch (err) {
             console.error(err)
             throw new Error(
                 `
                 Ошибка установки параметров компоненту.
                 Убедитесь, что все подписки были добавлены в this._subscriptions !
-                `
+                `,
             )
         }
     }
@@ -248,12 +260,55 @@ export abstract class Component {
             },
             deleteProperty() {
                 throw new Error("Нельзя удалять свойства блока")
-            }
+            },
         })
     }
 
     private _createDocumentElement(tagName: string): HTMLElement {
         return document.createElement(tagName)
+    }
+
+    // Получить ссылки на дочерние компоненты внутри
+    private _getComponentChildrenReferences() {
+        const childrenComponents = this._element.querySelectorAll("[data-ref]")
+        for (const child of Array.from(childrenComponents)) {
+            const childName = child.getAttribute("data-ref")
+            if (childName) {
+                (this as any)[childName] = child
+            }
+        }
+    }
+
+    // Заменяем заглушки на дочерние компоненты и сохраняем ссылку на компонент
+    private _replaceComponentChildren() {
+        if (this.props.children === undefined || !this.props.children.length) {
+            return
+        }
+        const childrenComponents = this._element.querySelectorAll("[data-component]")
+        for (const child of Array.from(childrenComponents)) {
+            const childName = child.getAttribute("data-component") as string
+            const parentNode = child.parentNode as ParentNode
+
+            const componentChild = this.props.children.find((x) => x.name === childName)
+            if (!componentChild) {
+                throw new Error(`Не существует дочернего компонента с именем ${childName}`)
+            }
+            // Заменяем заглушку на компонент
+            parentNode.replaceChild(componentChild.component.element, child)
+        }
+        // Отдельно сохраняем компоненты (даже если они не отрендерелись)
+        for (const componentChild of this.props.children) {
+            // Сохраняем ссылку
+            (this as any)[componentChild.name] = componentChild.component
+        }
+    }
+
+    disableDefaultDestroyLogic() {
+        this._isDefaultDestroyLogicEnabled = false
+    }
+
+    enableDefaultDestroyLogic() {
+        this._isDefaultDestroyLogicEnabled = true
     }
 
     show() {
@@ -262,5 +317,25 @@ export abstract class Component {
 
     hide() {
         this.getContent().style.display = "none"
+    }
+
+    setDisabled() {
+        this.getContent().setAttribute("disabled", "")
+    }
+
+    setEnabled() {
+        this.getContent().removeAttribute("disabled")
+    }
+
+    setVisible() {
+        this.getContent().style.visibility = "visible"
+    }
+
+    setInvisible() {
+        this.getContent().style.visibility = "hidden"
+    }
+
+    destroy() {
+        this._componentDidUnmount()
     }
 }

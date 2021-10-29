@@ -1,12 +1,13 @@
-import { InternalObserver, InternalSubscribe, Observable, Subscription } from "./observable"
-import {EventBus} from "./event-bus"
+import {
+    InternalObserver, InternalSubscribe, Observable, Subscription,
+} from "./observable"
+import { EventBus } from "./event-bus"
 
 export class Subject<T> {
-
     static EVENTS = {
         NEXT: "NEXT",
         ERROR: "ERROR",
-        COMPLETE: "COMPLETE"
+        COMPLETE: "COMPLETE",
     }
 
     observers: InternalObserver[]
@@ -19,40 +20,39 @@ export class Subject<T> {
     }
 
     subscribe(onNext: Function, onError?: Function, onCompleted?: Function): Subscription {
-
-        let onErrorFn = onError || (() => {})
-        let onCompletedFn = onCompleted || (() => {})
+        const onErrorFn = onError || (() => {})
+        const onCompletedFn = onCompleted || (() => {})
 
         const observer: InternalObserver = {
-            onNext, 
-            onError: onErrorFn, 
-            onCompleted: onCompletedFn 
+            onNext,
+            onError: onErrorFn,
+            onCompleted: onCompletedFn,
         }
         this.observers.push(observer)
-        
+
         return {
             unsubscribe: () => {
-                this.observers = this.observers.filter(o => o !== observer)
-            }
+                this.observers = this.observers.filter((o) => o !== observer)
+            },
         }
     }
 
     next(value?: T): void {
-        for(let observer of this.observers) {
+        for (const observer of this.observers) {
             observer.onNext(value)
         }
         this._eventBus.emit(Subject.EVENTS.NEXT, value)
     }
 
     error(err: any): void {
-        for(let observer of this.observers) {
+        for (const observer of this.observers) {
             observer.onError(err)
         }
         this._eventBus.emit(Subject.EVENTS.ERROR, err)
     }
 
     complete(): void {
-        for(let observer of this.observers) {
+        for (const observer of this.observers) {
             observer.onCompleted()
         }
         this._eventBus.emit(Subject.EVENTS.COMPLETE)
@@ -60,7 +60,6 @@ export class Subject<T> {
 
     asObservable(): Observable {
         const handler: InternalSubscribe = (observer: InternalObserver): Subscription => {
-
             // Выполнять инструкции при срабатывании функций внутри Subject
             this._eventBus.on(Subject.EVENTS.NEXT, observer.onNext)
             this._eventBus.on(Subject.EVENTS.ERROR, observer.onError)
@@ -76,9 +75,9 @@ export class Subject<T> {
                     observer = {
                         onNext: () => {},
                         onError: () => {},
-                        onCompleted: () => {}
+                        onCompleted: () => {},
                     }
-                }
+                },
             }
         }
         const observable = new Observable(handler)

@@ -9,20 +9,24 @@ export default
             {{/if}}
             <span class="chat__name">{{ name }}</span>                
         </div>
-        <div class="chat__messages">
-            {{#unless messages}}
+        <div data-ref="messagesContainer" class="chat__messages">
+            {{#unless messagesComponents}}
                 <h4>Сообщений нет</h4>
             {{/unless}}
+            {{#each messagesComponents}}
+                <div data-component="{{ this.name }}"></div>
+            {{/each}}
         </div>
-        <div class="chat__input">
+        <div data-ref="chatInput" class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
+            <div data-component="sendForm"></div>
+            <div data-component="sendButton"></div>
         </div>    
     {{else}}
         {{> emptyChat}}
     {{/if}}
 `
 
-export const emptyChat = 
-`
+export const emptyChat = `
     <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
 `

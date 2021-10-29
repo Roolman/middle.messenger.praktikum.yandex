@@ -14,7 +14,8 @@ export type ChatData = {
     lastMessageTime: Date,
     lastMessageTimeShort?: string,
     unreadCount: number,
-    messages: MessageData[]
+    messages: MessageData[],
+    selected?: boolean
 }
 
 export type MessageData = {
@@ -26,7 +27,6 @@ export type MessageData = {
 }
 
 export class ChatsService {
-
     public chatsObservable: Observable
     private _chatsSubject: Subject<ChatData[]>
     private _chats: ChatData[]
@@ -48,20 +48,23 @@ export class ChatsService {
     }
 
     getChats(): void {
-        // TODO: Fix AS
-        this._chats = CHATS.map(x => {
-            return {...x, lastMessageTimeShort: getShortChatDate(x.lastMessageTime as Date)}
-        })
+        this._chats = CHATS.map((x) => ({
+            ...x,
+            lastMessageTimeShort: getShortChatDate(x.lastMessageTime),
+        }))
         this._chatsSubject.next(this._chats)
     }
 
-    setChat(chatData: ChatData): void {
-        console.time('setChat')
-        this._chat = chatData
-        this.setMessages(this._chat)
+    setChat(chatId: number): void {
+        this._chat = this._chats.find((x) => x.id === chatId) || null
+        if (this._chat) {
+            const { id } = this._chat
+            this.setMessages(this._chat)
+            this._chats = this._chats.map((x) => ({ ...x, selected: x.id === id }))
 
-        this._chatSubject.next(this._chat)
-        console.timeEnd('setChat')
+            this._chatsSubject.next(this._chats)
+            this._chatSubject.next(this._chat)
+        }
     }
 
     setMessages(chat: ChatData): void {
@@ -70,14 +73,13 @@ export class ChatsService {
 
     addMessage(message: string): void {
         const messageData: MessageData = {
-            id: Math.random()*100,
+            id: Math.random() * 100,
             type: MESSAGE_TYPES.TEXT,
             value: message,
             time: new Date(),
-            sentByUser: true
+            sentByUser: true,
         }
         this._chat?.messages.push(messageData)
         this._chatSubject.next(this._chat)
     }
-
 }

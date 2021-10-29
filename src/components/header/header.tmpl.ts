@@ -5,5 +5,7 @@ export default
         <p class="header__title">{{ title }}</p>
     </div>
     <div class="header__page-links">
+        <div data-component="goToError404"></div>
+        <div data-component="goToError500"></div>
     </div>
 `

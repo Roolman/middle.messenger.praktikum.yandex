@@ -1,6 +1,6 @@
 export default
 `
-    <div class="change-avatar__elements">
+    <div data-ref="block" class="change-avatar__elements">
         <h3>Загрузите файл</h3>
         <label for="avatar" class="change-avatar__file-upload-label">
             Выберите файл

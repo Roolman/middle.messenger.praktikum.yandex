@@ -1,1 +1,1 @@
-export {Error404Page} from "./404"
+export { Error404Page } from "./404"

@@ -1,15 +1,18 @@
-import { FormElement } from "../../../../../../components/Form/Form"
-import { Component } from "../../../../../../utils/classes/component"
+import { FormElement } from "../../../../../../components/form/form"
+import { Component, ComponentProps } from "../../../../../../utils/classes/component"
 import { Observable } from "../../../../../../utils/classes/observable"
+import { Subject } from "../../../../../../utils/classes/subject"
 import { Validators } from "../../../../../../utils/classes/validators"
-import "./Message-input.scss"
+import "./message-input.scss"
+import templ from "./message-input.tmpl"
 
-type MessageInputProps = {
+type MessageInputProps = ComponentProps & {
     validators: Validators
 }
 
 export class MessageInput extends Component implements FormElement {
-
+    private _onValueChange: Subject<string | number | boolean>
+    private _onValueChangeObservable: Observable
 
     get name(): string {
         return this.element.getAttribute("name") || "chatMessage"
@@ -18,15 +21,33 @@ export class MessageInput extends Component implements FormElement {
         return (this.element as HTMLInputElement).value
     }
     get isValid(): boolean {
-        return this._checkInputValidity()
+        return this._checkInputValidity(this.element as HTMLInputElement)
+    }
+    get inputElement(): HTMLElement {
+        return this.element
+    }
+    get onValueChange(): Observable {
+        return this._onValueChangeObservable
     }
 
     constructor(props: MessageInputProps) {
-        super("input", props)
+        super("input", props, templ)
+    }
+
+    setDefaultProps(props: MessageInputProps): MessageInputProps {
+        return {
+            ...props,
+            componentClassName: "chat__input-text",
+        }
+    }
+
+    componentDidInit() {
+        this._onValueChange = new Subject()
+        this._onValueChangeObservable = this._onValueChange.asObservable()
     }
 
     componentDidRender() {
-        this.element.classList.add("chat__input-text")
+        // TODO: Fix
         this.element.setAttribute("type", "text")
         this.element.setAttribute("id", "chatMessage")
         this.element.setAttribute("name", "chatMessage")
@@ -38,16 +59,17 @@ export class MessageInput extends Component implements FormElement {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.element, "input")
-                    .subscribe(() => {
-                        this._checkInputValidity()
-                    })
+                .subscribe(() => {
+                    const element = this.element as HTMLInputElement
+                    this._checkInputValidity(element)
+                    this._onValueChange.next(element.value)
+                }),
         )
     }
 
-    private _checkInputValidity(): boolean {
-        const element = this.element as HTMLInputElement
-        if(!element.checkValidity()) {
-            this.props.validators.checkValidity(this.element)
+    private _checkInputValidity(element: HTMLInputElement): boolean {
+        if (!element.checkValidity()) {
+            this.props.validators.checkValidity(element)
             return false
         }
         return true
