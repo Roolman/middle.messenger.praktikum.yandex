@@ -40,20 +40,11 @@ export class ProfilePage extends Component {
     profileSaveButton: Button
     // Вернуться в профиль
     profileReturn: HTMLElement
-    profileActions: HTMLElement
-    profileMainInfo: HTMLElement
     avatar: HTMLElement
     // Форма для данных
     profileEditForm: Form
-    profileEmail: Input
-    profileFirstName: Input
-    profileSecondName: Input
-    profileDisplayName: Input
-    profilePhone: Input
     // Форма для пароля
     passwordForm: Form
-    passwordOld: Input
-    passwordNew: Input
     // Модуль смены аватара
     сhangeAvatar: ChangeAvatar
 
@@ -71,6 +62,164 @@ export class ProfilePage extends Component {
             profileIsEditable: false,
             changePasswordFormIsShown: false,
             componentClassName: "profile",
+            children: [
+                {
+                    name: "profileEditForm",
+                    component: new Form({
+                        children: [
+                            {
+                                name: "email",
+                                component: new Input({
+                                    name: "email",
+                                    title: "Почта",
+                                    type: "email",
+                                    value: PROFILE_DATA.find((x) => x.name === "email")?.value,
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        EMAIL_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                            {
+                                name: "first_name",
+                                component: new Input({
+                                    name: "first_name",
+                                    title: "Имя",
+                                    type: "text",
+                                    value: PROFILE_DATA.find((x) => x.name === "first_name")?.value,
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        NAME_PATTERN_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                            {
+                                name: "second_name",
+                                component: new Input({
+                                    name: "second_name",
+                                    title: "Фамилия",
+                                    type: "text",
+                                    value: PROFILE_DATA.find((x) => x.name === "second_name")?.value,
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        NAME_PATTERN_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                            {
+                                name: "dispalay_name",
+                                component: new Input({
+                                    name: "dispalay_name",
+                                    title: "Имя в чате",
+                                    type: "text",
+                                    value: PROFILE_DATA.find((x) => x.name === "dispalay_name")?.value,
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        NAME_PATTERN_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                            {
+                                name: "phone",
+                                component: new Input({
+                                    name: "phone",
+                                    title: "Телефон",
+                                    type: "text",
+                                    value: PROFILE_DATA.find((x) => x.name === "phone")?.value,
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        PHONE_MIN_LENGTH_VALIDATOR,
+                                        PHONE_MAX_LENGTH_VALIDATOR,
+                                        PHONE_PATTERN_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                        ],
+                        attributes: {
+                            id: "profileEditFormId",
+                        },
+                    })
+                },
+                {
+                    name: "passwordForm",
+                    component: new Form({
+                        children: [
+                            {
+                                name: "oldPassword",
+                                component: new Input({
+                                    name: "oldPassword",
+                                    title: "Старый пароль",
+                                    type: "password",
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                            {
+                                name: "newPassword",
+                                component: new Input({
+                                    name: "newPassword",
+                                    title: "Новый пароль",
+                                    type: "password",
+                                    validators: new Validators([
+                                        REQUIRED_VALIDATOR,
+                                        PASSWORD_MIN_LENGTH_VALIDATOR,
+                                        PASSWORD_MAX_LENGTH_VALIDATOR,
+                                        PASSWORD_PATTERN_VALIDATOR,
+                                    ]),
+                                }),
+                            },
+                        ],
+                        attributes: {
+                            id: "passwordFormId",
+                        },
+                    })
+                },
+                {
+                    name: "сhangeAvatar",
+                    component: new ChangeAvatar()
+                },
+                {
+                    name: "returnButton",
+                    component: new Button({
+                        type: BUTTON_TYPES.ROUND,
+                        theme: BUTTON_THEMES.PRIMARY,
+                        iconClass: "fa fa-arrow-left",
+                    })
+                },
+                {
+                    name: "editDataButton",
+                    component: new Button({
+                        title: "Изменить данные",
+                        type: BUTTON_TYPES.LINK,
+                    })
+                },
+                {
+                    name: "changePasswordButton",
+                    component: new Button({
+                        title: "Изменить пароль",
+                        type: BUTTON_TYPES.LINK,
+                    })
+                },                
+                {
+                    name: "logoutButton",
+                    component: new Button({
+                        title: "Выйти",
+                        type: BUTTON_TYPES.LINK,
+                        theme: BUTTON_THEMES.DANGER,
+                    })
+                }, 
+                {
+                    name: "profileSaveButton",
+                    component: new Button({
+                        title: "Сохранить",
+                        attributes: {
+                            type: "submit",
+                            form: "profileEditFormId",
+                        },
+                    })
+                },
+            ]
         }
     }
 
@@ -83,155 +232,6 @@ export class ProfilePage extends Component {
                 })
             },
         ))
-    }
-
-    componentDidRender() {
-        // Форма профиля
-        this.profileEmail = new Input({
-            name: "email",
-            title: "Почта",
-            type: "email",
-            value: this.props.profileData.find((x) => x.name === "email")?.value,
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                EMAIL_VALIDATOR,
-            ]),
-        })
-        this.profileFirstName = new Input({
-            name: "first_name",
-            title: "Имя",
-            type: "text",
-            value: this.props.profileData.find((x) => x.name === "first_name")?.value,
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR,
-            ]),
-        })
-        this.profileSecondName = new Input({
-            name: "second_name",
-            title: "Фамилия",
-            type: "text",
-            value: this.props.profileData.find((x) => x.name === "second_name")?.value,
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR,
-            ]),
-        })
-        this.profileDisplayName = new Input({
-            name: "dispalay_name",
-            title: "Имя в чате",
-            type: "text",
-            value: this.props.profileData.find((x) => x.name === "dispalay_name")?.value,
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                NAME_PATTERN_VALIDATOR,
-            ]),
-        })
-        this.profilePhone = new Input({
-            name: "phone",
-            title: "Телефон",
-            type: "text",
-            value: this.props.profileData.find((x) => x.name === "phone")?.value,
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                PHONE_MIN_LENGTH_VALIDATOR,
-                PHONE_MAX_LENGTH_VALIDATOR,
-                PHONE_PATTERN_VALIDATOR,
-            ]),
-        })
-        this.profileEditForm = new Form({
-            formElements: [
-                this.profileEmail,
-                this.profileFirstName,
-                this.profileSecondName,
-                this.profileDisplayName,
-                this.profilePhone,
-            ],
-            attributes: {
-                id: "profileEditFormId",
-            },
-        })
-        // Форма пароля
-        this.passwordOld = new Input({
-            name: "oldPassword",
-            title: "Старый пароль",
-            type: "password",
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-            ]),
-        })
-        this.passwordNew = new Input({
-            name: "newPassword",
-            title: "Новый пароль",
-            type: "password",
-            validators: new Validators([
-                REQUIRED_VALIDATOR,
-                PASSWORD_MIN_LENGTH_VALIDATOR,
-                PASSWORD_MAX_LENGTH_VALIDATOR,
-                PASSWORD_PATTERN_VALIDATOR,
-            ]),
-        })
-        this.passwordForm = new Form({
-            formElements: [
-                this.passwordOld,
-                this.passwordNew,
-            ],
-            attributes: {
-                id: "passwordFormId",
-            },
-        })
-        // Смена аватара
-        this.сhangeAvatar = new ChangeAvatar()
-        // Кнопочки
-        this.returnButton = new Button({
-            type: BUTTON_TYPES.ROUND,
-            theme: BUTTON_THEMES.PRIMARY,
-            iconClass: "fa fa-arrow-left",
-        })
-        this.editDataButton = new Button({
-            title: "Изменить данные",
-            type: BUTTON_TYPES.LINK,
-        })
-        this.changePasswordButton = new Button({
-            title: "Изменить пароль",
-            type: BUTTON_TYPES.LINK,
-        })
-        this.logoutButton = new Button({
-            title: "Выйти",
-            type: BUTTON_TYPES.LINK,
-            theme: BUTTON_THEMES.DANGER,
-        })
-        this.profileSaveButton = new Button({
-            title: "Сохранить",
-            attributes: {
-                type: "submit",
-                form: this.profileEditForm.props.id,
-            },
-        })
-
-        // Вставляем в DOM
-
-        // Кнопка вернуться к чатам
-        this.profileReturn.appendChild(this.returnButton.element)
-        // Дествия с профилем
-        if (this.props.profileIsEditable) {
-            this.profileActions.appendChild(this.profileSaveButton.element)
-        } else {
-            this.profileActions.appendChild(this.editDataButton.element)
-            this.profileActions.appendChild(this.changePasswordButton.element)
-            this.profileActions.appendChild(this.logoutButton.element)
-        }
-        // Форма
-        if (this.props.profileIsEditable) {
-            if (this.props.changePasswordFormIsShown) {
-                this.profileMainInfo.appendChild(this.passwordForm.element)
-            } else {
-                this.profileMainInfo.appendChild(this.profileEditForm.element)
-            }
-        }
-
-        // Смена аватара
-        this.element.appendChild(this.сhangeAvatar.element)
     }
 
     componentDidMount() {
@@ -250,14 +250,19 @@ export class ProfilePage extends Component {
                 .subscribe(
                     () => {
                         const fieldValues: ProfileFieldValue[] = []
+                        let form
                         if (!this.props.changePasswordFormIsShown) {
-                            const elements = this.profileEditForm.formElements
-                            for (const el of elements) {
-                                fieldValues.push({
-                                    name: el.name,
-                                    value: el.value,
-                                })
-                            }
+                            form = this.profileEditForm
+                        }
+                        else {
+                            form = this.passwordForm
+                        }
+                        const elements = form.formElements
+                        for (const el of elements) {
+                            fieldValues.push({
+                                name: el.name,
+                                value: el.value,
+                            })
                         }
                         console.log(fieldValues)
                         // Меняем значения через сервис
@@ -273,7 +278,10 @@ export class ProfilePage extends Component {
         // Валидация кнопки сохранения
         this._onMountSubscriptions.push(
             this.profileEditForm.onValidityChange.subscribe(
-                (isValid: boolean) => this._setSaveButtonValidity(isValid),
+                (isValid: boolean) => {
+                    this._setSaveButtonValidity(isValid)
+                    console.log(isValid)
+                },
             ),
         )
         // Кнопки

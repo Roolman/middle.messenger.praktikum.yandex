@@ -13,10 +13,16 @@ type ProxyObject = {
     [key: string]: any
 }
 
+export type ComponentChild = {
+    name: string
+    component: Component
+}
+
 export type ComponentProps = {
     componentClassName?: string
     styles?: Object
     attributes?: Object
+    children?: Array<ComponentChild>
     [key: string]: any
 }
 
@@ -47,6 +53,8 @@ export abstract class Component {
     private _element: HTMLElement
     private _meta: ComponentMeta
     private _template: string
+    // Вкл/выкл удаление подписок при unmount
+    private _isDefaultDestroyLogicEnabled: boolean
 
     get element() {
         return this._element
@@ -102,14 +110,20 @@ export abstract class Component {
 
     // Внутренняя инициализация
     private _init() {
+        this._isDefaultDestroyLogicEnabled = true
         this._createResources()
+        // Компонент должен быть удален если его нет в дереве
         this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
             () => {
-                if (!document.body.contains(this._element)) {
+                if (!document.body.contains(this._element) && this._isDefaultDestroyLogicEnabled) {
                     this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
                 }
             },
         ))
+        // Отключаем дефолтное уничтожение при отсутствии в дереве для детей
+        for(let child of this.props.children || []) {
+            child.component.disableDefaultDestroyLogic()
+        }
         this._eventBus.emit(Component.EVENTS.FLOW_CDI)
     }
 
@@ -165,6 +179,8 @@ export abstract class Component {
         }
         // Получаем ссылки на компоненты
         this._getComponentChildrenReferences()
+        // Заменяем заглушки на дочерние компоненты
+        this._replaceComponentChildren()
         // Вызываем FLOW_CDR
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
@@ -192,7 +208,7 @@ export abstract class Component {
     }
 
     componentDidMount() {}
-    // oldProps?: ComponentProps
+    
     // Компонент исчез из дерева
     // Нужно закрыть подпикси
     private _componentDidUnmount() {
@@ -203,6 +219,10 @@ export abstract class Component {
         }
         for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
+        }
+        // Уничтожаем подписки детей
+        for(let child of this.props.children || []) {
+            child.component.destroy()
         }
     }
 
@@ -259,6 +279,39 @@ export abstract class Component {
         }
     }
 
+    // Заменяем заглушки на дочерние компоненты и сохраняем ссылку на компонент
+    private _replaceComponentChildren() {
+        if(this.props.children === undefined || !this.props.children.length) {
+            return
+        }
+        const childrenComponents = this._element.querySelectorAll("[data-component]")
+        for (let child of Array.from(childrenComponents)) {
+
+            const childName = child.getAttribute("data-component") as string
+            const parentNode = child.parentNode as ParentNode
+
+            const componentChild = this.props.children.find(x => x.name === childName)
+            if(!componentChild) {
+                throw new Error(`Не существует дочернего компонента с именем ${childName}`)
+            }
+            // Заменяем заглушку на компонент
+            parentNode.replaceChild(componentChild.component.element, child)
+        }
+        // Отдельно сохраняем компоненты (даже если они не отрендерелись)
+        for(let componentChild of this.props.children) {
+            // Сохраняем ссылку
+            (this as any)[componentChild.name] = componentChild.component
+        }        
+    }
+
+    disableDefaultDestroyLogic() {
+        this._isDefaultDestroyLogicEnabled = false
+    }
+
+    enableDefaultDestroyLogic() {
+        this._isDefaultDestroyLogicEnabled = true
+    }
+
     show() {
         this.getContent().style.display = "flex"
     }
@@ -281,5 +334,9 @@ export abstract class Component {
 
     setInvisible() {
         this.getContent().style.visibility = "hidden"
+    }
+
+    destroy() {
+        this._componentDidUnmount()
     }
 }

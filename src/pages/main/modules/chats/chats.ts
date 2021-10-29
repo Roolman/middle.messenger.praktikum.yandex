@@ -4,7 +4,7 @@ import templ from "./chats.tmpl"
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
-import { Component, ComponentProps } from "../../../../utils/classes/component"
+import { Component, ComponentChild, ComponentProps } from "../../../../utils/classes/component"
 import { goToProfilePage } from "../../../../services/core/navigation"
 import { Inject } from "../../../../utils/decorators/inject"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
@@ -12,18 +12,15 @@ import { Observable } from "../../../../utils/classes/observable"
 import { ChatPreview } from "./components/chat-preview"
 
 type ChatsProps = ComponentProps & {
-    chats: ChatData[]
+    chats: ComponentChild[]
 }
 
 export class Chats extends Component {
     props: ChatsProps
 
-    chatsActions: HTMLElement
     profileLink: HTMLElement
     chatsContainer: HTMLElement
     addChatButton: Button
-
-    private _chatsPreview: ChatPreview[]
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
@@ -37,38 +34,26 @@ export class Chats extends Component {
             ...props,
             componentClassName: "chats",
             chats: [],
+            children: [
+                {
+                    name: "addChatButton",
+                    component: new Button({
+                        type: BUTTON_TYPES.ROUND,
+                        theme: BUTTON_THEMES.PRIMARY,
+                        iconClass: "fa fa-plus",
+                    })
+                }
+            ]
         }
     }
 
     componentDidInit() {
-        this._chatsPreview = []
         this._subscriptions.push(this._chatsService.chatsObservable.subscribe(
             (chats: ChatData[]) => {
-                this.setProps({ chats })
+                this.setProps({ chats: this._getChatsPreviewComponents(chats) })
             },
         ))
         this._chatsService.getChats()
-    }
-
-    componentDidUpdate() {
-        this._chatsPreview = []
-        return true
-    }
-
-    componentDidRender() {
-        // Добавляем кнопку добавить чат
-        this.addChatButton = new Button({
-            type: BUTTON_TYPES.ROUND,
-            theme: BUTTON_THEMES.PRIMARY,
-            iconClass: "fa fa-plus",
-        })
-        this.chatsActions.insertBefore(this.addChatButton.element, this.profileLink)
-        // Добавляем список чатов
-        for (const chat of this.props.chats) {
-            const chatPreview = new ChatPreview(chat)
-            this._chatsPreview.push(chatPreview)
-            this.chatsContainer.appendChild(chatPreview.element)
-        }
     }
 
     componentDidMount() {
@@ -81,5 +66,20 @@ export class Chats extends Component {
                     },
                 ),
         )
+    }
+
+    private _getChatsPreviewComponents(chats: ChatData[]): ComponentChild[] {
+        const chatsPreviewComponents = chats.map((x, i) => {
+            return {
+                name: `chatsPreviewComponent__${i}`,
+                component: new ChatPreview(x)
+            }
+        })
+        // Обновляем children компонента для ререндера
+        if(this.props.children) {
+            this.props.children = this.props.children.filter(x => !x.name.includes("chatsPreviewComponent"))
+            this.props.children.push(...chatsPreviewComponents)
+        }
+        return chatsPreviewComponents
     }
 }

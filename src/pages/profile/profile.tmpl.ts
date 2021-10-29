@@ -1,6 +1,7 @@
 export default
 `
     <div data-ref="profileReturn" class="profile__return">
+        <div data-component="returnButton"></div>
     </div>
     <div class="profile__main">
         {{#unless profileIsEditable}}
@@ -14,16 +15,30 @@ export default
             <h3 class="profile__main-name">Иван</h3>
         {{/unless}}
         <div data-ref="profileMainInfo" class="profile__main-info">
-            {{#unless profileIsEditable}}
+            {{#if profileIsEditable}}
+                {{#if changePasswordFormIsShown}}
+                    <div data-component="passwordForm"></div>
+                {{else}}
+                    <div data-component="profileEditForm"></div>
+                {{/if}}
+            {{else}}
                 {{#each profileData}}
                     <div class="profile__main-info-item">
                         <span class="profile__main-info-item-title">{{ this.title }}</span>
                         <span class="profile__main-info-item-value">{{ this.value }}</span>
                     </div>
                 {{/each}}
-            {{/unless}}
+            {{/if}}
         </div>
         <div data-ref="profileActions" class="profile__main-actions">
+            {{#if profileIsEditable}}
+                <div data-component="profileSaveButton"></div>
+            {{else}}
+                <div data-component="editDataButton"></div>
+                <div data-component="changePasswordButton"></div>
+                <div data-component="logoutButton"></div>
+            {{/if}}
         </div>
     </div>
+    <div data-component="сhangeAvatar"></div>
 `

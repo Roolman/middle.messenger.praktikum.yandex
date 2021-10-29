@@ -16,8 +16,7 @@ type LoginRegisterBlockProps = ComponentProps & {
 export class LoginRegisterBlock extends Component {
     props: LoginRegisterBlockProps
 
-    blockContainer: HTMLElement
-    actionsBlock: HTMLElement
+    form: Form
     mainButton: Button
     secondButton: Button
 
@@ -29,25 +28,29 @@ export class LoginRegisterBlock extends Component {
         return {
             ...props,
             componentClassName: "login-register-block",
+            children: [
+                {
+                    name: "form",
+                    component: props.form
+                },
+                {
+                    name: "mainButton",
+                    component: new Button({
+                        title: props.mainActionTitle,
+                        attributes: {
+                            type: "submit",
+                            form: props.form.element.id,
+                        },
+                    })
+                },
+                {
+                    name: "secondButton",
+                    component: new Button({
+                        title: props.secondActionTitle,
+                        type: BUTTON_TYPES.LINK,
+                    })
+                }
+            ]
         }
-    }
-
-    componentDidRender() {
-        // Вставляем форму
-        this.blockContainer.insertBefore(this.props.form.element, this.actionsBlock)
-        // Вставляем кнопки
-        this.mainButton = new Button({
-            title: this.props.mainActionTitle,
-            attributes: {
-                type: "submit",
-                form: this.props.form.element.id,
-            },
-        })
-        this.secondButton = new Button({
-            title: this.props.secondActionTitle,
-            type: BUTTON_TYPES.LINK,
-        })
-        this.actionsBlock.appendChild(this.mainButton.element)
-        this.actionsBlock.appendChild(this.secondButton.element)
     }
 }

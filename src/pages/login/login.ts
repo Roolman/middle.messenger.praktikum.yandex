@@ -17,11 +17,6 @@ export class LoginPage extends Component {
     // Компоненты
     loginBlock: LoginRegisterBlock
     header: Header
-    // Форма
-    form: Form
-    loginInput: Input
-    passwordInput: Input
-    rememberMeCheckbox: Checkbox
 
     private _valid: boolean
     get valid(): boolean {
@@ -36,62 +31,69 @@ export class LoginPage extends Component {
         return {
             ...props,
             componentClassName: "login",
+            children: [
+                {
+                    name: "header",
+                    component: new Header()
+                },
+                {
+                    name: "loginBlock",
+                    component: new LoginRegisterBlock({
+                        title: "Вход",
+                        form: new Form({
+                            children: [
+                                {
+                                    name: "login",
+                                    component: new Input({
+                                        name: "login",
+                                        title: "Логин",
+                                        type: "text",
+                                        validators: new Validators([REQUIRED_VALIDATOR]),
+                                        isValidationHidden: true,
+                                    })
+                                },
+                                {
+                                    name: "password",
+                                    component: new Input({
+                                        name: "password",
+                                        title: "Пароль",
+                                        type: "password",
+                                        validators: new Validators([REQUIRED_VALIDATOR]),
+                                        isValidationHidden: true,
+                                    }),
+                                },
+                                {
+                                    name: "rememberMe",
+                                    component:  new Checkbox({
+                                        name: "rememberMe",
+                                        label: "Запомнить меня",
+                                    }),
+                                },                                      
+                            ],
+                            attributes: {
+                                id: "loginFormId",
+                            },
+                        }),
+                        mainActionTitle: "Авторизоваться",
+                        secondActionTitle: "Ещё не зарегистрированы?",
+                    })
+                }
+            ]
         }
     }
 
     componentDidRender() {
-        // Создаем форму
-        this.loginInput = new Input({
-            name: "login",
-            title: "Логин",
-            type: "text",
-            validators: new Validators([REQUIRED_VALIDATOR]),
-            isValidationHidden: true,
-        })
-        this.passwordInput = new Input({
-            name: "password",
-            title: "Пароль",
-            type: "password",
-            validators: new Validators([REQUIRED_VALIDATOR]),
-            isValidationHidden: true,
-        })
-        this.rememberMeCheckbox = new Checkbox({
-            name: "rememberMe",
-            label: "Запомнить меня",
-        })
-        this.form = new Form({
-            formElements: [
-                this.loginInput,
-                this.passwordInput,
-                this.rememberMeCheckbox,
-            ],
-            attributes: {
-                id: "loginFormId",
-            },
-        })
-        // Объединяем в один компонент
-        this.loginBlock = new LoginRegisterBlock({
-            title: "Вход",
-            form: this.form,
-            mainActionTitle: "Авторизоваться",
-            secondActionTitle: "Ещё не зарегистрированы?",
-        })
         // Определяем состояние кнопки по валидности формы
-        this._setLoginButtonValidity(this.form.isValid)
-        // Создаем хедер
-        this.header = new Header()
-        // Вставляем в элемент
-        this.element.appendChild(this.header.element)
-        this.element.appendChild(this.loginBlock.element)
+        this._setLoginButtonValidity(this.loginBlock.form.isValid)
     }
 
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.mainButton.element, "click")
                 .subscribe(() => {
-                    if (this.form.isValid) {
+                    if (this.loginBlock.form.isValid) {
                         const values = []
-                        for (const formElement of this.form.formElements) {
+                        for (const formElement of this.loginBlock.form.formElements) {
                             values.push({ name: formElement.name, value: formElement.value })
                         }
                         console.log(values)
@@ -104,7 +106,7 @@ export class LoginPage extends Component {
                 .subscribe(() => goToRegisterPage()),
         )
         this._onMountSubscriptions.push(
-            this.form.onValidityChange.subscribe(
+            this.loginBlock.form.onValidityChange.subscribe(
                 (isValid: boolean) => this._setLoginButtonValidity(isValid),
             ),
         )

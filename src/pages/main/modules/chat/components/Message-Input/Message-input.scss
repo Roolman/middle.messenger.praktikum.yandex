@@ -1,4 +1,4 @@
-@import "../../../../../../styles//colors.scss";
+@import "../../../../../../styles/colors.scss";
 
 .chat__input-text {
   padding: 10px;
@@ -10,4 +10,8 @@
   background-color: $chat_message_input_color;
   font-family: inherit;
   font-size: medium;
+
+  &::placeholder {
+    color: $secondary_color;
+  }
 }

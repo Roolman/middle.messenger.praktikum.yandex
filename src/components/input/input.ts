@@ -37,6 +37,9 @@ export class Input extends Component implements FormElement {
     get value(): string | number | boolean {
         return this.input.value
     }
+    get inputElement(): HTMLElement {
+        return this.input
+    }
     get onValueChange(): Observable {
         return this._onValueChangeObservable
     }
@@ -56,6 +59,10 @@ export class Input extends Component implements FormElement {
     componentDidInit() {
         this._onValueChange = new Subject()
         this._onValueChangeObservable = this._onValueChange.asObservable()
+
+        this._subscriptions.push(
+
+        )
     }
 
     componentDidRender() {
@@ -67,7 +74,6 @@ export class Input extends Component implements FormElement {
     }
 
     componentDidMount() {
-        if (!this.input) return
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.input, "focus")
                 .subscribe(() => {

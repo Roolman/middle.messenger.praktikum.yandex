@@ -10,12 +10,17 @@ export default
             <span class="chat__name">{{ name }}</span>                
         </div>
         <div data-ref="messagesContainer" class="chat__messages">
-            {{#unless messages}}
+            {{#unless messagesComponents}}
                 <h4>Сообщений нет</h4>
             {{/unless}}
+            {{#each messagesComponents}}
+                <div data-component="{{ this.name }}"></div>
+            {{/each}}
         </div>
         <div data-ref="chatInput" class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
+            <div data-component="sendForm"></div>
+            <div data-component="sendButton"></div>
         </div>    
     {{else}}
         {{> emptyChat}}

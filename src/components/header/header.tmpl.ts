@@ -4,6 +4,8 @@ export default
         <i class="header__icon fa fa-paper-plane"></i>
         <p class="header__title">{{ title }}</p>
     </div>
-    <div data-ref="linksBlock" class="header__page-links">
+    <div class="header__page-links">
+        <div data-component="goToError404"></div>
+        <div data-component="goToError500"></div>
     </div>
 `

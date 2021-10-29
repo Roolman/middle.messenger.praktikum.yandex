@@ -17,13 +17,16 @@ export class MainPage extends Component {
         return {
             ...props,
             componentClassName: "main",
+            children: [
+                {
+                    name: "chats",
+                    component: new Chats()
+                },
+                {
+                    name: "chat",
+                    component: new Chat()
+                }
+            ]
         }
-    }
-
-    componentDidRender() {
-        this.chats = new Chats()
-        this.chat = new Chat()
-        this.element.appendChild(this.chats.element)
-        this.element.appendChild(this.chat.element)
     }
 }

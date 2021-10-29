@@ -7,7 +7,6 @@ import "./header.scss"
 import templ from "./header.tmpl"
 
 export class Header extends Component {
-    linksBlock: HTMLDivElement
     goToError404: Button
     goToError500: Button
 
@@ -20,22 +19,25 @@ export class Header extends Component {
             ...props,
             title: "Fast messenger",
             componentClassName: "header",
+            children: [
+                {
+                    name: "goToError404",
+                    component: new Button({
+                        title: "Ошибка 404",
+                        type: BUTTON_TYPES.LINK,
+                        theme: BUTTON_THEMES.DANGER,
+                    })
+                },
+                {
+                    name: "goToError500",
+                    component: new Button({
+                        title: "Ошибка 500",
+                        type: BUTTON_TYPES.LINK,
+                        theme: BUTTON_THEMES.DANGER,
+                    })
+                },
+            ]
         }
-    }
-
-    componentDidRender() {
-        this.goToError404 = new Button({
-            title: "Ошибка 404",
-            type: BUTTON_TYPES.LINK,
-            theme: BUTTON_THEMES.DANGER,
-        })
-        this.goToError500 = new Button({
-            title: "Ошибка 500",
-            type: BUTTON_TYPES.LINK,
-            theme: BUTTON_THEMES.DANGER,
-        })
-        this.linksBlock.appendChild(this.goToError404.element)
-        this.linksBlock.appendChild(this.goToError500.element)
     }
 
     componentDidMount() {
