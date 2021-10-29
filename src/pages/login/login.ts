@@ -34,7 +34,7 @@ export class LoginPage extends Component {
             children: [
                 {
                     name: "header",
-                    component: new Header()
+                    component: new Header(),
                 },
                 {
                     name: "loginBlock",
@@ -50,7 +50,7 @@ export class LoginPage extends Component {
                                         type: "text",
                                         validators: new Validators([REQUIRED_VALIDATOR]),
                                         isValidationHidden: true,
-                                    })
+                                    }),
                                 },
                                 {
                                     name: "password",
@@ -64,11 +64,11 @@ export class LoginPage extends Component {
                                 },
                                 {
                                     name: "rememberMe",
-                                    component:  new Checkbox({
+                                    component: new Checkbox({
                                         name: "rememberMe",
                                         label: "Запомнить меня",
                                     }),
-                                },                                      
+                                },
                             ],
                             attributes: {
                                 id: "loginFormId",
@@ -76,9 +76,9 @@ export class LoginPage extends Component {
                         }),
                         mainActionTitle: "Авторизоваться",
                         secondActionTitle: "Ещё не зарегистрированы?",
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 

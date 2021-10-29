@@ -121,7 +121,7 @@ export abstract class Component {
             },
         ))
         // Отключаем дефолтное уничтожение при отсутствии в дереве для детей
-        for(let child of this.props.children || []) {
+        for (const child of this.props.children || []) {
             child.component.disableDefaultDestroyLogic()
         }
         this._eventBus.emit(Component.EVENTS.FLOW_CDI)
@@ -208,7 +208,7 @@ export abstract class Component {
     }
 
     componentDidMount() {}
-    
+
     // Компонент исчез из дерева
     // Нужно закрыть подпикси
     private _componentDidUnmount() {
@@ -221,7 +221,7 @@ export abstract class Component {
             sub.unsubscribe()
         }
         // Уничтожаем подписки детей
-        for(let child of this.props.children || []) {
+        for (const child of this.props.children || []) {
             child.component.destroy()
         }
     }
@@ -281,27 +281,26 @@ export abstract class Component {
 
     // Заменяем заглушки на дочерние компоненты и сохраняем ссылку на компонент
     private _replaceComponentChildren() {
-        if(this.props.children === undefined || !this.props.children.length) {
+        if (this.props.children === undefined || !this.props.children.length) {
             return
         }
         const childrenComponents = this._element.querySelectorAll("[data-component]")
-        for (let child of Array.from(childrenComponents)) {
-
+        for (const child of Array.from(childrenComponents)) {
             const childName = child.getAttribute("data-component") as string
             const parentNode = child.parentNode as ParentNode
 
-            const componentChild = this.props.children.find(x => x.name === childName)
-            if(!componentChild) {
+            const componentChild = this.props.children.find((x) => x.name === childName)
+            if (!componentChild) {
                 throw new Error(`Не существует дочернего компонента с именем ${childName}`)
             }
             // Заменяем заглушку на компонент
             parentNode.replaceChild(componentChild.component.element, child)
         }
         // Отдельно сохраняем компоненты (даже если они не отрендерелись)
-        for(let componentChild of this.props.children) {
+        for (const componentChild of this.props.children) {
             // Сохраняем ссылку
             (this as any)[componentChild.name] = componentChild.component
-        }        
+        }
     }
 
     disableDefaultDestroyLogic() {

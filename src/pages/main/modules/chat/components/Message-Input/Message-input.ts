@@ -11,7 +11,6 @@ type MessageInputProps = ComponentProps & {
 }
 
 export class MessageInput extends Component implements FormElement {
-
     private _onValueChange: Subject<string | number | boolean>
     private _onValueChangeObservable: Observable
 

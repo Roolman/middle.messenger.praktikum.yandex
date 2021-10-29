@@ -20,13 +20,13 @@ export class MainPage extends Component {
             children: [
                 {
                     name: "chats",
-                    component: new Chats()
+                    component: new Chats(),
                 },
                 {
                     name: "chat",
-                    component: new Chat()
-                }
-            ]
+                    component: new Chat(),
+                },
+            ],
         }
     }
 }

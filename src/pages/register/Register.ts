@@ -34,7 +34,7 @@ export class RegisterPage extends Component {
             children: [
                 {
                     name: "header",
-                    component: new Header()
+                    component: new Header(),
                 },
                 {
                     name: "registerBlock",
@@ -52,7 +52,7 @@ export class RegisterPage extends Component {
                                             REQUIRED_VALIDATOR,
                                             EMAIL_VALIDATOR,
                                         ]),
-                                    })
+                                    }),
                                 },
                                 {
                                     name: "login",
@@ -105,7 +105,7 @@ export class RegisterPage extends Component {
                                             PHONE_PATTERN_VALIDATOR,
                                         ]),
                                     }),
-                                },                               
+                                },
                                 {
                                     name: "password",
                                     component: new Input({
@@ -119,7 +119,7 @@ export class RegisterPage extends Component {
                                             PASSWORD_PATTERN_VALIDATOR,
                                         ]),
                                     }),
-                                },                                
+                                },
                                 {
                                     name: "password_check",
                                     component: new Input({
@@ -134,8 +134,8 @@ export class RegisterPage extends Component {
                                                 error: "Пароли не совпадают",
                                             },
                                         ]),
-                                    })
-                                },                                                        
+                                    }),
+                                },
                             ],
                             attributes: {
                                 id: "registerFormId",
@@ -143,9 +143,9 @@ export class RegisterPage extends Component {
                         }),
                         mainActionTitle: "Зарегистрироваться",
                         secondActionTitle: "Войти",
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 

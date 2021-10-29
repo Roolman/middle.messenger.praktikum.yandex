@@ -99,7 +99,9 @@ export class ProfilePage extends Component {
                                     name: "second_name",
                                     title: "Фамилия",
                                     type: "text",
-                                    value: PROFILE_DATA.find((x) => x.name === "second_name")?.value,
+                                    value: PROFILE_DATA.find(
+                                        (x) => x.name === "second_name",
+                                    )?.value,
                                     validators: new Validators([
                                         REQUIRED_VALIDATOR,
                                         NAME_PATTERN_VALIDATOR,
@@ -112,7 +114,9 @@ export class ProfilePage extends Component {
                                     name: "dispalay_name",
                                     title: "Имя в чате",
                                     type: "text",
-                                    value: PROFILE_DATA.find((x) => x.name === "dispalay_name")?.value,
+                                    value: PROFILE_DATA.find(
+                                        (x) => x.name === "dispalay_name",
+                                    )?.value,
                                     validators: new Validators([
                                         REQUIRED_VALIDATOR,
                                         NAME_PATTERN_VALIDATOR,
@@ -138,7 +142,7 @@ export class ProfilePage extends Component {
                         attributes: {
                             id: "profileEditFormId",
                         },
-                    })
+                    }),
                 },
                 {
                     name: "passwordForm",
@@ -173,11 +177,11 @@ export class ProfilePage extends Component {
                         attributes: {
                             id: "passwordFormId",
                         },
-                    })
+                    }),
                 },
                 {
                     name: "сhangeAvatar",
-                    component: new ChangeAvatar()
+                    component: new ChangeAvatar(),
                 },
                 {
                     name: "returnButton",
@@ -185,30 +189,30 @@ export class ProfilePage extends Component {
                         type: BUTTON_TYPES.ROUND,
                         theme: BUTTON_THEMES.PRIMARY,
                         iconClass: "fa fa-arrow-left",
-                    })
+                    }),
                 },
                 {
                     name: "editDataButton",
                     component: new Button({
                         title: "Изменить данные",
                         type: BUTTON_TYPES.LINK,
-                    })
+                    }),
                 },
                 {
                     name: "changePasswordButton",
                     component: new Button({
                         title: "Изменить пароль",
                         type: BUTTON_TYPES.LINK,
-                    })
-                },                
+                    }),
+                },
                 {
                     name: "logoutButton",
                     component: new Button({
                         title: "Выйти",
                         type: BUTTON_TYPES.LINK,
                         theme: BUTTON_THEMES.DANGER,
-                    })
-                }, 
+                    }),
+                },
                 {
                     name: "profileSaveButton",
                     component: new Button({
@@ -217,9 +221,9 @@ export class ProfilePage extends Component {
                             type: "submit",
                             form: "profileEditFormId",
                         },
-                    })
+                    }),
                 },
-            ]
+            ],
         }
     }
 
@@ -253,8 +257,7 @@ export class ProfilePage extends Component {
                         let form
                         if (!this.props.changePasswordFormIsShown) {
                             form = this.profileEditForm
-                        }
-                        else {
+                        } else {
                             form = this.passwordForm
                         }
                         const elements = form.formElements

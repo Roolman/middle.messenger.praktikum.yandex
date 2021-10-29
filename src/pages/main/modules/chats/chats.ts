@@ -41,9 +41,9 @@ export class Chats extends Component {
                         type: BUTTON_TYPES.ROUND,
                         theme: BUTTON_THEMES.PRIMARY,
                         iconClass: "fa fa-plus",
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 
@@ -69,15 +69,15 @@ export class Chats extends Component {
     }
 
     private _getChatsPreviewComponents(chats: ChatData[]): ComponentChild[] {
-        const chatsPreviewComponents = chats.map((x, i) => {
-            return {
-                name: `chatsPreviewComponent__${i}`,
-                component: new ChatPreview(x)
-            }
-        })
+        const chatsPreviewComponents = chats.map((x, i) => ({
+            name: `chatsPreviewComponent__${i}`,
+            component: new ChatPreview(x),
+        }))
         // Обновляем children компонента для ререндера
-        if(this.props.children) {
-            this.props.children = this.props.children.filter(x => !x.name.includes("chatsPreviewComponent"))
+        if (this.props.children) {
+            this.props.children = this.props.children.filter(
+                (x) => !x.name.includes("chatsPreviewComponent"),
+            )
             this.props.children.push(...chatsPreviewComponents)
         }
         return chatsPreviewComponents

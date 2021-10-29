@@ -26,7 +26,7 @@ export class Header extends Component {
                         title: "Ошибка 404",
                         type: BUTTON_TYPES.LINK,
                         theme: BUTTON_THEMES.DANGER,
-                    })
+                    }),
                 },
                 {
                     name: "goToError500",
@@ -34,9 +34,9 @@ export class Header extends Component {
                         title: "Ошибка 500",
                         type: BUTTON_TYPES.LINK,
                         theme: BUTTON_THEMES.DANGER,
-                    })
+                    }),
                 },
-            ]
+            ],
         }
     }
 

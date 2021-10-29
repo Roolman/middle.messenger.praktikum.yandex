@@ -56,7 +56,7 @@ export class Chat extends Component {
                         styles: {
                             visibility: "hidden",
                         },
-                    })
+                    }),
                 },
                 {
                     name: "sendForm",
@@ -66,15 +66,15 @@ export class Chat extends Component {
                                 name: "messageInput",
                                 component: new MessageInput({
                                     validators: new Validators([REQUIRED_VALIDATOR]),
-                                })
-                            }
+                                }),
+                            },
                         ],
                         attributes: {
                             id: "sendMessageFormId",
                         },
-                    })
+                    }),
                 },
-            ]
+            ],
         }
     }
 
@@ -86,7 +86,7 @@ export class Chat extends Component {
                     (chat: ChatData) => {
                         this.setProps({
                             ...chat,
-                            messagesComponents: this._getMessagesComponents(chat.messages)
+                            messagesComponents: this._getMessagesComponents(chat.messages),
                         })
                     },
                 ),
@@ -138,15 +138,13 @@ export class Chat extends Component {
     }
 
     private _getMessagesComponents(messages: MessageData[]): ComponentChild[] {
-        const messagesComponents = messages.map((x, i) => {
-            return {
-                name: `message__${i}`,
-                component: new Message(x)
-            }
-        })
+        const messagesComponents = messages.map((x, i) => ({
+            name: `message__${i}`,
+            component: new Message(x),
+        }))
         // Обновляем children компонента для ререндера
-        if(this.props.children) {
-            this.props.children = this.props.children.filter(x => !x.name.includes("message"))
+        if (this.props.children) {
+            this.props.children = this.props.children.filter((x) => !x.name.includes("message"))
             this.props.children.push(...messagesComponents)
         }
         return messagesComponents

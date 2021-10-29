@@ -37,6 +37,10 @@
     "build-windows": "npm run pre-build-windows && npm run pre-build",
     "start": "npm run build && node server.js",
     "start-windows": "npm run build-windows && node server.js",
+    "eslint": "node_modules/.bin/eslint ./src",
+    "eslint-fix": "node_modules/.bin/eslint ./src --fix",
+    "stylelint": "node_modules/.bin/stylelint ./src",
+    "stylelint-fix": "node_modules/.bin/stylelint ./src --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

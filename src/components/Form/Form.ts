@@ -9,7 +9,7 @@ type FormProps = ComponentProps & {
         id: string
         [key: string]: any
     }
-    children: (ComponentChild & { component: FormElement })[] 
+    children: (ComponentChild & { component: FormElement })[]
 }
 
 export interface FormElement extends Component {
@@ -28,7 +28,7 @@ export class Form extends Component {
     private _onValidityChangeObservable: Observable
 
     get formElements(): Array<FormElement> {
-        return this.props.children.map(x => x.component as FormElement)
+        return this.props.children.map((x) => x.component as FormElement)
     }
 
     get onValidityChange(): Observable {
@@ -68,7 +68,7 @@ export class Form extends Component {
                             this._onValidityChange.next(this.isValid)
                         }
                     },
-                )
+                ),
             )
         }
     }

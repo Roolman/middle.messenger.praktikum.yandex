@@ -31,7 +31,7 @@ export class LoginRegisterBlock extends Component {
             children: [
                 {
                     name: "form",
-                    component: props.form
+                    component: props.form,
                 },
                 {
                     name: "mainButton",
@@ -41,16 +41,16 @@ export class LoginRegisterBlock extends Component {
                             type: "submit",
                             form: props.form.element.id,
                         },
-                    })
+                    }),
                 },
                 {
                     name: "secondButton",
                     component: new Button({
                         title: props.secondActionTitle,
                         type: BUTTON_TYPES.LINK,
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 }
