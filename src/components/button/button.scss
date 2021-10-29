@@ -7,12 +7,10 @@ $button_light_color: #fafafa;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
   padding: 10px;
   border-radius: 5px;
   border: none;
   font-size: large;
-
   cursor: pointer;
 }
 
@@ -28,7 +26,13 @@ $button_light_color: #fafafa;
     &:hover {
       background-color: $hover_main_color;
     }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
+
   &.button_danger {
     background-color: $danger_color;
     border-color: $danger_color;
@@ -36,6 +40,16 @@ $button_light_color: #fafafa;
     &:hover {
       background-color: $hover_danger_color;
     }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &:disabled {
+    background-color: $secondary_color;
+    cursor: not-allowed;
   }
 }
 
@@ -46,13 +60,29 @@ $button_light_color: #fafafa;
 
   &.button_primary {
     border-color: $main_color;
+
+    &:disabled {
+      border-color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
+
   &.button_danger {
     border-color: $danger_color;
+
+    &:disabled {
+      border-color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
 
   &:hover {
     background-color: $button_light_color;
+  }
+
+  &:disabled {
+    border-color: $secondary_color;
+    cursor: not-allowed;
   }
 }
 
@@ -63,13 +93,29 @@ $button_light_color: #fafafa;
 
   &.button_primary {
     color: $main_color;
+
+    &:disabled {
+      color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
+
   &.button_danger {
     color: $danger_color;
+
+    &:disabled {
+      color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
 
   &:hover {
     background-color: $button_light_color;
+  }
+
+  &:disabled {
+    color: $secondary_color;
+    cursor: not-allowed;
   }
 }
 
@@ -90,7 +136,13 @@ $button_light_color: #fafafa;
     &:hover {
       background-color: $hover_main_color;
     }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
   }
+
   &.button_danger {
     background-color: $danger_color;
     border-color: $danger_color;
@@ -98,5 +150,15 @@ $button_light_color: #fafafa;
     &:hover {
       background-color: $hover_danger_color;
     }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &:disabled {
+    background-color: $secondary_color;
+    cursor: not-allowed;
   }
 }

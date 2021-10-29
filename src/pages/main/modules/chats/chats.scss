@@ -11,8 +11,11 @@ $chats_width: 35vw;
   max-width: 310px;
   background-color: $light_gray_chat_color;
   border-right: 1px solid $light_gray_border_color;
-
   padding-bottom: 0;
+
+  @media (min-width: 1500px) {
+    max-width: 400px;
+  }
 }
 
 .chats__controls {
@@ -27,7 +30,6 @@ $chats_width: 35vw;
 .chats__actions {
   display: flex;
   flex-direction: row;
-
   justify-content: space-between;
   align-items: center;
 }
@@ -53,6 +55,15 @@ $chats_width: 35vw;
   align-items: center;
   justify-content: center;
 
+  .chats__search__label {
+    display: none;
+    position: absolute;
+    transition: 0.2s;
+    color: $secondary_color;
+    font-size: 0.9rem;
+    cursor: text;
+  }
+
   input {
     padding: 10px;
     height: 32px;
@@ -72,15 +83,6 @@ $chats_width: 35vw;
       display: block;
     }
   }
-
-  .chats__search__label {
-    display: none;
-    position: absolute;
-    transition: 0.2s;
-    color: $secondary_color;
-    font-size: 0.9rem;
-    cursor: text;
-  }
 }
 
 .chats__chats-list {
@@ -96,92 +98,6 @@ $chats_width: 35vw;
     flex-direction: column;
     width: 100%;
     padding-left: 10px;
-  }
-
-  .chats__chat-container {
-    display: flex;
-    flex-direction: row;
-    height: 77px;
-    padding: 10px;
-    border: 0;
-    border-top: 1px;
-    border-color: $light_gray_border_color;
-    border-style: solid;
-    user-select: none;
-
-    .chats__chat-avatar {
-      display: flex;
-      width: calc($chats_width / 5);
-      align-items: center;
-      justify-content: center;
-
-      .chats__chat-avatar-image {
-        width: 47px;
-        height: 47px;
-        border-radius: 47px;
-      }
-    }
-
-    .chats__chat-message {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      .chats__chat-name {
-        font-weight: bold;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-      }
-
-      .chats__chat-last-message-time {
-        color: $secondary_color;
-        font-size: 0.9rem;
-      }
-    }
-
-    .chats__chat-info {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-
-      .chats__chat-last-message-sent-by-user {
-        color: black;
-        font-weight: bold;
-      }
-
-      .chats__chat-last-message {
-        font-size: 0.9rem;
-        padding-top: 5px;
-        color: $secondary_color;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-
-      .chats__chat-unread-count {
-        width: 23px;
-        min-width: 23px;
-        height: 23px;
-        border-radius: 20px;
-        font-size: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $main_color;
-        color: white;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: $light_gray_hover_color;
-    }
   }
 
   &::-webkit-scrollbar {

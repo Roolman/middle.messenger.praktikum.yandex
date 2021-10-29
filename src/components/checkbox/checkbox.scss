@@ -1,5 +1,44 @@
 @import "../../styles/colors.scss";
 
+.checkbox-container__checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 3px;
+  border: 1px solid $main_color;
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 2px;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+}
+
+.checkbox__input {
+  position: absolute;
+  opacity: 0%;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+
+  &:checked ~ .checkbox-container__checkmark {
+    background-color: $main_color;
+  }
+
+  &:checked ~ .checkbox-container__checkmark::after {
+    display: block;
+  }
+}
+
 .checkbox-container {
   display: block;
   position: relative;
@@ -11,47 +50,7 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover input ~ .checkbox-container__checkmark {
+  &:hover .checkbox__input:not(:checked) ~ .checkbox-container__checkmark {
     background-color: $light_main_color;
-  }
-}
-
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-
-  &:checked ~ .checkbox-container__checkmark {
-    background-color: #2196f3;
-  }
-
-  &:checked ~ .checkbox-container__checkmark:after {
-    display: block;
-  }
-}
-
-.checkbox-container__checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  border-radius: 3px;
-  border: 1px solid $main_color;
-
-  &:after {
-    content: "";
-    position: absolute;
-    display: none;
-
-    left: 7px;
-    top: 2px;
-    width: 6px;
-    height: 11px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
   }
 }
