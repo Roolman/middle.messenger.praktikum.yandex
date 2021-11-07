@@ -1,5 +1,6 @@
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
-import { goToError404Page, goToError500Page } from "../../services/core/navigation"
+import { PAGES } from "../../services/core/navigation"
+import Router from "../../services/core/router"
 import { Component, ComponentProps } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Button } from "../button"
@@ -43,11 +44,11 @@ export class Header extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToError404.element, "click")
-                .subscribe(goToError404Page),
+                .subscribe(() => Router.go(PAGES.ERROR404)),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.goToError500.element, "click")
-                .subscribe(goToError500Page),
+                .subscribe(() => Router.go(PAGES.ERROR500)),
         )
     }
 }

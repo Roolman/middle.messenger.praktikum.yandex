@@ -5,7 +5,7 @@ import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
 import { Header } from "../../components/header/index"
 
-import { goToLoginPage } from "../../services/core/navigation"
+import Router from "../../services/core/router"
 import { Component, ComponentProps } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
@@ -16,6 +16,7 @@ import {
     PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
     PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
+import { PAGES } from "../../services/core/navigation"
 
 export class RegisterPage extends Component {
     registerBlock: LoginRegisterBlock
@@ -168,13 +169,13 @@ export class RegisterPage extends Component {
                             values.push({ name: formElement.name, value: formElement.value })
                         }
                         console.log(values)
-                        alert("Зареган!")
+                        Router.go(PAGES.LOGIN)
                     }
                 }),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.registerBlock.secondButton.element, "click")
-                .subscribe(() => goToLoginPage()),
+                .subscribe(() => Router.go(PAGES.LOGIN)),
         )
         this._onMountSubscriptions.push(
             this.registerBlock.form.onValidityChange.subscribe(

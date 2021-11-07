@@ -6,12 +6,13 @@ import { Input } from "../../components/input/index"
 import { Checkbox } from "../../components/checkbox/index"
 import { Header } from "../../components/header/index"
 
-import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
+import Router from "../../services/core/router"
 import { Component, ComponentProps } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators } from "../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../constants/validators"
+import { PAGES } from "../../services/core/navigation"
 
 export class LoginPage extends Component {
     // Компоненты
@@ -97,13 +98,13 @@ export class LoginPage extends Component {
                             values.push({ name: formElement.name, value: formElement.value })
                         }
                         console.log(values)
-                        goToMainPage()
+                        Router.go(PAGES.MAIN)
                     }
                 }),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.secondButton.element, "click")
-                .subscribe(() => goToRegisterPage()),
+                .subscribe(() => Router.go(PAGES.REGISTER)),
         )
         this._onMountSubscriptions.push(
             this.loginBlock.form.onValidityChange.subscribe(

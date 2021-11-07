@@ -5,11 +5,12 @@ import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
 import { Component, ComponentChild, ComponentProps } from "../../../../utils/classes/component"
-import { goToProfilePage } from "../../../../services/core/navigation"
+import Router from "../../../../services/core/router"
 import { Inject } from "../../../../utils/decorators/inject"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Observable } from "../../../../utils/classes/observable"
 import { ChatPreview } from "./components/chat-preview"
+import { PAGES } from "../../../../services/core/navigation"
 
 type ChatsProps = ComponentProps & {
     chats: ComponentChild[]
@@ -62,7 +63,7 @@ export class Chats extends Component {
                 .subscribe(
                     (event: MouseEvent) => {
                         event.preventDefault()
-                        goToProfilePage()
+                        Router.go(PAGES.PROFILE)
                     },
                 ),
         )

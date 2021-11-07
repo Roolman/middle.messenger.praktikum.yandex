@@ -20,6 +20,6 @@ export const getShortChatDate = (date: Date): string => {
     if (diff < week) {
         return `${date.toLocaleString("ru-Ru", { weekday: "long" })}`
     }
-    // Иначе дату в формате: "1 января 2021"
+    // Иначе дату в формате: "01.01.2021"
     return `${date.toLocaleString("ru-Ru", { day: "numeric", month: "numeric", year: "numeric" })}`
 }

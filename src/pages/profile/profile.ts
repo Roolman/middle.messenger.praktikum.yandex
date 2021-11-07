@@ -5,7 +5,7 @@ import { Input } from "../../components/input/index"
 import { Button } from "../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { ChangeAvatar } from "./modules/change-avatar"
-import { goToMainPage, goToLoginPage } from "../../services/core/navigation"
+import Router from "../../services/core/router"
 import { PROFILE_DATA } from "../../mock/profile"
 import { Component, ComponentProps } from "../../utils/classes/component"
 import { Form } from "../../components/form"
@@ -22,6 +22,7 @@ import {
     PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
     PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
+import { PAGES } from "../../services/core/navigation"
 
 type ProfilePageProps = ComponentProps & {
     profileData: Array<ProfileField>
@@ -244,7 +245,7 @@ export class ProfilePage extends Component {
             Observable
                 .fromEvent(this.profileReturn, "click")
                 .subscribe(
-                    () => goToMainPage(),
+                    () => Router.go(PAGES.MAIN),
                 ),
         )
         // Сохранить инфо по нажатию
@@ -292,7 +293,7 @@ export class ProfilePage extends Component {
             Observable
                 .fromEvent(this.editDataButton.element, "click")
                 .subscribe(() => {
-                // Переходим в режим редактирования
+                    // Переходим в режим редактирования
                     this.setProps({
                         changePasswordFormIsShown: false,
                         profileIsEditable: true,
@@ -312,7 +313,7 @@ export class ProfilePage extends Component {
         this._onMountSubscriptions.push(
             Observable
                 .fromEvent(this.logoutButton.element, "click")
-                .subscribe(() => goToLoginPage()),
+                .subscribe(() => Router.go(PAGES.LOGIN)),
         )
         // Аватар
         if (!this.props.profileIsEditable) {
