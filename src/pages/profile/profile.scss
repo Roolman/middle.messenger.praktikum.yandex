@@ -1,5 +1,7 @@
 @import "../../styles/colors.scss";
 
+$profile_main_info_width: 510px;
+
 .profile {
   display: flex;
   flex-direction: row;
@@ -70,7 +72,7 @@
 .profile__main-info {
   display: flex;
   flex-direction: column;
-  width: 510px;
+  width: $profile_main_info_width;
 
   .profile__main-info-item {
     display: flex;
@@ -92,5 +94,13 @@
 .profile__main-actions {
   display: flex;
   flex-direction: column;
+  padding-top: 50px;
+}
+
+.profile__save-actions {
+  display: flex;
+  flex-direction: row;
+  width: $profile_main_info_width;
+  justify-content: space-around;
   padding-top: 50px;
 }

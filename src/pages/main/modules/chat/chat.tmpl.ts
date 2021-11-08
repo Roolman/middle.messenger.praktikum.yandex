@@ -1,13 +1,16 @@
 export default
 `
     {{#if id}}
-        <div class="chat__header">
-            {{#if avatar}}
+        <div data-ref="chatHeader" class="chat__header">
+            <div class="chat__header-chat-info">
+                {{#if avatar}}
                 <img class="chat__avatar-image" src="{{avatar}}"/>
-            {{else}}
-                <img class="chat__avatar-image" src="static/img/chat_default.png"/>
-            {{/if}}
-            <span class="chat__name">{{ name }}</span>                
+                {{else}}
+                    <img class="chat__avatar-image" src="static/img/chat_default.png"/>
+                {{/if}}
+                <span class="chat__name">{{ name }}</span>   
+            </div>
+            <div data-component="openChatSettingsButton"></div>             
         </div>
         <div data-ref="messagesContainer" class="chat__messages">
             {{#unless messagesComponents}}

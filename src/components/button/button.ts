@@ -10,6 +10,7 @@ type ButtonProps = ComponentProps & {
     title?: string
     type?: string
     theme?: string
+    iconClass?: string
 }
 
 export class Button extends Component {

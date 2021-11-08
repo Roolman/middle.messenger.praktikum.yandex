@@ -14,6 +14,8 @@ import { MessageInput } from "./components/message-input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
+import Router from "../../../../services/core/router"
+import { PAGES } from "../../../../services/core/navigation"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
@@ -26,6 +28,7 @@ export class Chat extends Component {
 
     sendForm: Form
     sendButton: Button
+    openChatSettingsButton: Button
 
     chatInput: HTMLElement
     messagesContainer: HTMLElement
@@ -56,6 +59,14 @@ export class Chat extends Component {
                         styles: {
                             visibility: "hidden",
                         },
+                    }),
+                },
+                {
+                    name: "openChatSettingsButton",
+                    component: new Button({
+                        type: BUTTON_TYPES.ROUND,
+                        theme: BUTTON_THEMES.NORMAL,
+                        iconClass: "fa fa-cog fa-lg",
                     }),
                 },
                 {
@@ -125,6 +136,15 @@ export class Chat extends Component {
                 this.sendForm.onValidityChange.subscribe(
                     (isValid: boolean) => this._setSendButtonVisibility(isValid),
                 ),
+            )
+            this._onMountSubscriptions.push(
+                Observable.fromEvent(this.openChatSettingsButton.element, "click")
+                    .subscribe(
+                        (e: Event) => {
+                            e.preventDefault()
+                            Router.go(PAGES.CHATSETTINGS)
+                        },
+                    ),
             )
         }
     }

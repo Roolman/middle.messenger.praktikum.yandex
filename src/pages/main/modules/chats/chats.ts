@@ -41,7 +41,7 @@ export class Chats extends Component {
                     component: new Button({
                         type: BUTTON_TYPES.ROUND,
                         theme: BUTTON_THEMES.PRIMARY,
-                        iconClass: "fa fa-plus",
+                        iconClass: "fa fa-plus fa-md",
                     }),
                 },
             ],

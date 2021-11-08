@@ -12,6 +12,7 @@ import { EMAIL_VALIDATOR, NAME_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
 } from "../../../../constants/validators";
 import { Validators } from "../../../../utils/classes/validators";
 import { Form } from "../../../../components/form";
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
 
 type ProfileEditProps = ComponentProps & {
     profileData: Array<ProfileField>
@@ -24,7 +25,7 @@ export class ProfileEdit extends Component {
     // Форма для данных
     profileEditForm: Form
     profileSaveButton: Button
-
+    cancelButton: Button
 
     @Inject(ProfileService)
     private _profileService: ProfileService
@@ -129,6 +130,14 @@ export class ProfileEdit extends Component {
                         },
                     }),
                 },
+                {
+                    name: "cancelButton",
+                    component: new Button({
+                        title: "Отмена",
+                        type: BUTTON_TYPES.STROKED,
+                        theme: BUTTON_THEMES.NORMAL
+                    }),
+                },
             ]
         }
     }
@@ -165,6 +174,16 @@ export class ProfileEdit extends Component {
                         // Меняем значения через сервис
                         this._profileService.setProfile(fieldValues)
                         //
+                        this.props.onSaveButton()
+                    },
+                ),
+        )
+        this._onMountSubscriptions.push(
+            Observable
+                .fromEvent(this.cancelButton.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        e.preventDefault()
                         this.props.onSaveButton()
                     },
                 ),

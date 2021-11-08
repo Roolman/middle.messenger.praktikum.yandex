@@ -26,19 +26,26 @@ $input_height: 55px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: 55px;
   border-bottom: 1px solid $light_gray_border_color;
 
-  .chat__avatar-image {
-    width: 34px;
-    height: 34px;
-    border-radius: 34px;
-  }
+  .chat__header-chat-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-  .chat__name {
-    padding-left: 10px;
-    font-weight: bold;
+    .chat__avatar-image {
+      width: 34px;
+      height: 34px;
+      border-radius: 34px;
+    }
+
+    .chat__name {
+      padding-left: 10px;
+      font-weight: bold;
+    }
   }
 }
 

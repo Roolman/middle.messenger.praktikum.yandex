@@ -15,6 +15,7 @@ import { MainPage } from "./pages/main"
 import { ProfilePage } from "./pages/profile"
 import { Error404Page } from "./pages/errors/404"
 import { Error500Page } from "./pages/errors/500"
+import { ChatSettings } from "./pages/chat-settings"
 
 function registerServices() {
     ServiceLocator.registerService(ChatsService, new ChatsService())
@@ -28,6 +29,7 @@ function initRouter() {
         .use(PAGES.REGISTER, RegisterPage)
         .use(PAGES.MAIN, MainPage)
         .use(PAGES.PROFILE, ProfilePage)
+        .use(PAGES.CHATSETTINGS, ChatSettings)
         .use(PAGES.ERROR404, Error404Page)
         .use(PAGES.ERROR500, Error500Page)
         .start()

@@ -5,4 +5,5 @@ export enum PAGES {
     PROFILE = '/settings',
     ERROR404 = '/404',
     ERROR500 = '/500',
+    CHATSETTINGS = "/chat-settings"
 }
