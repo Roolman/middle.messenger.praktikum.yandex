@@ -1,32 +1,9 @@
 import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../services/core/mutationObserver"
-import { RouteData } from "../../services/core/router"
+import { ComponentMeta, ComponentProps, ProxyObject } from "../../types/components/component"
 import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
 import { Subscription } from "./observable"
-
-type ComponentMeta = {
-    tagName: string
-    props: ComponentProps
-}
-
-type ProxyObject = {
-    [key: string]: any
-}
-
-export type ComponentChild = {
-    name: string
-    component: Component
-}
-
-export type ComponentProps = {
-    componentClassName?: string
-    styles?: Object
-    attributes?: Object
-    children?: Array<ComponentChild>
-    routeData?: RouteData
-    [key: string]: any
-}
 
 export abstract class Component {
     static EVENTS = {

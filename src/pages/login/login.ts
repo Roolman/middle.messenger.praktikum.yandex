@@ -7,12 +7,16 @@ import { Checkbox } from "../../components/checkbox/index"
 import { Header } from "../../components/header/index"
 
 import Router from "../../services/core/router"
-import { Component, ComponentProps } from "../../utils/classes/component"
+import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators } from "../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../constants/validators"
 import { PAGES } from "../../services/core/navigation"
+import { Inject } from "../../utils/decorators/inject"
+import { UserService } from "../../services/state/user.service"
+import { ComponentProps } from "../../types/components/component"
+import { Indexed } from "../../types"
 
 export class LoginPage extends Component {
     // Компоненты
@@ -23,6 +27,9 @@ export class LoginPage extends Component {
     get valid(): boolean {
         return this._valid
     }
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor() {
         super("div", {}, templ)
@@ -91,14 +98,18 @@ export class LoginPage extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.mainButton.element, "click")
-                .subscribe(() => {
+                .subscribe((e: Event) => {
+                    e.preventDefault()
+
                     if (this.loginBlock.form.isValid) {
-                        const values = []
+                        const logInData: Indexed = {}
                         for (const formElement of this.loginBlock.form.formElements) {
-                            values.push({ name: formElement.name, value: formElement.value })
+                            logInData[formElement.name] = formElement.value
                         }
-                        console.log(values)
-                        Router.go(PAGES.MAIN)
+                        this._userService.logIn({
+                            login: logInData.login,
+                            password: logInData.password
+                        })
                     }
                 }),
         )

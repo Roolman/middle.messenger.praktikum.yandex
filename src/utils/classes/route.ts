@@ -1,6 +1,7 @@
 import { RouteData } from "../../services/core/router"
+import { ComponentProps } from "../../types/components/component"
 import isEqual from "../helpers/isEqual"
-import { Component, ComponentProps } from "./component"
+import { Component } from "./component"
 
 type RouteProps = {
     rootQuery: string

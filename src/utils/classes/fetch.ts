@@ -9,7 +9,7 @@ export enum HTTP_METHODS {
     DELETE = "DELETE",
 }
 
-type HTTP_OPTIONS = {
+export type HTTP_OPTIONS = {
     method?: string,
     headers?: Object,
     data?: Object
@@ -30,23 +30,30 @@ function queryStringify(data: Object): string {
 }
 
 export class HttpClient {
-    get = (url: string, options?: HTTP_OPTIONS) => {
-        this.request(
-            url + queryStringify(options?.data || {}),
+
+    private _baseUrl: string
+
+    constructor(baseUrl?: string) {
+        this._baseUrl = baseUrl || ''
+    }
+
+    get = (url: string, options?: HTTP_OPTIONS): Observable => {
+        return this.request(
+            this._baseUrl + url + queryStringify(options?.data || {}),
             { ...options, method: HTTP_METHODS.GET }, options?.timeout,
         )
     }
 
-    put = (url: string, options?: HTTP_OPTIONS) => {
-        this.request(url, { ...options, method: HTTP_METHODS.PUT }, options?.timeout)
+    put = (url: string, options?: HTTP_OPTIONS): Observable => {
+        return this.request(this._baseUrl + url, { ...options, method: HTTP_METHODS.PUT }, options?.timeout)
     }
 
-    post = (url: string, options?: HTTP_OPTIONS) => {
-        this.request(url, { ...options, method: HTTP_METHODS.POST }, options?.timeout)
+    post = (url: string, options?: HTTP_OPTIONS): Observable => {
+        return this.request(this._baseUrl + url, { ...options, method: HTTP_METHODS.POST }, options?.timeout)
     }
 
-    delete = (url: string, options?: HTTP_OPTIONS) => {
-        this.request(url, { ...options, method: HTTP_METHODS.DELETE }, options?.timeout)
+    delete = (url: string, options?: HTTP_OPTIONS): Observable => {
+        return this.request(this._baseUrl + url, { ...options, method: HTTP_METHODS.DELETE }, options?.timeout)
     }
 
     request(url: string, options: HTTP_OPTIONS, timeout?: number): Observable {
@@ -86,15 +93,17 @@ export class HttpClient {
         }
 
         const xhr = new XMLHttpRequest()
+        // Открываем запрос
+        xhr.open(options.method, url)
 
         // Устанавливаем headers
+        // TODO: Проверить не будет ли мешать отправке файла
+        xhr.setRequestHeader("content-type", "application/json")
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
                 xhr.setRequestHeader(key, value.toString())
             }
         }
-        // Открываем запрос
-        xhr.open(options.method, url)
 
         xhr.onload = () => {
             resolve(xhr)
@@ -107,7 +116,7 @@ export class HttpClient {
         if (options.method === HTTP_METHODS.GET || !options.data) {
             xhr.send()
         } else {
-            const body = options.data as XMLHttpRequestBodyInit | null | undefined
+            const body = JSON.stringify(options.data) as XMLHttpRequestBodyInit | null | undefined
             xhr.send(body)
         }
 

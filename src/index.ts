@@ -16,10 +16,12 @@ import { ProfilePage } from "./pages/profile"
 import { Error404Page } from "./pages/errors/404"
 import { Error500Page } from "./pages/errors/500"
 import { ChatSettings } from "./pages/chat-settings"
+import { UserService } from "./services/state/user.service"
 
 function registerServices() {
     ServiceLocator.registerService(ChatsService, new ChatsService())
     ServiceLocator.registerService(ProfileService, new ProfileService())
+    ServiceLocator.registerService(UserService, new UserService())
     ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
 }
 
