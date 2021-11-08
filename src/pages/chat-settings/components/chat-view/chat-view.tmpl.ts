@@ -1,7 +1,7 @@
 export default
 `
 <div data-ref="avatar" class="settings__main-avatar-container">
-    <img src="static/img/chat_default.jpg" class="settings__main-avatar" />
+    <img src="../static/img/chat_default.png" class="settings__main-avatar" />
     <div class="settings__main-avatar-hover-block">
         <span class="settings__main-avatar-hover-block-title">Поменять</span>
         <span class="settings__main-avatar-hover-block-title">аватар</span>
