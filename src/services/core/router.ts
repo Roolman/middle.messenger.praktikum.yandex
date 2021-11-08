@@ -1,4 +1,5 @@
 import { Route } from "../../utils/classes/route"
+import { Guard } from "../../utils/guards/auth.guard"
 
 export type RouteData = {
     data: string
@@ -33,8 +34,8 @@ class Router {
         Router.__instance = this
     }
 
-    use(pathname: string, block: Function) {
-        const route = new Route(pathname, block, {rootQuery: this._rootQuery})
+    use(pathname: string, block: Function, guards?: Guard[]) {
+        const route = new Route(pathname, block, {rootQuery: this._rootQuery}, guards)
         this.routes.push(route)
         return this
     }

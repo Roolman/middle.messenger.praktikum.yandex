@@ -8,6 +8,8 @@ import { PAGES } from "../core/navigation"
 import Router from "../core/router"
 import SnackBar, { SNACKBAR_TYPE } from "../core/snackbar"
 
+export const LOGGED_IN_KEY = "authorized"
+
 export class UserService {
 
     private _authApi: AuthApi
@@ -26,6 +28,11 @@ export class UserService {
         this.userObservable = this._userSubject.asObservable()
 
         this._authApi = new AuthApi()
+
+        const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
+        if(isLoggedIn) {
+            this.getUserData()
+        }
     }
 
     logIn(data: SignInUserData): void {
@@ -33,7 +40,7 @@ export class UserService {
             .signin(data)
             .subscribe(
                 () => {
-                    this.getUserData()
+                    localStorage.setItem(LOGGED_IN_KEY, "online")
                     Router.go(PAGES.MAIN)
                 },
                 (err: ServerErrorResponse) => {
@@ -77,12 +84,17 @@ export class UserService {
             .logout()
             .subscribe(
                 () => {
+                    localStorage.removeItem(LOGGED_IN_KEY)
                     this._user = null
                     this._userSubject.next(this._user)
                     Router.go(PAGES.LOGIN)
                 },
                 () => {
                     console.warn("Ошибка выхода")
+                    localStorage.removeItem(LOGGED_IN_KEY)
+                    this._user = null
+                    this._userSubject.next(this._user)
+                    Router.go(PAGES.LOGIN)
                 }
             )
     }

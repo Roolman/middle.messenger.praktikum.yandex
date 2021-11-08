@@ -17,6 +17,7 @@ import { Error404Page } from "./pages/errors/404"
 import { Error500Page } from "./pages/errors/500"
 import { ChatSettings } from "./pages/chat-settings"
 import { UserService } from "./services/state/user.service"
+import {AuthGuard} from "./utils/guards/auth.guard"
 
 function registerServices() {
     ServiceLocator.registerService(ChatsService, new ChatsService())
@@ -26,12 +27,14 @@ function registerServices() {
 }
 
 function initRouter() {
+   const authGuard = new AuthGuard()
+   const notAuthGuard = new AuthGuard().invert()
    Router
-        .use(PAGES.LOGIN, LoginPage)
-        .use(PAGES.REGISTER, RegisterPage)
-        .use(PAGES.MAIN, MainPage)
-        .use(PAGES.PROFILE, ProfilePage)
-        .use(PAGES.CHATSETTINGS, ChatSettings)
+        .use(PAGES.LOGIN, LoginPage, [notAuthGuard])
+        .use(PAGES.REGISTER, RegisterPage, [notAuthGuard])
+        .use(PAGES.MAIN, MainPage, [authGuard])
+        .use(PAGES.PROFILE, ProfilePage, [authGuard])
+        .use(PAGES.CHATSETTINGS, ChatSettings, [authGuard])
         .use(PAGES.ERROR404, Error404Page)
         .use(PAGES.ERROR500, Error500Page)
         .start()

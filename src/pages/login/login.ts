@@ -3,7 +3,6 @@ import templ from "./login.tmpl"
 
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
-import { Checkbox } from "../../components/checkbox/index"
 import { Header } from "../../components/header/index"
 
 import Router from "../../services/core/router"
@@ -69,14 +68,7 @@ export class LoginPage extends Component {
                                         validators: new Validators([REQUIRED_VALIDATOR]),
                                         isValidationHidden: true,
                                     }),
-                                },
-                                {
-                                    name: "rememberMe",
-                                    component: new Checkbox({
-                                        name: "rememberMe",
-                                        label: "Запомнить меня",
-                                    }),
-                                },
+                                }
                             ],
                             attributes: {
                                 id: "loginFormId",

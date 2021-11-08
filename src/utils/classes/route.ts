@@ -1,5 +1,6 @@
 import { RouteData } from "../../services/core/router"
 import { ComponentProps } from "../../types/components/component"
+import { Guard } from "../guards/auth.guard"
 import isEqual from "../helpers/isEqual"
 import { Component } from "./component"
 
@@ -14,11 +15,13 @@ export class Route {
     private _blockClass: any
     private _block: Component
     private _props: RouteProps 
+    private _guards: Guard[]
 
-    constructor(pathname: string, view: Function, props: RouteProps) {
+    constructor(pathname: string, view: Function, props: RouteProps, guards?: Guard[]) {
         this._pathname = pathname
         this._blockClass = view
         this._props = props
+        this._guards = guards || []
     }
 
     navigate(pathname: string) {
@@ -31,7 +34,9 @@ export class Route {
     leave() {
         if (this._block) {
             const root = document.querySelector(this._props.rootQuery) as HTMLElement
-            root.removeChild(this._block.getContent())
+            if(root.contains(this._block.getContent())) {
+                root.removeChild(this._block.getContent())
+            }
         }
     }
 
@@ -40,6 +45,18 @@ export class Route {
     }
 
     render(data?: RouteData) {
+        // Проверяем Guards перед рендером
+        let accessApproved = true
+        for(let guard of this._guards) {
+            if(!guard.checkAccess()) {
+                accessApproved = false
+                guard.actionOnNoAccess()
+                break
+            }
+        }
+        if(!accessApproved) {
+            return
+        }
         const props: ComponentProps = {
             routeData: data
         }

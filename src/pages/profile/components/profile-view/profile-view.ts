@@ -96,7 +96,6 @@ export class ProfileView extends Component {
                 .fromEvent(this.logoutButton.element, "click")
                 .subscribe(() => {
                     this._userService.logOut()
-                    Router.go(PAGES.LOGIN)
                 }),
         )
         // Аватар
