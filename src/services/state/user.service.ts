@@ -33,6 +33,10 @@ export class UserService {
         if(isLoggedIn) {
             this.getUserData()
         }
+        else {
+            // На случай если юзер руками удалил переменную в lS
+            this.logOut()
+        }
     }
 
     logIn(data: SignInUserData): void {
