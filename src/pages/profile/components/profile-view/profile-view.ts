@@ -1,7 +1,7 @@
 import { Button } from "../../../../components/button";
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
 import { ProfileField, ProfileService } from "../../../../services/state/profile.service";
-import { Component, ComponentProps } from "../../../../utils/classes/component";
+import { Component } from "../../../../utils/classes/component";
 import { Observable } from "../../../../utils/classes/observable";
 import { Inject } from "../../../../utils/decorators/inject";
 import Router from "../../../../services/core/router"
@@ -9,6 +9,8 @@ import Router from "../../../../services/core/router"
 import tmpl from "./profile-view.tmpl"
 import "./profile-view.scss"
 import { PAGES } from "../../../../services/core/navigation";
+import { UserService } from "../../../../services/state/user.service";
+import { ComponentProps } from "../../../../types/components/component";
 
 type ProfilewViewProps = ComponentProps & {
     profileData: Array<ProfileField>
@@ -28,6 +30,9 @@ export class ProfileView extends Component {
 
     @Inject(ProfileService)
     private _profileService: ProfileService
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor(props: ProfilewViewProps) {
         super("div", props, tmpl)
@@ -89,7 +94,10 @@ export class ProfileView extends Component {
         this._onMountSubscriptions.push(
             Observable
                 .fromEvent(this.logoutButton.element, "click")
-                .subscribe(() => Router.go(PAGES.LOGIN)),
+                .subscribe(() => {
+                    this._userService.logOut()
+                    Router.go(PAGES.LOGIN)
+                }),
         )
         // Аватар
         this._onMountSubscriptions.push(

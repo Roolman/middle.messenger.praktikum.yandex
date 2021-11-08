@@ -1,6 +1,6 @@
 import { AuthApi } from "../../api/auth.api"
 import { ServerErrorResponse } from "../../types/api"
-import { ServerUserResponse, SignInUserData } from "../../types/api/auth.api"
+import { ServerUserResponse, SignInUserData, SignUpUserData } from "../../types/api/auth.api"
 import { User } from "../../types/state/user"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
@@ -32,8 +32,8 @@ export class UserService {
         this._authApi
             .signin(data)
             .subscribe(
-                (user: SignInUserData) => {
-                    console.log(user)
+                () => {
+                    this.getUserData()
                     Router.go(PAGES.MAIN)
                 },
                 (err: ServerErrorResponse) => {
@@ -41,6 +41,21 @@ export class UserService {
                     console.error(err)
                 }
             )        
+    }
+
+    signUp(data: SignUpUserData): void {
+        this._authApi
+            .signup(data)
+            .subscribe(
+                () => {
+                    SnackBar.open("Пользователь успешно зарегестрирован", SNACKBAR_TYPE.SUCCESS)
+                    Router.go(PAGES.LOGIN)
+                },
+                (err: ServerErrorResponse) => {
+                    SnackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
+                    console.error(err)
+                }
+            )         
     }
 
     getUserData(): void {

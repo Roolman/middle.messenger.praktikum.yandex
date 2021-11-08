@@ -60,10 +60,15 @@ export class HttpClient {
         return new Observable((observer: InternalObserver): Subscription => {
             this._request(url, options, timeout)
                 .then((xhr: XMLHttpRequest) => {
+                    let response = xhr.response
+                    try {
+                        response = JSON.parse(response)
+                    }
+                    catch(err) {}
                     if (xhr.status < 400) {
-                        observer.onNext(JSON.parse(xhr.response))
+                        observer.onNext(response)
                     } else {
-                        observer.onError(JSON.parse(xhr.response))
+                        observer.onError(response)
                     }
                 })
                 .catch((err: any) => {
@@ -95,6 +100,7 @@ export class HttpClient {
         const xhr = new XMLHttpRequest()
         // Открываем запрос
         xhr.open(options.method, url)
+        xhr.withCredentials = true
 
         // Устанавливаем headers
         // TODO: Проверить не будет ли мешать отправке файла

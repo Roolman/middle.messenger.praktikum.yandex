@@ -36,7 +36,7 @@ class SnackBar {
 
         this._title = ''
         this._type = SNACKBAR_TYPE.INFO
-        this._duration = 1500
+        this._duration = 2500
 
         this._elementContainer.appendChild(this._element)
         const root = document.querySelector(rootQuery) as HTMLElement

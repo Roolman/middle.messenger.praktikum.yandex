@@ -6,7 +6,7 @@ import { Input } from "../../components/input/index"
 import { Header } from "../../components/header/index"
 
 import Router from "../../services/core/router"
-import { Component, ComponentProps } from "../../utils/classes/component"
+import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
@@ -17,12 +17,19 @@ import {
     PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
 import { PAGES } from "../../services/core/navigation"
+import { ComponentProps } from "../../types/components/component"
+import { Indexed } from "../../types"
+import { Inject } from "../../utils/decorators/inject"
+import { UserService } from "../../services/state/user.service"
 
 export class RegisterPage extends Component {
     registerBlock: LoginRegisterBlock
     // Форма
     passwordInput: Input
     passwordCheckInput: Input
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor() {
         super("div", {}, templ)
@@ -164,12 +171,18 @@ export class RegisterPage extends Component {
                     e.preventDefault()
 
                     if (this.registerBlock.form.isValid) {
-                        const values = []
+                        const registerData: Indexed = {}
                         for (const formElement of this.registerBlock.form.formElements) {
-                            values.push({ name: formElement.name, value: formElement.value })
+                            registerData[formElement.name] = formElement.value
                         }
-                        console.log(values)
-                        Router.go(PAGES.LOGIN)
+                        this._userService.signUp({
+                            first_name: registerData.first_name,
+                            second_name: registerData.second_name,
+                            login: registerData.login,
+                            email: registerData.email,
+                            password: registerData.password,
+                            phone: registerData.phone,
+                        })
                     }
                 }),
         )
@@ -180,7 +193,6 @@ export class RegisterPage extends Component {
         this._onMountSubscriptions.push(
             this.registerBlock.form.onValidityChange.subscribe(
                 (isValid: boolean) => {
-                    console.log(isValid)
                     this._setRegisterButtonValidity(isValid)
                 },
             ),
