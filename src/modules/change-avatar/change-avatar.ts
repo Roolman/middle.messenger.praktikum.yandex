@@ -1,9 +1,9 @@
 import "./change-avatar.scss"
 import templ from "./change-avatar.tmpl"
 
-import { Button } from "../../../../components/button/index"
-import { Component, ComponentProps } from "../../../../utils/classes/component"
-import { Observable } from "../../../../utils/classes/observable"
+import { Button } from "../../components/button/index"
+import { Component, ComponentProps } from "../../utils/classes/component"
+import { Observable } from "../../utils/classes/observable"
 
 export class ChangeAvatar extends Component {
     applyButton: Button

@@ -1,5 +1,6 @@
 import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../services/core/mutationObserver"
+import { RouteData } from "../../services/core/router"
 import { Inject } from "../decorators/inject"
 import { EventBus } from "./event-bus"
 import { Subscription } from "./observable"
@@ -23,6 +24,7 @@ export type ComponentProps = {
     styles?: Object
     attributes?: Object
     children?: Array<ComponentChild>
+    routeData?: RouteData
     [key: string]: any
 }
 

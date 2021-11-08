@@ -142,7 +142,7 @@ export class Chat extends Component {
                     .subscribe(
                         (e: Event) => {
                             e.preventDefault()
-                            Router.go(PAGES.CHATSETTINGS)
+                            Router.go(PAGES.CHATSETTINGS + `/${this.props.id}`)
                         },
                     ),
             )

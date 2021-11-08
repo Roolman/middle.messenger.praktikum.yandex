@@ -1,5 +1,14 @@
 import { Route } from "../../utils/classes/route"
 
+export type RouteData = {
+    data: string
+}
+
+type PathParams = {
+    path: string
+    params: RouteData
+}
+
 class Router {
 
     routes: Route[]
@@ -7,6 +16,7 @@ class Router {
 
     private _currentRoute: Route
     private _rootQuery: string
+    private _defaultRoute: string
 
     static __instance: Router
 
@@ -18,6 +28,7 @@ class Router {
         this.routes = [];
         this.history = window.history
         this._rootQuery = rootQuery
+        this._defaultRoute = "/"
 
         Router.__instance = this
     }
@@ -32,13 +43,15 @@ class Router {
         // Реагируем на изменения в адресной строке и вызываем перерисовку
         window.onpopstate = event => {
             const location = (event.currentTarget as any).location.pathname
-            this._onRoute(location)
+            const {path, params} = this._getPathParams(location)
+            this._onRoute(path, params)
         }
-
-        this._onRoute(window.location.pathname)
+        
+        const {path, params} = this._getPathParams(window.location.pathname)
+        this._onRoute(path, params)
     }
 
-    private _onRoute(pathname: string) {
+    private _onRoute(pathname: string, data: RouteData) {
         const route = this.getRoute(pathname)
 
         if (this._currentRoute) {
@@ -48,16 +61,17 @@ class Router {
         // TODO: Добавить Guards
         if(route) {
             this._currentRoute = route
-            route.render()
+            route.render(data)
         }
         else {
-            this.go('/')
+            this.go(this._defaultRoute)
         }
     }
 
-    go(pathname: string) {
-        this.history.pushState({}, "", pathname)
-        this._onRoute(pathname)
+    go(fullPathName: string) {
+        const {path, params} = this._getPathParams(fullPathName)
+        this.history.pushState(params, "", fullPathName)
+        this._onRoute(path, params)
     }
 
     back() {
@@ -70,6 +84,16 @@ class Router {
 
     getRoute(pathname: string): Route | undefined {
         return this.routes.find(route => route.match(pathname))
+    }
+
+    private _getPathParams(pathname: string): PathParams {
+        const [_, pathName, param] = pathname.split('/')
+        const path = `/${pathName}`
+        const params: RouteData = {data: param}
+        return {
+            path,
+            params
+        }
     }
 }
 

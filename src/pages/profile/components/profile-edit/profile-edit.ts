@@ -37,7 +37,7 @@ export class ProfileEdit extends Component {
     setDefaultProps(props: ProfileEditProps): ProfileEditProps {
         return {
             ...props,
-            componentClassName: "profile__main",
+            componentClassName: "settings__main",
             children: [
                 {
                     name: "profileEditForm",

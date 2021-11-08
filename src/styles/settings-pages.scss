@@ -1,0 +1,82 @@
+@import "./colors.scss";
+
+$profile_main_info_width: 510px;
+
+.settings {
+  display: flex;
+  flex-direction: row;
+}
+
+.settings__return {
+  display: flex;
+  min-width: 64px;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid $light_gray_border_color;
+  background-color: $light_gray_chat_color;
+
+  &:hover {
+    background-color: $light_gray_hover_color;
+    cursor: pointer;
+  }
+}
+
+.settings__main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings__main-avatar-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .settings__main-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 130px;
+  }
+
+  .settings__main-avatar-hover-block {
+    display: none;
+    background-color: rgb(0 0 0 / 50%);
+    width: 130px;
+    height: 130px;
+    border-radius: 130px;
+
+    .settings__main-avatar-hover-block-title {
+      color: white;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:hover > .settings__main-avatar-hover-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+  }
+}
+
+.settings__main-info {
+  display: flex;
+  flex-direction: column;
+  width: $profile_main_info_width;
+}
+
+.settings__main-actions {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+}

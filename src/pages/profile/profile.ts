@@ -3,7 +3,7 @@ import templ from "./profile.tmpl"
 
 import { Button } from "../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
-import { ChangeAvatar } from "./modules/change-avatar"
+import { ChangeAvatar } from "../../modules/change-avatar"
 import Router from "../../services/core/router"
 import { PROFILE_DATA } from "../../mock/profile"
 import { Component, ComponentProps } from "../../utils/classes/component"
@@ -42,7 +42,7 @@ export class ProfilePage extends Component {
             ...props,
             profileIsEditable: false,
             changePasswordFormIsShown: false,
-            componentClassName: "profile",
+            componentClassName: "settings",
             children: [
                 {
                     name: "сhangeAvatar",

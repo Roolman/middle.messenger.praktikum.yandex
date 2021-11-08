@@ -55,6 +55,17 @@ export class ChatsService {
         this._chatsSubject.next(this._chats)
     }
 
+    getChat(id: string): void {
+        const chat = this._chats.find(x => x.id == Number(id))
+        if(chat) {
+            this._chat = chat
+            this._chatSubject.next(this._chat)
+        }
+        else {
+            throw new Error(`Чат с id ${id} не найден`)
+        }
+    }
+
     setChat(chatId: number): void {
         this._chat = this._chats.find((x) => x.id === chatId) || null
         if (this._chat) {
@@ -67,13 +78,17 @@ export class ChatsService {
         }
     }
 
+    getSelectedChat(): ChatData | undefined {
+        return this._chats.find(x => x.selected)
+    }
+
     setMessages(chat: ChatData): void {
         chat.messages = MESSAGES
     }
 
     addMessage(message: string): void {
         const messageData: MessageData = {
-            id: Math.random() * 100,
+            id: Math.round(Math.random() * 100),
             type: MESSAGE_TYPES.TEXT,
             value: message,
             time: new Date(),

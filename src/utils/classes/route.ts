@@ -1,5 +1,6 @@
+import { RouteData } from "../../services/core/router"
 import isEqual from "../helpers/isEqual"
-import { Component } from "./component"
+import { Component, ComponentProps } from "./component"
 
 type RouteProps = {
     rootQuery: string
@@ -37,8 +38,11 @@ export class Route {
         return isEqual({pathname}, {pathname: this._pathname})
     }
 
-    render() {
-        this._block = new this._blockClass() as Component
+    render(data?: RouteData) {
+        const props: ComponentProps = {
+            routeData: data
+        }
+        this._block = new this._blockClass(props) as Component
         this._render(this._props.rootQuery, this._block)
     }
 

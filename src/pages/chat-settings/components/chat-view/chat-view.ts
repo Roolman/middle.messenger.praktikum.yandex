@@ -1,39 +1,35 @@
 import { Button } from "../../../../components/button";
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { ProfileField, ProfileService } from "../../../../services/state/profile.service";
 import { Component, ComponentProps } from "../../../../utils/classes/component";
 import { Observable } from "../../../../utils/classes/observable";
 import { Inject } from "../../../../utils/decorators/inject";
-import Router from "../../../../services/core/router"
 
-import tmpl from "./profile-view.tmpl"
-import "./profile-view.scss"
-import { PAGES } from "../../../../services/core/navigation";
+import tmpl from "./chat-view.tmpl"
+import "./chat-view.scss"
+import { ChatData, ChatsService } from "../../../../services/state/chats.service";
 
-type ProfilewViewProps = ComponentProps & {
-    profileData: Array<ProfileField>
-    onEditDataButton: Function
-    onChangePasswordButton: Function
+type ChatViewProps = ComponentProps & {
+    chat?: ChatData
+    chatId: string
     onAvatar: Function
 }
 
-export class ProfileView extends Component {
-    props: ProfilewViewProps
+export class ChatView extends Component {
+    props: ChatViewProps
 
     editDataButton: Button
-    changePasswordButton: Button
-    logoutButton: Button
+    addUsersButton: Button
+    deleteChatButton: Button
     avatar: HTMLElement
 
+    @Inject(ChatsService)
+    private _chatsService: ChatsService
 
-    @Inject(ProfileService)
-    private _profileService: ProfileService
-
-    constructor(props: ProfilewViewProps) {
+    constructor(props: ChatViewProps) {
         super("div", props, tmpl)
     }
 
-    setDefaultProps(props: ProfilewViewProps): ProfilewViewProps {
+    setDefaultProps(props: ChatViewProps): ChatViewProps {
         return {
             ...props,
             componentClassName: "settings__main",
@@ -46,16 +42,16 @@ export class ProfileView extends Component {
                     }),
                 },
                 {
-                    name: "changePasswordButton",
+                    name: "addUsersButton",
                     component: new Button({
-                        title: "Изменить пароль",
+                        title: "Добавить пользователей",
                         type: BUTTON_TYPES.LINK,
                     }),
                 },
                 {
-                    name: "logoutButton",
+                    name: "deleteChatButton",
                     component: new Button({
-                        title: "Выйти",
+                        title: "Удалить чат",
                         type: BUTTON_TYPES.LINK,
                         theme: BUTTON_THEMES.DANGER,
                     }),
@@ -65,13 +61,16 @@ export class ProfileView extends Component {
     }
 
     componentDidInit() {
-        this._subscriptions.push(this._profileService.profileObservable.subscribe(
-            (profile: ProfileField[]) => {
-                this.setProps({
-                    profileData: profile,
-                })
+        this._subscriptions.push(this._chatsService.chatObservable.subscribe(
+            (chat: ChatData) => {
+                this.setProps({ chat: chat })
             },
         ))
+        // В случае если переход на страницу произошел через адресную строку
+        if(!this.props.chat) {
+            this._chatsService.getChats()
+            this._chatsService.getChat(this.props.chatId)
+        }
     }
 
     componentDidMount() {
@@ -83,13 +82,17 @@ export class ProfileView extends Component {
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.changePasswordButton.element, "click")
-                .subscribe(() => this.props.onChangePasswordButton()),
+                .fromEvent(this.addUsersButton.element, "click")
+                .subscribe(() => {
+                    alert("Откыть модуль добавления пользователей!")
+                }),
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.logoutButton.element, "click")
-                .subscribe(() => Router.go(PAGES.LOGIN)),
+                .fromEvent(this.deleteChatButton.element, "click")
+                .subscribe(() => {
+                    alert("Открыть модал удалить чат?")
+                }),
         )
         // Аватар
         this._onMountSubscriptions.push(

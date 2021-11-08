@@ -36,7 +36,7 @@ export class PasswordEdit extends Component {
     setDefaultProps(props: PasswordEditProps): PasswordEditProps {
         return {
             ...props,
-            componentClassName: "profile__main",
+            componentClassName: "settings__main",
             children: [
                 {
                     name: "passwordForm",
