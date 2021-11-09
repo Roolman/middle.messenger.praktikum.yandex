@@ -53,11 +53,18 @@ export class SnackBarService {
         this._type = type || this._type
         this._duration = duration || this._duration
 
-        this._resetSnackBar()
-        this._element.classList.add(SNACKBAR_TYPE_CLASS[this._type])
-        this._elementText.textContent = this._title
-        this._element.classList.remove("snackbar-hidden")
-        this._element.classList.add("snackbar-shown")
+        this._overlayContainer.appendChild(this._globalOverlayWrapper)
+
+        // Для того, чтобы transition срабатывал
+        setTimeout(
+            () => {
+                this._resetSnackBar()
+                this._element.classList.add(SNACKBAR_TYPE_CLASS[this._type])
+                this._elementText.textContent = this._title
+                this._element.classList.add("snackbar-shown")
+            },
+            5
+        )
 
         this._timer = setTimeout(
             () => this.close(),
@@ -67,8 +74,9 @@ export class SnackBarService {
 
     close() {
         this._element.classList.remove("snackbar-shown")
-        this._element.classList.add("snackbar-hidden")
         clearTimeout(this._timer)
+
+        this._overlayContainer.removeChild(this._globalOverlayWrapper)
     }
 
     private _createElement() {

@@ -50,16 +50,12 @@
   background-color: white;
 
   margin-bottom: 25px;
-}
-
-.snackbar-hidden {
-  visibility: hidden;
   transform: scale(0.8);
-  transition: 0s;
+  visibility: hidden;
+  transition: transform 0.1s;
 }
 
 .snackbar-shown {
-  transition: 0.08s;
   visibility: visible;
   transform: scale(1);
 }
