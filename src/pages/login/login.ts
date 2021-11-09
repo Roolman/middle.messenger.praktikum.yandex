@@ -17,7 +17,12 @@ import { UserService } from "../../services/state/user.service"
 import { ComponentProps } from "../../types/components/component"
 import { Indexed } from "../../types"
 
+type LoginPageProps = ComponentProps & {
+    logInLoading?: boolean
+}
+
 export class LoginPage extends Component {
+    props: LoginPageProps
     // Компоненты
     loginBlock: LoginRegisterBlock
     header: Header
@@ -34,7 +39,7 @@ export class LoginPage extends Component {
         super("div", {}, templ)
     }
 
-    setDefaultProps(props: ComponentProps): ComponentProps {
+    setDefaultProps(props: LoginPageProps): LoginPageProps {
         return {
             ...props,
             componentClassName: "login",
@@ -80,6 +85,23 @@ export class LoginPage extends Component {
                 },
             ],
         }
+    }
+
+    componentDidInit() {
+        this._subscriptions.push(
+        this._userService
+            .logInLoadingObservable
+            .subscribe(
+                (isLoading: boolean) => {
+                    if(isLoading) {
+                        this.loginBlock.mainButton.setDisabled()
+                    }
+                    else {
+                        this.loginBlock.mainButton.setEnabled()
+                    }
+                }
+            )
+        )
     }
 
     componentDidRender() {

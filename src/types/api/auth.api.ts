@@ -6,6 +6,7 @@ export type SignUpUserData = {
     password: string
     phone: string
 }
+
 export type SignUpServerResponse = {
     id: number
 }

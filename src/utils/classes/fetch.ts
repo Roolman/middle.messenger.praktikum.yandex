@@ -12,7 +12,7 @@ export enum HTTP_METHODS {
 export type HTTP_OPTIONS = {
     method?: string,
     headers?: Object,
-    data?: Object
+    data?: Object | FormData
     timeout?: number
 }
 
@@ -122,7 +122,13 @@ export class HttpClient {
         if (options.method === HTTP_METHODS.GET || !options.data) {
             xhr.send()
         } else {
-            const body = JSON.stringify(options.data) as XMLHttpRequestBodyInit | null | undefined
+            let body
+            if(options.data instanceof FormData) {
+                body = options.data
+            }
+            else {
+                body = JSON.stringify(options.data)
+            }
             xhr.send(body)
         }
 

@@ -39,7 +39,7 @@ export class SnackBarService {
 
         this._title = ''
         this._type = SNACKBAR_TYPE.INFO
-        this._duration = 5000
+        this._duration = 2000
 
         this._createElement()
         const root = document.querySelector(rootQuery) as HTMLElement

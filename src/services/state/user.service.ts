@@ -19,6 +19,12 @@ export class UserService {
     private _userSubject: Subject<User | null>
     private _user: User | null
 
+    public logInLoadingObservable: Observable
+    private _logInLoadingSubject: Subject<boolean | undefined>
+
+    public registerLoadingObservable: Observable
+    private _registerLoadingSubject: Subject<boolean | undefined>
+
     public get user(): User | null {
         return this._user
     }
@@ -30,6 +36,11 @@ export class UserService {
         this._user = null
         this._userSubject = new Subject()
         this.userObservable = this._userSubject.asObservable()
+
+        this._logInLoadingSubject = new Subject()
+        this.logInLoadingObservable = this._logInLoadingSubject.asObservable()
+        this._registerLoadingSubject = new Subject()
+        this.registerLoadingObservable = this._registerLoadingSubject.asObservable()
 
         this._authApi = new AuthApi()
 
@@ -44,14 +55,17 @@ export class UserService {
     }
 
     logIn(data: SignInUserData): void {
+        this._logInLoadingSubject.next(true)
         this._authApi
             .signin(data)
             .subscribe(
                 () => {
+                    this._logInLoadingSubject.next(false)
                     localStorage.setItem(LOGGED_IN_KEY, "online")
                     Router.go(PAGES.MAIN)
                 },
                 (err: ServerErrorResponse) => {
+                    this._logInLoadingSubject.next(false)
                     this._snackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
                     console.error(err)
                 }
@@ -59,14 +73,20 @@ export class UserService {
     }
 
     signUp(data: SignUpUserData): void {
+        this._registerLoadingSubject.next(true)
         this._authApi
             .signup(data)
             .subscribe(
                 () => {
+                    this._registerLoadingSubject.next(false)
                     this._snackBar.open("Пользователь успешно зарегестрирован", SNACKBAR_TYPE.SUCCESS)
-                    Router.go(PAGES.LOGIN)
+                    this.logIn({
+                        login: data.login,
+                        password: data.password
+                    })
                 },
                 (err: ServerErrorResponse) => {
+                    this._registerLoadingSubject.next(false)
                     this._snackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
                     console.error(err)
                 }
