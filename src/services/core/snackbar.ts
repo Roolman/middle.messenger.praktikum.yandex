@@ -1,4 +1,7 @@
+import { Button } from "../../components/button"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { Indexed } from "../../types"
+import { Observable } from "../../utils/classes/observable"
 
 export enum SNACKBAR_TYPE {
     INFO = "INFO",
@@ -12,37 +15,37 @@ export const SNACKBAR_TYPE_CLASS: Indexed = {
     [SNACKBAR_TYPE.SUCCESS]: "snackbar-success",
 }
 
+export class SnackBarService {
 
-class SnackBar {
-
-    private _elementContainer: HTMLDivElement
+    private _overlayContainer: HTMLDivElement
+    private _globalOverlayWrapper: HTMLDivElement
+    private _overlayElementContainer: HTMLDivElement
     private _element: HTMLDivElement
+    private _elementText: HTMLSpanElement
+    private _elementButton: Button
+
     private _title: string
     private _type: string
     private _duration: number
 
-    static __instance: SnackBar
+    private _timer: any
+
+    static __instance: SnackBarService
 
     constructor(rootQuery: string) {
-        if (SnackBar.__instance) {
-            return SnackBar.__instance
+        if (SnackBarService.__instance) {
+            return SnackBarService.__instance
         }
-
-        this._elementContainer = document.createElement("div")
-        this._elementContainer.classList.add("snackbar-container")
-        this._element = document.createElement("div")
-        this._element.classList.add("snackbar")
-        this._element.classList.add("snackbar-hidden")
 
         this._title = ''
         this._type = SNACKBAR_TYPE.INFO
-        this._duration = 2500
+        this._duration = 5000
 
-        this._elementContainer.appendChild(this._element)
+        this._createElement()
         const root = document.querySelector(rootQuery) as HTMLElement
-        root.appendChild(this._elementContainer)
+        root.appendChild(this._overlayContainer)
 
-        SnackBar.__instance = this
+        SnackBarService.__instance = this
     }
 
     open(title: string, type?: string, duration?: number) {
@@ -52,19 +55,58 @@ class SnackBar {
 
         this._resetSnackBar()
         this._element.classList.add(SNACKBAR_TYPE_CLASS[this._type])
-        this._element.textContent = this._title
+        this._elementText.textContent = this._title
         this._element.classList.remove("snackbar-hidden")
         this._element.classList.add("snackbar-shown")
 
-        setTimeout(
-            () => {
-                this._element.classList.remove("snackbar-shown")
-                this._element.classList.add("snackbar-hidden")
-            },
+        this._timer = setTimeout(
+            () => this.close(),
             this._duration
         )
     }
 
+    close() {
+        this._element.classList.remove("snackbar-shown")
+        this._element.classList.add("snackbar-hidden")
+        clearTimeout(this._timer)
+    }
+
+    private _createElement() {
+        this._overlayContainer = document.createElement("div")
+        this._overlayContainer.classList.add("overlay-container")
+
+        this._globalOverlayWrapper = document.createElement("div")
+        this._globalOverlayWrapper.classList.add("global-overlay")
+
+        this._overlayElementContainer = document.createElement("div")
+        this._overlayElementContainer.classList.add("snackbar-overlay-container")
+
+        this._element = document.createElement("div")
+        this._element.classList.add("snackbar")
+        this._element.classList.add("snackbar-hidden")
+
+        this._elementText = document.createElement("span")
+
+        this._elementButton = new Button({
+            title: 'ОК',
+            theme: BUTTON_THEMES.PRIMARY,
+            type: BUTTON_TYPES.LINK
+        })
+
+        Observable
+        .fromEvent(this._elementButton.element, "click")
+        .subscribe(
+            () => {
+                this.close()
+            }
+        )
+
+        this._element.appendChild(this._elementText)
+        this._element.appendChild(this._elementButton.element)
+        this._overlayElementContainer.appendChild(this._element)
+        this._globalOverlayWrapper.appendChild(this._overlayElementContainer)
+        this._overlayContainer.appendChild(this._globalOverlayWrapper)
+    }
 
     private _resetSnackBar() {
         this._element.classList.remove("snackbar-error")
@@ -72,5 +114,3 @@ class SnackBar {
         this._element.classList.remove("snackbar-info")
     }
 }
-
-export default (new SnackBar("body"))

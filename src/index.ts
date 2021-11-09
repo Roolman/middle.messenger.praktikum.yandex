@@ -18,12 +18,14 @@ import { Error500Page } from "./pages/errors/500"
 import { ChatSettings } from "./pages/chat-settings"
 import { UserService } from "./services/state/user.service"
 import {AuthGuard} from "./utils/guards/auth.guard"
+import { SnackBarService } from "./services/core/snackbar"
 
 function registerServices() {
+    ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
     ServiceLocator.registerService(ChatsService, new ChatsService())
     ServiceLocator.registerService(ProfileService, new ProfileService())
     ServiceLocator.registerService(UserService, new UserService())
-    ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
+    ServiceLocator.registerService(SnackBarService, new SnackBarService("body"))
 }
 
 function initRouter() {

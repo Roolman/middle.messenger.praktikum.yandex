@@ -1,14 +1,39 @@
 @import "./constants.scss";
 @import "./colors.scss";
 
-.snackbar-container {
+.overlay-container {
+  position: fixed;
+  z-index: 1000;
+}
+
+.global-overlay {
   display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
   position: absolute;
-  z-index: -1;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.overlay-container,
+.global-overlay {
+  pointer-events: none;
   top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.snackbar-overlay-container {
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+
+  position: static;
+  margin-bottom: 0px;
 }
 
 .snackbar {
@@ -20,11 +45,11 @@
   min-width: 100px;
   padding: 22px;
   border-radius: 5px;
-  position: absolute;
   z-index: 99999;
   box-shadow: $common_shadow;
   background-color: white;
-  bottom: 15px;
+
+  margin-bottom: 25px;
 }
 
 .snackbar-hidden {

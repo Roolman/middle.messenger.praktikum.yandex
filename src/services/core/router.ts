@@ -59,7 +59,6 @@ class Router {
             this._currentRoute.leave()
         }
 
-        // TODO: Добавить Guards
         if(route) {
             this._currentRoute = route
             route.render(data)

@@ -4,9 +4,10 @@ import { ServerUserResponse, SignInUserData, SignUpUserData } from "../../types/
 import { User } from "../../types/state/user"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
+import { Inject } from "../../utils/decorators/inject"
 import { PAGES } from "../core/navigation"
 import Router from "../core/router"
-import SnackBar, { SNACKBAR_TYPE } from "../core/snackbar"
+import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
 
 export const LOGGED_IN_KEY = "authorized"
 
@@ -21,6 +22,9 @@ export class UserService {
     public get user(): User | null {
         return this._user
     }
+
+    @Inject(SnackBarService)
+    private _snackBar: SnackBarService
 
     constructor() {
         this._user = null
@@ -48,7 +52,7 @@ export class UserService {
                     Router.go(PAGES.MAIN)
                 },
                 (err: ServerErrorResponse) => {
-                    SnackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
+                    this._snackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
                     console.error(err)
                 }
             )        
@@ -59,11 +63,11 @@ export class UserService {
             .signup(data)
             .subscribe(
                 () => {
-                    SnackBar.open("Пользователь успешно зарегестрирован", SNACKBAR_TYPE.SUCCESS)
+                    this._snackBar.open("Пользователь успешно зарегестрирован", SNACKBAR_TYPE.SUCCESS)
                     Router.go(PAGES.LOGIN)
                 },
                 (err: ServerErrorResponse) => {
-                    SnackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
+                    this._snackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
                     console.error(err)
                 }
             )         
