@@ -1,19 +1,17 @@
 import { Button } from "../../../../components/button";
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { ProfileField, ProfileService } from "../../../../services/state/profile.service";
 import { Component } from "../../../../utils/classes/component";
 import { Observable } from "../../../../utils/classes/observable";
 import { Inject } from "../../../../utils/decorators/inject";
-import Router from "../../../../services/core/router"
 
 import tmpl from "./profile-view.tmpl"
 import "./profile-view.scss"
-import { PAGES } from "../../../../services/core/navigation";
 import { UserService } from "../../../../services/state/user.service";
 import { ComponentProps } from "../../../../types/components/component";
+import { User } from "../../../../types/state/user";
 
 type ProfilewViewProps = ComponentProps & {
-    profileData: Array<ProfileField>
+    user: User |  null
     onEditDataButton: Function
     onChangePasswordButton: Function
     onAvatar: Function
@@ -26,10 +24,6 @@ export class ProfileView extends Component {
     changePasswordButton: Button
     logoutButton: Button
     avatar: HTMLElement
-
-
-    @Inject(ProfileService)
-    private _profileService: ProfileService
 
     @Inject(UserService)
     private _userService: UserService
@@ -70,10 +64,11 @@ export class ProfileView extends Component {
     }
 
     componentDidInit() {
-        this._subscriptions.push(this._profileService.profileObservable.subscribe(
-            (profile: ProfileField[]) => {
+        this._subscriptions.push(
+            this._userService.userObservable.subscribe(
+            (user: User) => {
                 this.setProps({
-                    profileData: profile,
+                    user
                 })
             },
         ))
@@ -99,10 +94,12 @@ export class ProfileView extends Component {
                 }),
         )
         // Аватар
-        this._onMountSubscriptions.push(
-            Observable
-                .fromEvent(this.avatar, "click")
-                .subscribe(() => this.props.onAvatar()),
-        )
+        if(this.avatar) {
+            this._onMountSubscriptions.push(
+                Observable
+                    .fromEvent(this.avatar, "click")
+                    .subscribe(() => this.props.onAvatar()),
+            )
+        }
     }
 }

@@ -1,20 +1,24 @@
-import { Component, ComponentChild, ComponentProps } from "../../utils/classes/component"
+import { ComponentChild, ComponentProps } from "../../types/components/component"
+import { Component } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import "./form.scss"
 import templ from "./form.tmpl"
+
+type FormChild = (ComponentChild<FormElement> & { component: FormElement })
 
 type FormProps = ComponentProps & {
     attributes: {
         id: string
         [key: string]: any
     }
-    children: (ComponentChild & { component: FormElement })[]
+    children: FormChild[]
 }
 
 export interface FormElement extends Component {
     get name(): string
     get value(): string | number | boolean
+    set value(val)
     get isValid(): boolean
     get inputElement(): HTMLElement
     get onValueChange(): Observable
@@ -28,7 +32,7 @@ export class Form extends Component {
     private _onValidityChangeObservable: Observable
 
     get formElements(): Array<FormElement> {
-        return this.props.children.map((x) => x.component as FormElement)
+        return this.props.children.map((x: FormChild) => x.component)
     }
 
     get onValidityChange(): Observable {

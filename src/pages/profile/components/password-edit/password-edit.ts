@@ -1,6 +1,5 @@
 import { Button } from "../../../../components/button";
-import { ProfileFieldValue, ProfileService } from "../../../../services/state/profile.service";
-import { Component, ComponentProps } from "../../../../utils/classes/component";
+import { Component } from "../../../../utils/classes/component";
 import { Observable } from "../../../../utils/classes/observable";
 import { Inject } from "../../../../utils/decorators/inject";
 
@@ -13,6 +12,8 @@ import { PASSWORD_MAX_LENGTH_VALIDATOR, PASSWORD_MIN_LENGTH_VALIDATOR,
 import { Validators } from "../../../../utils/classes/validators";
 import { Form } from "../../../../components/form";
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
+import { ComponentProps } from "../../../../types/components/component";
+import { UserService } from "../../../../services/state/user.service";
 
 type PasswordEditProps = ComponentProps & {
     onSaveButton: Function
@@ -26,8 +27,8 @@ export class PasswordEdit extends Component {
     profileSaveButton: Button
     cancelButton: Button
 
-    @Inject(ProfileService)
-    private _profileService: ProfileService
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor(props?: PasswordEditProps) {
         super("div", props, tmpl)
@@ -50,7 +51,7 @@ export class PasswordEdit extends Component {
                                     type: "password",
                                     validators: new Validators([
                                         REQUIRED_VALIDATOR,
-                                    ]),
+                                    ])
                                 }),
                             },
                             {
@@ -79,7 +80,8 @@ export class PasswordEdit extends Component {
                         title: "Сохранить",
                         attributes: {
                             type: "submit",
-                            form: "profileEditFormId",
+                            form: "passwordFormId",
+                            disabled: ''
                         },
                     }),
                 },
@@ -104,20 +106,18 @@ export class PasswordEdit extends Component {
                     (e: Event) => {
                         e.preventDefault()
 
-                        const fieldValues: ProfileFieldValue[] = []
-                        let form = this.passwordForm
-                        const elements = form.formElements
-                        for (const el of elements) {
-                            fieldValues.push({
-                                name: el.name,
-                                value: el.value,
-                            })
-                        }
-                        console.log(fieldValues)
+                        const elements = this.passwordForm.formElements
+                        const oldPassword = elements.find(x => x.name === "oldPassword")?.value
+                        const newPassword = elements.find(x => x.name === "newPassword")?.value
                         // Меняем значения через сервис
-                        this._profileService.setProfile(fieldValues)
+                        this._userService.updatePassword(oldPassword as string, newPassword as string)
                         //
                         this.props.onSaveButton()
+                        // Сбрасываем значения
+                        const oldP = this.passwordForm.formElements[0] as Input
+                        const newP = this.passwordForm.formElements[1] as Input
+                        oldP.setProps({value: ''})
+                        newP.setProps({value: ''})
                     },
                 ),
         )

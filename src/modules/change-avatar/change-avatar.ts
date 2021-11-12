@@ -14,6 +14,8 @@ type ChangeAvatarProps = ComponentProps & {
     onApplyButton: Function
     applyButtonText: string
     headerTitle: string
+    isModal?: boolean
+    isFileRequired?: boolean
 }
 
 export class ChangeAvatar extends Component {
@@ -33,6 +35,7 @@ export class ChangeAvatar extends Component {
     setDefaultProps(props: ChangeAvatarProps): ChangeAvatarProps {
         return {
             ...props,
+            componentClassName: props.isModal ? "modal-container" : "",
             children: [
                 {
                     name: "applyButton",
@@ -47,8 +50,28 @@ export class ChangeAvatar extends Component {
         }
     }
 
-    componentDidRender() {
+    componentDidInit() {
         this.hide()
+        if(this.props.isModal) {
+            this._subscriptions.push(
+                Observable
+                .fromEvent(this.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        const target = e.target as HTMLElement
+                        if(target.classList.contains(this.props.componentClassName  as string)) {
+                            this.hide()
+                        }
+                    }
+                )
+            )
+        }
+    }
+
+    componentDidRender() {
+        if(this.props.isFileRequired) {
+            this.applyButton.setDisabled()
+        }
     }
 
     componentDidMount() {
@@ -56,7 +79,7 @@ export class ChangeAvatar extends Component {
             Observable
             .fromEvent(this.applyButton.element, "click")
             .subscribe(() => {
-                this.props.onApplyButton()
+                this.props.onApplyButton(this.file)
             }),
         )
         this._onMountSubscriptions.push(
@@ -67,12 +90,18 @@ export class ChangeAvatar extends Component {
                 if(file.type.startsWith(ACCEPT_TYPE)) {
                     this.selectFileLabel.textContent = file.name
                     this.file = file
+                    if(this.props.isFileRequired) {
+                        this.applyButton.setEnabled()
+                    }
                 }
                 else {
                     this.selectFileLabel.textContent = "Выберите файл"
                     this.fileInput.files = null
                     this.file = null
                     this._snackBar.open("Выберите изображение", SNACKBAR_TYPE.ERROR)
+                    if(this.props.isFileRequired) {
+                        this.applyButton.setDisabled()
+                    }
                 }
             })
         )

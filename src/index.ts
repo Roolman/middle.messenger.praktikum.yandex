@@ -5,7 +5,6 @@ import * as Handlebars from "handlebars"
 import ServiceLocator from "./services/core/serviceLocator"
 import { ChatsService } from "./services/state/chats.service"
 import { MutationsObservation } from "./services/core/mutationObserver"
-import { ProfileService } from "./services/state/profile.service"
 
 import Router from "./services/core/router"
 import { PAGES } from "./services/core/navigation"
@@ -27,7 +26,6 @@ function registerServices() {
 
     ServiceLocator.registerService(UserService, new UserService())
     ServiceLocator.registerService(ChatsService, new ChatsService())
-    ServiceLocator.registerService(ProfileService, new ProfileService())
 
     ServiceLocator.registerService(AddChatUsersService, new AddChatUsersService())
 }

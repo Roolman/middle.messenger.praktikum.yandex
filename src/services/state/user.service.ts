@@ -1,5 +1,6 @@
 import { AuthApi } from "../../api/auth.api"
 import { UsersApi } from "../../api/users.api"
+import { RESOURCES_URL } from "../../constants/api"
 import { ServerErrorResponse } from "../../types/api"
 import { ServerUserResponse, SignInUserData, SignUpUserData } from "../../types/api/auth.api"
 import { User } from "../../types/state/user"
@@ -66,6 +67,7 @@ export class UserService {
                     this._logInLoadingSubject.next(false)
                     localStorage.setItem(LOGGED_IN_KEY, "online")
                     Router.go(PAGES.MAIN)
+                    this.getUserData()
                 },
                 (err: ServerErrorResponse) => {
                     this._logInLoadingSubject.next(false)
@@ -101,6 +103,12 @@ export class UserService {
             .requestUser()
             .subscribe(
                 (user: ServerUserResponse) => {
+                    if(!user.display_name) {
+                        user.display_name = `${user.first_name} ${user.second_name}`
+                    }
+                    if(user.avatar) {
+                        user.avatar = RESOURCES_URL + user.avatar
+                    }                    
                     this._user = user
                     this._userSubject.next(this._user)
                 },
@@ -125,6 +133,58 @@ export class UserService {
                     this._user = null
                     this._userSubject.next(this._user)
                     Router.go(PAGES.LOGIN)
+                }
+            )
+    }
+
+    updateProfile(user: User): void {
+        this._usersApi
+            .update(user)
+            .subscribe(
+                (user: User) => {
+                    if(user.avatar) {
+                        user.avatar = RESOURCES_URL + user.avatar
+                    }
+                    this._user = user
+                    this._userSubject.next(this._user)
+                    this._snackBar.open("Данные успешно изменены", SNACKBAR_TYPE.SUCCESS)
+                },
+                (err: ServerErrorResponse) => {
+                    this._snackBar.open("Ошибка изменения данных", SNACKBAR_TYPE.ERROR)
+                }
+            )
+    }
+
+    updateProfileAvatar(avatar: File): void {
+        this._usersApi
+            .updateAvatar(avatar)
+            .subscribe(
+                (user: User) => {
+                    user.avatar = RESOURCES_URL + user.avatar
+                    this._user = user
+                    this._userSubject.next(this._user)
+                    this._snackBar.open("Аватар успешно изменен", SNACKBAR_TYPE.SUCCESS)
+                },
+                (err: ServerErrorResponse) => {
+                    this._snackBar.open("Ошибка смены аватара", SNACKBAR_TYPE.ERROR)
+                }
+            )        
+    }
+
+    updatePassword(oldPassword: string, newPassword: string) {
+        this._usersApi
+            .updatePassword(oldPassword, newPassword)
+            .subscribe(
+                () => {
+                    this._snackBar.open("Пароль успешно изменен", SNACKBAR_TYPE.SUCCESS)
+                },
+                (err: ServerErrorResponse) => {
+                    if(err.reason === "Password is incorrect") {
+                        this._snackBar.open("Пароль неверный", SNACKBAR_TYPE.ERROR)
+                    }
+                    else {
+                        this._snackBar.open("Ошибка смены пароля", SNACKBAR_TYPE.ERROR)
+                    }
                 }
             )
     }

@@ -18,6 +18,7 @@ export type SignInUserData = {
 }
 
 export type ServerUserResponse = SignUpUserData & {
-    id: number,
+    id: number
     avatar: string
+    display_name: string
 }

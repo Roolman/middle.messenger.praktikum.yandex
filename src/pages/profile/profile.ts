@@ -6,18 +6,21 @@ import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { ChangeAvatar } from "../../modules/change-avatar"
 import Router from "../../services/core/router"
 import { PROFILE_DATA } from "../../mock/profile"
-import { Component, ComponentProps } from "../../utils/classes/component"
-import { ProfileService } from "../../services/state/profile.service"
+import { Component } from "../../utils/classes/component"
 import { Inject } from "../../utils/decorators/inject"
 import { Observable } from "../../utils/classes/observable"
 import { PAGES } from "../../services/core/navigation"
 import { ProfileView } from "./components/profile-view"
 import { ProfileEdit } from "./components/profile-edit"
 import { PasswordEdit } from "./components/password-edit"
+import { ComponentProps } from "../../types/components/component"
+import { UserService } from "../../services/state/user.service"
+import { User } from "../../types/state/user"
 
 type ProfilePageProps = ComponentProps & {
     profileIsEditable: boolean
     changePasswordFormIsShown: boolean
+    user: User | null
 }
 
 export class ProfilePage extends Component {
@@ -30,8 +33,8 @@ export class ProfilePage extends Component {
     // Модуль смены аватара
     сhangeAvatar: ChangeAvatar
 
-    @Inject(ProfileService)
-    private _profileService: ProfileService
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor() {
         super("div", {}, templ)
@@ -43,10 +46,21 @@ export class ProfilePage extends Component {
             profileIsEditable: false,
             changePasswordFormIsShown: false,
             componentClassName: "settings",
+            user: this._userService.user,
             children: [
                 {
                     name: "сhangeAvatar",
-                    component: new ChangeAvatar(),
+                    component: new ChangeAvatar({
+                        onApplyButton: (file: File) => {
+                            // Обновить аватар
+                            this._userService.updateProfileAvatar(file)
+                            this.сhangeAvatar.hide()
+                        },
+                        applyButtonText: "Загрузить",
+                        headerTitle: "Выберите аватар",
+                        isModal: true,
+                        isFileRequired: true
+                    }),
                 },
                 {
                     name: "returnButton",
@@ -59,6 +73,7 @@ export class ProfilePage extends Component {
                 {
                     name: "profileView",
                     component: new ProfileView({
+                        user: this._userService.user,
                         profileData: PROFILE_DATA,
                         onEditDataButton: () => {
                             // Переходим в режим редактирования
@@ -81,7 +96,7 @@ export class ProfilePage extends Component {
                 {
                     name: "profileEdit",
                     component: new ProfileEdit({
-                        profileData: PROFILE_DATA,
+                        user: this._userService.user,
                         onSaveButton: () => {
                             // Переходим в режим просмотра
                             this.setProps({
@@ -105,10 +120,6 @@ export class ProfilePage extends Component {
                 }
             ],
         }
-    }
-
-    componentDidInit() {
-        this._profileService.getProfile()
     }
 
     componentDidMount() {
