@@ -1,4 +1,5 @@
 import { AuthApi } from "../../api/auth.api"
+import { UsersApi } from "../../api/users.api"
 import { ServerErrorResponse } from "../../types/api"
 import { ServerUserResponse, SignInUserData, SignUpUserData } from "../../types/api/auth.api"
 import { User } from "../../types/state/user"
@@ -14,6 +15,7 @@ export const LOGGED_IN_KEY = "authorized"
 export class UserService {
 
     private _authApi: AuthApi
+    private _usersApi: UsersApi
 
     public userObservable: Observable
     private _userSubject: Subject<User | null>
@@ -43,6 +45,7 @@ export class UserService {
         this.registerLoadingObservable = this._registerLoadingSubject.asObservable()
 
         this._authApi = new AuthApi()
+        this._usersApi = new UsersApi()
 
         const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
         if(isLoggedIn) {
@@ -79,7 +82,7 @@ export class UserService {
             .subscribe(
                 () => {
                     this._registerLoadingSubject.next(false)
-                    this._snackBar.open("Пользователь успешно зарегестрирован", SNACKBAR_TYPE.SUCCESS)
+                    this._snackBar.open("Добро пожаловать в Fast messenger!", SNACKBAR_TYPE.SUCCESS)
                     this.logIn({
                         login: data.login,
                         password: data.password
@@ -118,7 +121,6 @@ export class UserService {
                     Router.go(PAGES.LOGIN)
                 },
                 () => {
-                    console.warn("Ошибка выхода")
                     localStorage.removeItem(LOGGED_IN_KEY)
                     this._user = null
                     this._userSubject.next(this._user)
@@ -126,5 +128,4 @@ export class UserService {
                 }
             )
     }
-
 }

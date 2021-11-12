@@ -1,3 +1,5 @@
+type isEqualInput = PlainObject | null | undefined
+
 type PlainObject<T = any> = {
     [k in string]: T
 }
@@ -17,7 +19,10 @@ function isArrayOrObject(value: unknown): value is [] | PlainObject {
     return isPlainObject(value) || isArray(value)
 }
 
-function isEqual(lhs: PlainObject, rhs: PlainObject) {
+function isEqual(lhs: isEqualInput, rhs: isEqualInput) {
+    if(!lhs || !rhs) {
+        return false
+    }
     if (Object.keys(lhs).length !== Object.keys(rhs).length) {
         return false
     }

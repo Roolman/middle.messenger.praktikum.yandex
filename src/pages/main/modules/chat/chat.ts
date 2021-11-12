@@ -6,7 +6,7 @@ import templ, { emptyChat } from "./chat.tmpl"
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
-import { Component, ComponentChild, ComponentProps } from "../../../../utils/classes/component"
+import { Component } from "../../../../utils/classes/component"
 import { ChatData, ChatsService, MessageData } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
@@ -16,11 +16,12 @@ import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
 import Router from "../../../../services/core/router"
 import { PAGES } from "../../../../services/core/navigation"
+import { ComponentChild, ComponentProps } from "../../../../types/components/component"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
 type ChatProps = ComponentProps & ChatData & {
-    messagesComponents: ComponentChild[]
+    messagesComponents: ComponentChild<Message>[]
 }
 
 export class Chat extends Component {
@@ -97,7 +98,7 @@ export class Chat extends Component {
                     (chat: ChatData) => {
                         this.setProps({
                             ...chat,
-                            messagesComponents: this._getMessagesComponents(chat.messages),
+                            messagesComponents: this._getMessagesComponents(chat.messages || []),
                         })
                     },
                 ),
@@ -157,7 +158,7 @@ export class Chat extends Component {
         }
     }
 
-    private _getMessagesComponents(messages: MessageData[]): ComponentChild[] {
+    private _getMessagesComponents(messages: MessageData[]): ComponentChild<Message>[] {
         const messagesComponents = messages.map((x, i) => ({
             name: `message__${i}`,
             component: new Message(x),

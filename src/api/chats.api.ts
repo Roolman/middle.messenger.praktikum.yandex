@@ -13,6 +13,12 @@ export type AddDeleteChatUsers = {
     chatId: number
 }
 
+export type RequestChatsParams = {
+    offset?: number,
+    limit?: number,
+    title?: string
+}
+
 export class ChatsApi extends BaseAPI {
 
     private _api: HttpClient
@@ -22,8 +28,8 @@ export class ChatsApi extends BaseAPI {
         this._api = new HttpClient(BASE_URL + "chats")
     }
 
-    request(): Observable {
-        return this._api.get("")
+    request(data?: RequestChatsParams): Observable {
+        return this._api.get("", {data})
     }
 
     create(title: string): Observable {
@@ -43,10 +49,9 @@ export class ChatsApi extends BaseAPI {
     }
 
     loadChatAvatar(data: UploadChatAvatar): Observable {
-        // TODO: Проверить работоспособность...
         let form = new FormData()
-        form.append("chatId", data.chatId.toString())
-        form.append("avatar", data.avatar)
+        form.set("chatId", data.chatId.toString())
+        form.set("avatar", data.avatar, data.avatar.name)
         return this._api.put(`/avatar`, {data: form})
     }
 

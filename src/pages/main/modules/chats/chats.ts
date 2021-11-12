@@ -4,16 +4,20 @@ import templ from "./chats.tmpl"
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 
-import { Component, ComponentChild, ComponentProps } from "../../../../utils/classes/component"
+import { Component } from "../../../../utils/classes/component"
 import Router from "../../../../services/core/router"
 import { Inject } from "../../../../utils/decorators/inject"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Observable } from "../../../../utils/classes/observable"
 import { ChatPreview } from "./components/chat-preview"
 import { PAGES } from "../../../../services/core/navigation"
+import { ComponentChild, ComponentProps } from "../../../../types/components/component"
+import { RequestChatsParams } from "../../../../api/chats.api"
+import { SearchInput } from "./components/search-input"
 
 type ChatsProps = ComponentProps & {
-    chats: ComponentChild[]
+    chats?: ComponentChild<ChatPreview>[]
+    onAddChatButton: Function
 }
 
 export class Chats extends Component {
@@ -21,13 +25,17 @@ export class Chats extends Component {
 
     profileLink: HTMLElement
     chatsContainer: HTMLElement
+
+    searchInput: SearchInput
+    isInputFocused: boolean
+
     addChatButton: Button
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
 
-    constructor() {
-        super("div", {}, templ)
+    constructor(props: ChatsProps) {
+        super("div", props, templ)
     }
 
     setDefaultProps(props: ChatsProps): ChatsProps {
@@ -44,6 +52,10 @@ export class Chats extends Component {
                         iconClass: "fa fa-plus fa-md",
                     }),
                 },
+                {
+                    name: "searchInput",
+                    component: new SearchInput({})
+                }
             ],
         }
     }
@@ -57,6 +69,12 @@ export class Chats extends Component {
         this._chatsService.getChats()
     }
 
+    componentDidRender() {
+        if(this.isInputFocused) {
+            this.searchInput.input.focus()
+        }
+    }
+
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.profileLink, "click")
@@ -67,10 +85,46 @@ export class Chats extends Component {
                     },
                 ),
         )
+        this._onMountSubscriptions.push(
+        Observable.fromEvent(this.addChatButton.element, "click")
+            .subscribe(
+                (event: MouseEvent) => {
+                    event.preventDefault()
+                    this.props.onAddChatButton()
+                },
+            ),
+        )
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.searchInput.input, "input")
+            .throttle(500)
+            .subscribe(
+                () => {
+                    const request: RequestChatsParams = {
+                        title: this.searchInput.input.value
+                    }
+                    this._chatsService.getChats(request)
+                }
+            )
+        )
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.searchInput.input, "focus")
+            .subscribe(
+                () => this.isInputFocused = true
+            )
+        )
+        this._onMountSubscriptions.push(
+            Observable
+            .fromEvent(this.searchInput.input, "blur")
+            .subscribe(
+                () => this.isInputFocused = false
+            )
+        )
     }
 
-    private _getChatsPreviewComponents(chats: ChatData[]): ComponentChild[] {
-        const chatsPreviewComponents = chats.map((x, i) => ({
+    private _getChatsPreviewComponents(chats: ChatData[]): ComponentChild<ChatPreview>[] {
+        const chatsPreviewComponents: ComponentChild<ChatPreview>[] = chats.map((x, i) => ({
             name: `chatsPreviewComponent__${i}`,
             component: new ChatPreview(x),
         }))

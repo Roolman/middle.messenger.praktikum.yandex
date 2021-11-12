@@ -113,7 +113,6 @@ export class SnackBarService {
         this._element.appendChild(this._elementButton.element)
         this._overlayElementContainer.appendChild(this._element)
         this._globalOverlayWrapper.appendChild(this._overlayElementContainer)
-        this._overlayContainer.appendChild(this._globalOverlayWrapper)
     }
 
     private _resetSnackBar() {

@@ -1,3 +1,4 @@
+import { Indexed } from "../../types"
 import {
     InternalObserver, Observable, Subscription,
 } from "./observable"
@@ -11,7 +12,7 @@ export enum HTTP_METHODS {
 
 export type HTTP_OPTIONS = {
     method?: string,
-    headers?: Object,
+    headers?: Indexed,
     data?: Object | FormData
     timeout?: number
 }
@@ -103,12 +104,14 @@ export class HttpClient {
         xhr.withCredentials = true
 
         // Устанавливаем headers
-        // TODO: Проверить не будет ли мешать отправке файла
-        xhr.setRequestHeader("content-type", "application/json")
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
+                console.log(key, value.toString())
                 xhr.setRequestHeader(key, value.toString())
             }
+        }
+        if(!(options.data instanceof FormData)) {
+            xhr.setRequestHeader("content-type", "application/json")
         }
 
         xhr.onload = () => {

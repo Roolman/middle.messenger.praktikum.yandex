@@ -1,5 +1,6 @@
 import { FormElement } from "../../../../../../components/form/form"
-import { Component, ComponentProps } from "../../../../../../utils/classes/component"
+import { ComponentProps } from "../../../../../../types/components/component"
+import { Component } from "../../../../../../utils/classes/component"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Subject } from "../../../../../../utils/classes/subject"
 import { Validators } from "../../../../../../utils/classes/validators"

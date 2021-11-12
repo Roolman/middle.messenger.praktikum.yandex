@@ -10,16 +10,16 @@ export type ProxyObject = {
     [key: string]: any
 }
 
-export type ComponentChild = {
+export type ComponentChild<T> = {
     name: string
-    component: Component
+    component: T
 }
 
 export type ComponentProps = {
     componentClassName?: string
     styles?: Object
     attributes?: Object
-    children?: Array<ComponentChild>
+    children?: Array<ComponentChild<Component>>
     routeData?: RouteData
     [key: string]: any
 }

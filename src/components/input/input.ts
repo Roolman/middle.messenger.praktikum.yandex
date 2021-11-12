@@ -35,8 +35,11 @@ export class Input extends Component implements FormElement {
     get name(): string {
         return this.input.name
     }
-    get value(): string | number | boolean {
+    get value(): string {
         return this.input.value
+    }
+    set value(value: string) {
+        this.input.value = value
     }
     get inputElement(): HTMLElement {
         return this.input

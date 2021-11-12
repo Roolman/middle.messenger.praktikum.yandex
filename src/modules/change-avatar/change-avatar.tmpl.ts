@@ -1,10 +1,11 @@
 export default
 `
-    <div data-ref="block" class="change-avatar__elements">
-        <h3>Загрузите файл</h3>
-        <label for="avatar" class="change-avatar__file-upload-label">
+    <div data-ref="block" class="modal-content">
+        <h3>{{ headerTitle }}</h3>
+        <label data-ref="selectFileLabel" for="avatar" class="change-avatar__file-upload-label">
             Выберите файл
         </label>
-        <input id="avatar" name="avatar" type="file" />                
+        <input data-ref="fileInput" id="avatar" name="avatar" type="file" accept="image/*" />   
+        <div data-component="applyButton"></div>             
     </div>
 `

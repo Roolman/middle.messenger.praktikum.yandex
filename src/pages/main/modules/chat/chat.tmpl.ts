@@ -4,11 +4,11 @@ export default
         <div data-ref="chatHeader" class="chat__header">
             <div class="chat__header-chat-info">
                 {{#if avatar}}
-                <img class="chat__avatar-image" src="{{avatar}}"/>
+                <img class="chat__avatar-image" src="{{avatar}}" crossorigin="use-credentials"/>
                 {{else}}
-                    <img class="chat__avatar-image" src="static/img/chat_default.png"/>
+                    <img class="chat__avatar-image" src="static/img/chat_default.png" crossorigin="use-credentials"/>
                 {{/if}}
-                <span class="chat__name">{{ name }}</span>   
+                <span class="chat__name">{{ title }}</span>   
             </div>
             <div data-component="openChatSettingsButton"></div>             
         </div>
