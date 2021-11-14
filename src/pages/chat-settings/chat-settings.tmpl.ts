@@ -5,4 +5,6 @@ export default
 </div>
 <div data-component="chatView"></div>
 <div data-component="сhangeAvatar"></div>
+<div data-component="confirmModal"></div>
+<div data-component="addChatUsers"></div>
 `

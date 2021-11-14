@@ -19,6 +19,7 @@ import { UserService } from "./services/state/user.service"
 import {AuthGuard} from "./utils/guards/auth.guard"
 import { SnackBarService } from "./services/core/snackbar"
 import { AddChatUsersService } from "./modules/add-chat-users/services/users.service"
+import { ChatSelectedGuard } from "./utils/guards/chat-selected.guard"
 
 function registerServices() {
     ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
@@ -33,12 +34,13 @@ function registerServices() {
 function initRouter() {
    const authGuard = new AuthGuard()
    const notAuthGuard = new AuthGuard().invert()
+   const chatSelectedGuard = new ChatSelectedGuard()
    Router
         .use(PAGES.LOGIN, LoginPage, [notAuthGuard])
         .use(PAGES.REGISTER, RegisterPage, [notAuthGuard])
         .use(PAGES.MAIN, MainPage, [authGuard])
         .use(PAGES.PROFILE, ProfilePage, [authGuard])
-        .use(PAGES.CHATSETTINGS, ChatSettings, [authGuard])
+        .use(PAGES.CHATSETTINGS, ChatSettings, [authGuard, chatSelectedGuard])
         .use(PAGES.ERROR404, Error404Page)
         .use(PAGES.ERROR500, Error500Page)
         .start()

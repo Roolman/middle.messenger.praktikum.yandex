@@ -1,4 +1,4 @@
-import { AddDeleteChatUsers, ChatsApi, RequestChatsParams, UploadChatAvatar } from "../../api/chats.api"
+import { AddDeleteChatUsers, ChatsApi, RequestChatsParams, RequestChatUsersParams, UploadChatAvatar } from "../../api/chats.api"
 import { RESOURCES_URL } from "../../constants/api"
 import { MESSAGES } from "../../mock/chat"
 import { ServerErrorResponse } from "../../types/api"
@@ -10,6 +10,8 @@ import { getShortChatDate } from "../../utils/helpers/date.utils"
 import isEqual from "../../utils/helpers/isEqual"
 import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
 import { LOGGED_IN_KEY, UserService } from "./user.service"
+import Router from "../core/router"
+import { PAGES } from "../core/navigation"
 
 export type ChatData = {
     id: number
@@ -17,6 +19,8 @@ export type ChatData = {
     avatar: string | null
     unread_count: number | null
     last_message: MessageData | null
+    created_by?: number
+    users?: User[]
     messages?: MessageData[]
     lastMessageTimeShort?: string
     lastMessageSentByUser?: boolean
@@ -47,6 +51,10 @@ export class ChatsService {
     public chatObservable: Observable
     private _chatSubject: Subject<ChatData | null>
     private _chat: ChatData | null
+
+    get chat(): ChatData | null {
+        return this._chat
+    }
 
     @Inject(SnackBarService)
     private _snackBar: SnackBarService
@@ -134,10 +142,7 @@ export class ChatsService {
                         users: users.map(x => x.id),
                         chatId: response.id
                     }
-                    this
-                    ._chatsApi
-                    .addChatUsers(data)
-                    .subscribe(() => {})
+                    this.addChatUsers(data)
                 }
                 
                 if(avatar) {
@@ -145,18 +150,7 @@ export class ChatsService {
                         avatar: avatar,
                         chatId: response.id
                     }
-                    this
-                    ._chatsApi
-                    .loadChatAvatar(data)
-                    .subscribe((uploadresponse: ChatDataShort) => {
-                        this._chats = this._chats.map((x) => {
-                            if(x.id === uploadresponse.id) {
-                                x.avatar = RESOURCES_URL + uploadresponse.avatar
-                            }
-                            return x
-                        })
-                        this._chatsSubject.next(this._chats)
-                    })
+                    this.uploadChatAvatar(data)
                 }
             },
             (err: ServerErrorResponse) => {
@@ -174,11 +168,96 @@ export class ChatsService {
 
             this._chatsSubject.next(this._chats)
             this._chatSubject.next(this._chat)
+
+            // Также получаем юзеров чата
+            this.getChatUsers(this._chat.id)
         }
     }
 
-    getSelectedChat(): ChatData | undefined {
-        return this._chats.find(x => x.selected)
+    getChatUsers(chatId: number): void {
+        // TODO: Добавить пагинацию
+        const requestParams: RequestChatUsersParams = {
+            limit: 1000
+        }
+        this._chatsApi
+            .requestChatUsers(chatId, requestParams)
+            .subscribe(
+                (users: User[]) => {
+                    if(this._chat) {
+                        users = users.map(
+                            x => ({
+                                ...x,
+                                avatar: x.avatar ? RESOURCES_URL + x.avatar : '',
+                            })
+                        )
+                        this._chat.users = users
+                        this._chatSubject.next(this._chat)
+                    }
+                },
+                (err: ServerErrorResponse) => {
+                    console.log(err)
+                }
+            )
+    }
+
+    uploadChatAvatar(data: UploadChatAvatar): void {
+        this
+        ._chatsApi
+        .loadChatAvatar(data)
+        .subscribe((uploadresponse: ChatDataShort) => {
+            this._chats = this._chats.map((x) => {
+                if(x.id === uploadresponse.id) {
+                    x.avatar = RESOURCES_URL + uploadresponse.avatar
+                }
+                return x
+            })
+            this._chatsSubject.next(this._chats)
+            if(uploadresponse.id === this._chat?.id) {
+                this._chat.avatar = RESOURCES_URL + uploadresponse.avatar
+                this._chatSubject.next(this._chat)
+                this._snackBar.open("Аватар изменен", SNACKBAR_TYPE.SUCCESS)
+            }
+        })        
+    }
+
+    addChatUsers(data: AddDeleteChatUsers): void {
+        this
+        ._chatsApi
+        .addChatUsers(data)
+        .subscribe(
+            () => {
+                // Обновляем список пользователей
+                this.getChatUsers(data.chatId)
+            }
+        )        
+    }
+
+    deleteChatUsers(data: AddDeleteChatUsers): void {
+        this
+        ._chatsApi
+        .deleteChatUsers(data)
+        .subscribe(
+            () => {
+                // Обновляем список пользователей
+                this.getChatUsers(data.chatId)
+            }
+        )      
+    }
+
+    deleteChat(chatId: number): void {
+        this._chatsApi
+            .delete(chatId)
+            .subscribe(
+                () => {
+                    this._snackBar.open("Чат успешно удален", SNACKBAR_TYPE.SUCCESS)
+                    // this._chats = this._chats.filter(x => x.id !== chatId)
+                    // this._chatsSubject.next(this._chats)
+                    Router.go(PAGES.MAIN)
+                },
+                (err: ServerErrorResponse) => {
+                    this._snackBar.open("Ошибка удаления чата", SNACKBAR_TYPE.ERROR)
+                }
+            )
     }
 
     setMessages(chat: ChatData): void {

@@ -14,10 +14,18 @@ export type AddDeleteChatUsers = {
 }
 
 export type RequestChatsParams = {
-    offset?: number,
-    limit?: number,
+    offset?: number
+    limit?: number
     title?: string
 }
+
+export type RequestChatUsersParams = {
+    offset?: number
+    limit?: number
+    name?: string
+    email?: string
+}
+
 
 export class ChatsApi extends BaseAPI {
 
@@ -40,8 +48,8 @@ export class ChatsApi extends BaseAPI {
         return this._api.delete("", {data: {chatId}})
     }
 
-    requestChatUsers(chatId: number): Observable {
-        return this._api.get(`/${chatId}/users`)
+    requestChatUsers(chatId: number, requstParams?: RequestChatUsersParams): Observable {
+        return this._api.get(`/${chatId}/users`, {data: requstParams})
     }
 
     requestChatNewMessages(chatId: number): Observable {

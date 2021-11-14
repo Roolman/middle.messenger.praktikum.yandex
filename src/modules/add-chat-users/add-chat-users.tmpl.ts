@@ -1,4 +1,4 @@
-export default
+const addChatUsersTemplate = 
 `
 <h3>Добавить пользователей</h3>
 <div data-ref="seclectedUsersContainer" class="add-chat__selected-users">
@@ -20,4 +20,15 @@ export default
     {{/each}}
 </div>
 <div data-component="nextButton"></div>
+`
+
+export default
+`
+{{#if isModal}}
+    <div class="modal-content">
+        ${addChatUsersTemplate}
+    </div>
+{{else}}
+    ${addChatUsersTemplate}
+{{/if}}
 `

@@ -27,7 +27,6 @@ $profile_main_info_width: 510px;
   flex-direction: column;
   width: 100%;
   align-items: center;
-  justify-content: center;
 }
 
 .settings__main-avatar-container {
@@ -35,6 +34,7 @@ $profile_main_info_width: 510px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-top: 45px;
 
   .settings__main-avatar {
     width: 130px;

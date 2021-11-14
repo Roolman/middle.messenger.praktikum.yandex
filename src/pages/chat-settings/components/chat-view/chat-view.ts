@@ -1,23 +1,28 @@
 import { Button } from "../../../../components/button";
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { Component, ComponentProps } from "../../../../utils/classes/component";
+import { Component } from "../../../../utils/classes/component";
 import { Observable } from "../../../../utils/classes/observable";
 import { Inject } from "../../../../utils/decorators/inject";
 
 import tmpl from "./chat-view.tmpl"
 import "./chat-view.scss"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service";
+import { ComponentChild, ComponentProps } from "../../../../types/components/component";
+import { User } from "../../../../types/state/user";
+import { ChatUserItem } from "../chat-user-item";
 
 type ChatViewProps = ComponentProps & {
-    chat?: ChatData
-    chatId: string
+    chat: ChatData
+    users?: ComponentChild<ChatUserItem>[]
+    onAddUsersButton: Function
+    onDeleteChatButton: Function
+    onDeleteUserButton: Function
     onAvatar: Function
 }
 
 export class ChatView extends Component {
     props: ChatViewProps
 
-    editDataButton: Button
     addUsersButton: Button
     deleteChatButton: Button
     avatar: HTMLElement
@@ -30,17 +35,11 @@ export class ChatView extends Component {
     }
 
     setDefaultProps(props: ChatViewProps): ChatViewProps {
+        const usersChildComponents = this._getChatUserItemComponents(this._chatsService.chat?.users || [])
         return {
             ...props,
             componentClassName: "settings__main",
             children: [
-                {
-                    name: "editDataButton",
-                    component: new Button({
-                        title: "Изменить данные",
-                        type: BUTTON_TYPES.LINK,
-                    }),
-                },
                 {
                     name: "addUsersButton",
                     component: new Button({
@@ -56,49 +55,70 @@ export class ChatView extends Component {
                         theme: BUTTON_THEMES.DANGER,
                     }),
                 },
-            ]
+                ...usersChildComponents
+            ],
+            users: usersChildComponents
         }
     }
 
     componentDidInit() {
-        this._subscriptions.push(this._chatsService.chatObservable.subscribe(
-            (chat: ChatData) => {
-                this.setProps({ chat: chat })
-            },
+        this._subscriptions.push(
+            this._chatsService.chatObservable.subscribe(
+                (chat: ChatData) => {
+                    this.setProps({
+                         chat: chat,
+                         users: this._getChatUserItemComponents(chat.users || [])
+                    })
+                },
         ))
-        // В случае если переход на страницу произошел через адресную строку
-        if(!this.props.chat) {
-            this._chatsService.getChats()
-            this._chatsService.getChat(this.props.chatId)
-        }
     }
 
     componentDidMount() {
         // Кнопки
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.editDataButton.element, "click")
-                .subscribe(() => this.props.onEditDataButton()),
+            .fromEvent(this.addUsersButton.element, "click")
+            .subscribe(() => {
+                this.props.onAddUsersButton()
+            }),
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.addUsersButton.element, "click")
-                .subscribe(() => {
-                    alert("Откыть модуль добавления пользователей!")
-                }),
-        )
-        this._onMountSubscriptions.push(
-            Observable
-                .fromEvent(this.deleteChatButton.element, "click")
-                .subscribe(() => {
-                    alert("Открыть модал удалить чат?")
-                }),
+            .fromEvent(this.deleteChatButton.element, "click")
+            .subscribe(() => {
+                this.props.onDeleteChatButton()
+            }),
         )
         // Аватар
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.avatar, "click")
-                .subscribe(() => this.props.onAvatar()),
+            .fromEvent(this.avatar, "click")
+            .subscribe(() => this.props.onAvatar()),
         )
+    }
+
+    private _getChatUserItemComponents(users: User[]): ComponentChild<ChatUserItem>[] {
+        const chatsUserItemComponents: ComponentChild<ChatUserItem>[] = users.map((x, i) => ({
+            name: `chatUserItemComponent__${i}`,
+            component: new ChatUserItem({
+                user: x,
+                onUserDelete: () => {
+                    this.props.onDeleteUserButton(x)
+                },
+                isChatCreator: this._isUserChatCreator(x)
+            }),
+        }))
+        // Обновляем children компонента для ререндера
+        if (this.props?.children) {
+            this.props.children = this.props.children.filter(
+                (x) => !x.name.includes("chatUserItemComponent"),
+            )
+            this.props.children.push(...chatsUserItemComponents)
+        }
+        return chatsUserItemComponents
+    }
+
+    private _isUserChatCreator(user: User): boolean {
+        return this._chatsService.chat?.created_by === user.id
     }
 }

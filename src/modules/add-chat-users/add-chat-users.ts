@@ -15,6 +15,8 @@ import isEqual from "../../utils/helpers/isEqual"
 type AddChatUsersProps = ComponentProps & {
     selectedUsers?: User[]
     fetchedUsers?: ComponentChild<UsersListItem>[]
+    isModal?: boolean
+    nextButtonTitle?: string
     onNextButton: Function
 }
 
@@ -37,7 +39,7 @@ export class AddChatUsers extends Component {
     setDefaultProps(props: AddChatUsersProps): AddChatUsersProps {
         return {
             ...props,
-            componentClassName: "modal-content",
+            componentClassName: props.isModal ? "modal-container" : "modal-content",
             selectedUsers: [],
             fetchedUsers: [],
             children: [
@@ -56,7 +58,7 @@ export class AddChatUsers extends Component {
                 {
                     name: "nextButton",
                     component: new Button({
-                        title: "Далее",
+                        title: props.nextButtonTitle || "Далее",
                         styles: {
                             width: "100%"
                         }
@@ -68,6 +70,20 @@ export class AddChatUsers extends Component {
 
     componentDidInit() {
         this.hide()
+        if(this.props.isModal) {
+            this._subscriptions.push(
+                Observable
+                .fromEvent(this.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        const target = e.target as HTMLElement
+                        if(target.classList.contains(this.props.componentClassName  as string)) {
+                            this.hide()
+                        }
+                    }
+                )
+            )
+        }
     }
 
     componentDidRender() {
