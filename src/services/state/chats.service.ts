@@ -2,7 +2,7 @@ import { AddDeleteChatUsers, ChatsApi, RequestChatsParams, RequestChatUsersParam
 import { RESOURCES_URL } from "../../constants/api"
 import { ServerErrorResponse } from "../../types/api"
 import { User } from "../../types/state/user"
-import { Observable } from "../../utils/classes/observable"
+import { Observable, Subscription } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import { Inject } from "../../utils/decorators/inject"
 import { getShortChatDate } from "../../utils/helpers/date.utils"
@@ -45,6 +45,8 @@ export type LastMessageData = {
 
 export class ChatsService {
 
+    private _subscriptions: Subscription[]
+
     private _chatsApi: ChatsApi
 
     public chatsObservable: Observable
@@ -69,6 +71,8 @@ export class ChatsService {
     private _userService: UserService
 
     constructor() {
+        this._subscriptions = []
+
         this._chatsApi = new ChatsApi()
 
         this._chats = []
@@ -97,14 +101,13 @@ export class ChatsService {
                 limit: 1000
             }
         }
-        this
+        const getChatsSub = this
         ._chatsApi
         .request(data)
         .subscribe(
             (chats: ChatData[]) => {
                 // TODO: Подумать о создании новых чатов
                 this._chats = this._mapChats(chats)
-                console.log(this._chats)
                 this._chatsSubject.next(this._chats)
             },
             (err: ServerErrorResponse) => {
@@ -112,10 +115,11 @@ export class ChatsService {
                 this._snackBar.open("Сервис не доступен. Попробуйте позже")
             }
         )
+        this._subscriptions.push(getChatsSub)
     }
 
     createChat(title: string, users?: User[], avatar?: File | null): void {
-        this._chatsApi.create(title).subscribe(
+        const createChatSub = this._chatsApi.create(title).subscribe(
             (response: {id: number}) => {
 
                 const newChat: ChatData = {
@@ -149,6 +153,7 @@ export class ChatsService {
                 this._snackBar.open("Ошибка создания чата", SNACKBAR_TYPE.ERROR)
             }
         )
+        this._subscriptions.push(createChatSub)
     }
 
     setChat(chatId: number): void {
@@ -175,7 +180,7 @@ export class ChatsService {
         const requestParams: RequestChatUsersParams = {
             limit: 1000
         }
-        this._chatsApi
+        const getChatUsersSub = this._chatsApi
             .requestChatUsers(chatId, requestParams)
             .subscribe(
                 (users: User[]) => {
@@ -193,11 +198,12 @@ export class ChatsService {
                 (err: ServerErrorResponse) => {
                     console.log(err)
                 }
-            )
+        )
+        this._subscriptions.push(getChatUsersSub)
     }
 
     uploadChatAvatar(data: UploadChatAvatar): void {
-        this
+        const uploadChatAvatarSub = this
         ._chatsApi
         .loadChatAvatar(data)
         .subscribe((uploadresponse: ChatDataShort) => {
@@ -213,11 +219,12 @@ export class ChatsService {
                 this._chatSubject.next(this._chat)
                 this._snackBar.open("Аватар изменен", SNACKBAR_TYPE.SUCCESS)
             }
-        })        
+        }) 
+        this._subscriptions.push(uploadChatAvatarSub)       
     }
 
     addChatUsers(data: AddDeleteChatUsers): void {
-        this
+        const addChatUsersSub = this
         ._chatsApi
         .addChatUsers(data)
         .subscribe(
@@ -225,11 +232,12 @@ export class ChatsService {
                 // Обновляем список пользователей
                 this.getChatUsers(data.chatId)
             }
-        )        
+        )
+        this._subscriptions.push(addChatUsersSub)        
     }
 
     deleteChatUsers(data: AddDeleteChatUsers): void {
-        this
+        const deleteChatUsersSub = this
         ._chatsApi
         .deleteChatUsers(data)
         .subscribe(
@@ -237,11 +245,12 @@ export class ChatsService {
                 // Обновляем список пользователей
                 this.getChatUsers(data.chatId)
             }
-        )      
+        ) 
+        this._subscriptions.push(deleteChatUsersSub)     
     }
 
     deleteChat(chatId: number): void {
-        this._chatsApi
+        const deleteChatSub = this._chatsApi
             .delete(chatId)
             .subscribe(
                 () => {
@@ -253,7 +262,8 @@ export class ChatsService {
                 (err: ServerErrorResponse) => {
                     this._snackBar.open("Ошибка удаления чата", SNACKBAR_TYPE.ERROR)
                 }
-            )
+        )
+        this._subscriptions.push(deleteChatSub)
     }
 
     onGetOldMessages(messages:  Message[], chatId: number): void {
@@ -284,10 +294,26 @@ export class ChatsService {
         }        
     }
 
+    // Закрыть все подписки, сокеты и реинициализировать данные
+    destroy() {
+        // Закрываем подписки
+        for(let sub of this._subscriptions) {
+            sub.unsubscribe()
+        }
+        // Закрываем веб сокеты
+        for(let chat of this._chats) {
+            chat.messenger?.destroy()
+        }
+        // Реинициализируем данные
+        this._chat = null
+        this._chats = []
+        this._chatSubject.next(this._chat)
+        this._chatsSubject.next(this._chats)
+    }
+
     private _mapChats(chats: ChatData[]) {
         const chatIds = this._chats.map(x => x.id)
         const {id, avatar, ...authUser} = this._userService.user as User
-        console.log(authUser)
         // TODO: Заменить поиск на более оптимальный
         return chats.map(
             (x: ChatData) => {

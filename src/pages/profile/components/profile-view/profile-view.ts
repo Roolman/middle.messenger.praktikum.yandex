@@ -9,6 +9,7 @@ import "./profile-view.scss"
 import { UserService } from "../../../../services/state/user.service";
 import { ComponentProps } from "../../../../types/components/component";
 import { User } from "../../../../types/state/user";
+import { ChatsService } from "../../../../services/state/chats.service";
 
 type ProfilewViewProps = ComponentProps & {
     user: User |  null
@@ -27,6 +28,9 @@ export class ProfileView extends Component {
 
     @Inject(UserService)
     private _userService: UserService
+
+    @Inject(ChatsService)
+    private _chatsService: ChatsService
 
     constructor(props: ProfilewViewProps) {
         super("div", props, tmpl)
@@ -91,6 +95,7 @@ export class ProfileView extends Component {
             .fromEvent(this.logoutButton.element, "click")
             .subscribe(() => {
                 this._userService.logOut()
+                this._chatsService.destroy()
             }),
         )
         // Аватар

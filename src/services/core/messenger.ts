@@ -4,7 +4,7 @@ import { MESSENGER_EVENTS } from "../../constants/messenger";
 import { Indexed } from "../../types";
 import { ServerErrorResponse } from "../../types/api";
 import { User } from "../../types/state/user";
-import { Observable } from "../../utils/classes/observable";
+import { Observable, Subscription } from "../../utils/classes/observable";
 
 export type MessengerProps = {
     chatId: number
@@ -38,6 +38,8 @@ type WSDataServerResponse = Indexed & {type?: string} | Array<Indexed & {type: s
 
 export class Messenger {
 
+    private _subscriptions: Subscription[]
+
     private _socket: WebSocket
     private _token: string
 
@@ -59,107 +61,121 @@ export class Messenger {
         this._onNewMessage = props.onNewMessage
         this._onGetOldMessages = props.onGetOldMessages
 
+        this._subscriptions = []
+
         this.connect()
     }
 
     connect() {
-        this
-        ._api
-        .requestToken(this._chatId)
-        .subscribe(
-            ({token}: {token: string}) => {
-                this._token = token
-                this._socket = new WebSocket(WEBSOCKET_BASE_URL + `${this._user.id}/${this._chatId}/${token}`)
-                this.init()
-            },
-            (err: ServerErrorResponse) => {
-                console.log(err)
-            }
+        this._subscriptions.push(
+            this
+            ._api
+            .requestToken(this._chatId)
+            .subscribe(
+                ({token}: {token: string}) => {
+                    this._token = token
+                    this._socket = new WebSocket(WEBSOCKET_BASE_URL + `${this._user.id}/${this._chatId}/${token}`)
+                    this.init()
+                },
+                (err: ServerErrorResponse) => {
+                    console.log(err)
+                }
+            )
         )
     }
 
     init() {
-        Observable
-        .fromEvent(this._socket, "open")
-        .subscribe(
-            () => {
-                console.log('Соединение установлено')
-                // NOTE: Пингуем сокет раз в секунду
-                this._pingTimer = setInterval(
-                    () => {
-                        this.pingChat()
-                    },
-                    5000
-                )
-            }
+        this._subscriptions.push(
+            Observable
+            .fromEvent(this._socket, "open")
+            .subscribe(
+                () => {
+                    console.log('Соединение установлено')
+                    // NOTE: Пингуем сокет раз в секунду
+                    this._pingTimer = setInterval(
+                        () => {
+                            this.pingChat()
+                        },
+                        5000
+                    )
+                }
+            )
         )
 
-        Observable
-        .fromEvent(this._socket, "close")
-        .subscribe(
-            (event: CloseEvent) => {
-                if (event.wasClean) {
-                    console.log('Соединение закрыто чисто')
-                } 
-                else {
-                    console.log('Обрыв соединения')
-                }
 
-                clearInterval(this._pingTimer)
-            
-                console.log(`Код: ${event.code} | Причина: ${event.reason}`)
-            }
+        this._subscriptions.push(
+            Observable
+            .fromEvent(this._socket, "close")
+            .subscribe(
+                (event: CloseEvent) => {
+                    if (event.wasClean) {
+                        console.log('Соединение закрыто чисто')
+                    } 
+                    else {
+                        console.log('Обрыв соединения')
+                    }
+    
+                    clearInterval(this._pingTimer)
+                
+                    console.log(`Код: ${event.code} | Причина: ${event.reason}`)
+                }
+            )              
         )
 
-        Observable
-        .fromEvent(this._socket, "message")
-        .subscribe(
-            (event: MessageEvent) => {
-                let data: WSDataServerResponse = JSON.parse(event.data)
-                let type
-                if(Array.isArray(data)) {
-                    type = data[0]?.type
+        this._subscriptions.push(
+            Observable
+            .fromEvent(this._socket, "message")
+            .subscribe(
+                (event: MessageEvent) => {
+                    let data: WSDataServerResponse = JSON.parse(event.data)
+                    let type
+                    if(Array.isArray(data)) {
+                        type = data[0]?.type
+                    }
+                    else {
+                        type = data.type
+                    }
+                    switch(type) {
+                        case MESSENGER_EVENTS.MESSAGE:
+                            if(Array.isArray(data)) {
+                                data = data as Message[]
+                                this._onGetOldMessages(data, this._chatId)
+                            }
+                            else {
+                                data = data as Message
+                                this._onNewMessage(data, this._chatId)
+                            }
+                            break
+                        case MESSENGER_EVENTS.PONG:
+                            //
+                            break
+                        case MESSENGER_EVENTS.USER_CONNECTED:
+                            //
+                            break
+                        case MESSENGER_EVENTS.FILE:
+                            data = event.data as Message[]
+                            //
+                            break
+                        case MESSENGER_EVENTS.STICKER:
+                            data = event.data as Message[]
+                            //
+                            break
+                        default: 
+                            break
+                    }
                 }
-                else {
-                    type = data.type
-                }
-                switch(type) {
-                    case MESSENGER_EVENTS.MESSAGE:
-                        if(Array.isArray(data)) {
-                            data = data as Message[]
-                            this._onGetOldMessages(data, this._chatId)
-                        }
-                        else {
-                            data = data as Message
-                            this._onNewMessage(data, this._chatId)
-                        }
-                        break
-                    case MESSENGER_EVENTS.PONG:
-                        //
-                        break
-                    case MESSENGER_EVENTS.USER_CONNECTED:
-                        //
-                        break
-                    case MESSENGER_EVENTS.FILE:
-                        data = event.data as Message[]
-                        //
-                        break
-                    case MESSENGER_EVENTS.STICKER:
-                        data = event.data as Message[]
-                        //
-                        break
-                    default: 
-                        break
-                }
-            }
+            )            
         )
 
-        Observable
-        .fromEvent(this._socket, "error")
-        .subscribe(
-            (event: ErrorEvent) => {
-                console.log('Ошибка', event.message)
-            }
+
+        this._subscriptions.push(
+            Observable
+            .fromEvent(this._socket, "error")
+            .subscribe(
+                (event: ErrorEvent) => {
+                    console.log('Ошибка', event.message)
+                }
+            )           
         )
     }
 
@@ -173,6 +189,14 @@ export class Messenger {
 
     pingChat() {
         this._send("ping", MESSENGER_EVENTS.PING)   
+    }
+
+    destroy() {
+        for(let sub of this._subscriptions) {
+            sub.unsubscribe()
+        }
+        clearInterval(this._pingTimer)
+        this._socket.close(1000)
     }
 
     private _send(content: string | number, type: string) {
