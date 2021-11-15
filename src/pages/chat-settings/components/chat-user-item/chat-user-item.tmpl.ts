@@ -13,7 +13,7 @@ export default
         <span>{{user.login}}</span>
     </div>
 </div>
-{{#unless isChatCreator}}
+{{#unless isChatCreatorOrAuthUser}}
 <div class="chat__user-delete">
     <i data-ref="deleteElement" class="fa fa-times"></i>
 </div>

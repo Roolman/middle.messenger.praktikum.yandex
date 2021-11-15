@@ -16,9 +16,14 @@ export default
             {{#unless messagesComponents}}
                 <div class="chat__messages-no-messages">Отправьте первое сообщение</div>
             {{/unless}}
-            {{#each messagesComponents}}
-                <div data-component="{{ this.name }}"></div>
-            {{/each}}
+            {{#if messagesComponents}}
+                {{#unless allMessagesLoaded}}
+                    <div data-ref="loadMoreButton" class="chat__messages-load-more">Загрузить еще</div>
+                {{/unless}}
+                {{#each messagesComponents}}
+                    <div data-component="{{ this.name }}"></div>
+                {{/each}}
+            {{/if}}
         </div>
         <div data-ref="chatInput" class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>

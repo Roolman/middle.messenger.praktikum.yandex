@@ -8,7 +8,7 @@ import { Observable } from "../../../../utils/classes/observable";
 
 type ChatUserItemProps = ComponentProps & {
     user: User
-    isChatCreator: boolean
+    isChatCreatorOrAuthUser: boolean
     onUserDelete: Function
 }
 
@@ -33,7 +33,7 @@ export class ChatUserItem extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.isChatCreator) {
+        if(!this.props.isChatCreatorOrAuthUser) {
             this._onMountSubscriptions.push(
                 Observable
                 .fromEvent(this.deleteElement, "click")

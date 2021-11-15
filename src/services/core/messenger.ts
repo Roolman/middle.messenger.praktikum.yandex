@@ -15,7 +15,7 @@ export type MessengerProps = {
 }
 
 export type Message = {
-    id: string
+    id: number
     time: string
     type: string
     user_id: number

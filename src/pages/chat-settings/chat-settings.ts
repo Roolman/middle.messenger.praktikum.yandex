@@ -16,9 +16,11 @@ import { AddDeleteChatUsers, UploadChatAvatar } from "../../api/chats.api";
 import { ConfirmModal } from "../../modules/confirm-modal";
 import { AddChatUsers } from "../../modules/add-chat-users";
 import { User } from "../../types/state/user";
+import { UserService } from "../../services/state/user.service";
 
 type ChatSettingsProps = ComponentProps & {
     chat: ChatData
+    isUserChatCreator?: boolean
 }
 
 export class ChatSettings extends Component {
@@ -38,6 +40,9 @@ export class ChatSettings extends Component {
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor(props: ChatSettingsProps) {
         super("div", props, tmpl)
@@ -85,21 +90,26 @@ export class ChatSettings extends Component {
                             this.addChatUsers.show()
                         },
                         onDeleteChatButton: () => {
-                            this._onChatDelete()
+                            const user = this._userService.user as User
+                            // Если создатель, то удялаем чат
+                            if(this._isUserChatCreator(user)) {
+                                this._onChatDelete()
+                            }
+                            else {
+                                // Иначе покидаем
+                                const data: AddDeleteChatUsers = {
+                                    chatId: this.props.chat.id,
+                                    users: [user.id]
+                                }
+                                this._onDeleteChatUser(data, "Вы уверены, что хотите покинуть чат?", true)
+                            }
                         },
                         onDeleteUserButton: (user: User) => {
-                            this.confirmModal.setProps({
-                                description: "Вы уверены, что хотите удалить пользователя?",
-                                onConfirm: () => {
-                                    const data: AddDeleteChatUsers = {
-                                        chatId: this.props.chat.id,
-                                        users: [user.id]
-                                    }
-                                    this._chatsService.deleteChatUsers(data)
-                                    this.confirmModal.hide()
-                                }
-                            })
-                            this.confirmModal.show()
+                            const data: AddDeleteChatUsers = {
+                                chatId: this.props.chat.id,
+                                users: [user.id]
+                            }  
+                            this._onDeleteChatUser(data, "Вы уверены, что хотите удалить пользователя?")
                         },
                         onAvatar: () => {
                             this.сhangeAvatar.show()
@@ -164,5 +174,25 @@ export class ChatSettings extends Component {
             }
         })
         this.confirmModal.show()
+    }
+
+    private _onDeleteChatUser(data: AddDeleteChatUsers, description: string, leavePage?: boolean) {
+        this.confirmModal.setProps({
+            description: description,
+            onConfirm: () => {             
+                this._chatsService.deleteChatUsers(data)
+                this.confirmModal.hide()
+                // Покинуть страницу и обновить чаты
+                if(leavePage) {
+                    this._chatsService.getChats()
+                    Router.go(PAGES.MAIN)
+                }
+            }
+        })
+        this.confirmModal.show()
+    }
+    
+    private _isUserChatCreator(user: User): boolean {
+        return this._chatsService.chat?.created_by === user.id
     }
 }

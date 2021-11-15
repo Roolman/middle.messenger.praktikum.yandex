@@ -10,6 +10,7 @@ import { ChatData, ChatsService } from "../../../../services/state/chats.service
 import { ComponentChild, ComponentProps } from "../../../../types/components/component";
 import { User } from "../../../../types/state/user";
 import { ChatUserItem } from "../chat-user-item";
+import { UserService } from "../../../../services/state/user.service";
 
 type ChatViewProps = ComponentProps & {
     chat: ChatData
@@ -30,12 +31,16 @@ export class ChatView extends Component {
     @Inject(ChatsService)
     private _chatsService: ChatsService
 
+    @Inject(UserService)
+    private _userService: UserService
+
     constructor(props: ChatViewProps) {
         super("div", props, tmpl)
     }
 
     setDefaultProps(props: ChatViewProps): ChatViewProps {
         const usersChildComponents = this._getChatUserItemComponents(this._chatsService.chat?.users || [])
+        const onDeleteTitle = this._isUserChatCreator(this._userService.user as User) ? "Удалить чат" : "Покинуть чат"
         return {
             ...props,
             componentClassName: "settings__main",
@@ -50,7 +55,7 @@ export class ChatView extends Component {
                 {
                     name: "deleteChatButton",
                     component: new Button({
-                        title: "Удалить чат",
+                        title: onDeleteTitle,
                         type: BUTTON_TYPES.LINK,
                         theme: BUTTON_THEMES.DANGER,
                     }),
@@ -105,7 +110,7 @@ export class ChatView extends Component {
                 onUserDelete: () => {
                     this.props.onDeleteUserButton(x)
                 },
-                isChatCreator: this._isUserChatCreator(x)
+                isChatCreatorOrAuthUser: this._isUserChatCreator(x) || this._isAuthUser(x)
             }),
         }))
         // Обновляем children компонента для ререндера
@@ -120,5 +125,9 @@ export class ChatView extends Component {
 
     private _isUserChatCreator(user: User): boolean {
         return this._chatsService.chat?.created_by === user.id
+    }
+
+    private _isAuthUser(user: User): boolean {
+        return this._userService.user?.id === user.id
     }
 }

@@ -26,6 +26,7 @@ export type ChatData = {
     selected?: boolean
     // Отображаемые сообщения в чате
     messages?: Message[]
+    allMessagesLoaded?: boolean
     // Сервис обмена сообщениями для чата
     messenger?: Messenger
 }
@@ -266,17 +267,24 @@ export class ChatsService {
         this._subscriptions.push(deleteChatSub)
     }
 
+    loadMoreMessages(): void {
+        if(this._chat && this._chat.messages?.length) {
+            const lastMessageId = this._chat.messages[0].id
+            this._chat.messenger?.getOldMessages(lastMessageId)
+        }
+    }
+
     onGetOldMessages(messages:  Message[], chatId: number): void {
         const chat = this._chats.find(x => x.id === chatId)
         if(chat) {
             chat.messages?.unshift(...messages.reverse())
-            if(chat === this._chat) {
-                this._chatSubject.next(chat)
+            // Если получили меньше 20, то больше нет сообщений
+            if(messages.length < 20) {
+                chat.allMessagesLoaded = true
             }
-            else {
-                // TODO: 
-                // this._chatsSubject.next(this._chats)
-            }
+            // NOTE: Вызов функции только для текущего чата!!!
+            this._chat = chat
+            this._chatSubject.next(chat)
         }
     }
 

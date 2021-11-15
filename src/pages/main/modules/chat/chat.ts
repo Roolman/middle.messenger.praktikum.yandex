@@ -36,6 +36,9 @@ export class Chat extends Component {
     messagesContainer: HTMLElement
     isInputFocused: boolean
 
+    loadMoreButton: HTMLElement
+    onLoadMoreWasTriggered: boolean
+
     @Inject(ChatsService)
     private _chatsService: ChatsService
 
@@ -104,7 +107,12 @@ export class Chat extends Component {
                         })
                         // TODO: Скролить только тогда, когда сообщение было отправело мною
                         // Иначе показывать типо не прочитанное сообщение и скролл вниз
-                        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
+                        if(!this.onLoadMoreWasTriggered) {
+                            this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
+                        }
+                        else {
+                            this.onLoadMoreWasTriggered = false
+                        }
                     },
                 ),
         )
@@ -170,6 +178,16 @@ export class Chat extends Component {
                     () => this.isInputFocused = false
                 )
             )
+            if(this.loadMoreButton) {
+                Observable
+                .fromEvent(this.loadMoreButton, "click")
+                .subscribe(
+                    () => {
+                        this.onLoadMoreWasTriggered = true
+                        this._chatsService.loadMoreMessages()
+                    }
+                )
+            }
         }
     }
 
