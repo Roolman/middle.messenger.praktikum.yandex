@@ -38,7 +38,7 @@ type ChatDataShort = {
 }
 
 export type LastMessageData = {
-    user: User
+    user: Omit<User, "id">
     time: Date
     content: string
 }
@@ -57,6 +57,9 @@ export class ChatsService {
 
     get chat(): ChatData | null {
         return this._chat
+    }
+    get chats(): ChatData[] {
+        return this._chats
     }
 
     @Inject(SnackBarService)
@@ -101,6 +104,7 @@ export class ChatsService {
             (chats: ChatData[]) => {
                 // TODO: Подумать о создании новых чатов
                 this._chats = this._mapChats(chats)
+                console.log(this._chats)
                 this._chatsSubject.next(this._chats)
             },
             (err: ServerErrorResponse) => {
@@ -154,7 +158,6 @@ export class ChatsService {
             this._chats = this._chats.map((x) => ({ ...x, selected: x.id === id }))
 
             // Если нет сообщений в чате, то получаем с 0го
-            console.log(this._chat.messages)
             if(!this._chat.messages?.length) {
                 this._chat.messenger?.getOldMessages(0)
             }
@@ -283,16 +286,23 @@ export class ChatsService {
 
     private _mapChats(chats: ChatData[]) {
         const chatIds = this._chats.map(x => x.id)
+        const {id, avatar, ...authUser} = this._userService.user as User
+        console.log(authUser)
         // TODO: Заменить поиск на более оптимальный
         return chats.map(
             (x: ChatData) => {
+                let lastMessageUser
+                if(x.last_message) {
+                    const {avatar, ...lastMessageUserData} = x.last_message.user
+                    lastMessageUser = lastMessageUserData
+                }
                 if(chatIds.includes(x.id)) {
                     const existingChat = this._chats.find(c => c.id === x.id) as ChatData
                     return {
                         ...existingChat,
                         avatar: x.avatar ? RESOURCES_URL + x.avatar: null,
                         lastMessageTimeShort: x.last_message ? getShortChatDate(new Date(x.last_message.time)) : undefined,
-                        lastMessageSentByUser: isEqual(x.last_message?.user, this._userService.user),
+                        lastMessageSentByUser: isEqual(lastMessageUser, authUser),
                     }
                 }
                 else {
@@ -300,7 +310,7 @@ export class ChatsService {
                         ...x,
                         avatar: x.avatar ? RESOURCES_URL + x.avatar: null,
                         lastMessageTimeShort: x.last_message ? getShortChatDate(new Date(x.last_message.time)) : undefined,
-                        lastMessageSentByUser: isEqual(x.last_message?.user, this._userService.user),
+                        lastMessageSentByUser: isEqual(lastMessageUser, authUser),
                         messages: [],
                         messenger: new Messenger({
                             chatId: x.id,

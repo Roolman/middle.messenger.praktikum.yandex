@@ -55,6 +55,15 @@ $input_height: 55px;
   height: calc(100vh - $header_height - $input_height);
   overflow: auto;
 
+  .chat__messages-no-messages {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    height: 100%;
+    font-size: larger;
+    color: $secondary_color;
+  }
+
   &::-webkit-scrollbar {
     display: none;
   }

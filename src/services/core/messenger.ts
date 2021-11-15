@@ -118,7 +118,7 @@ export class Messenger {
                 let data: WSDataServerResponse = JSON.parse(event.data)
                 let type
                 if(Array.isArray(data)) {
-                    type = data[0].type
+                    type = data[0]?.type
                 }
                 else {
                     type = data.type

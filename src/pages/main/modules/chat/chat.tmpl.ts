@@ -14,7 +14,7 @@ export default
         </div>
         <div data-ref="messagesContainer" class="chat__messages">
             {{#unless messagesComponents}}
-                <h4>Сообщений нет</h4>
+                <div class="chat__messages-no-messages">Отправьте первое сообщение</div>
             {{/unless}}
             {{#each messagesComponents}}
                 <div data-component="{{ this.name }}"></div>

@@ -44,10 +44,11 @@ export class Chats extends Component {
     }
 
     setDefaultProps(props: ChatsProps): ChatsProps {
+        const chatsChildComponents = this._getChatsPreviewComponents(this._chatsService.chats)
         return {
             ...props,
             componentClassName: "chats",
-            chats: [],
+            chats: chatsChildComponents,
             children: [
                 {
                     name: "addChatButton",
@@ -60,7 +61,8 @@ export class Chats extends Component {
                 {
                     name: "searchInput",
                     component: new SearchInput({})
-                }
+                },
+                ...chatsChildComponents
             ],
         }
     }
@@ -146,7 +148,7 @@ export class Chats extends Component {
             component: new ChatPreview(x),
         }))
         // Обновляем children компонента для ререндера
-        if (this.props.children) {
+        if (this.props?.children) {
             this.props.children = this.props.children.filter(
                 (x) => !x.name.includes("chatsPreviewComponent"),
             )

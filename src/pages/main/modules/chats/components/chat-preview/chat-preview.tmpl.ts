@@ -18,7 +18,7 @@ export default
             <div class="chats__chat-info">
                 <span class="chats__chat-last-message">
                     {{#if lastMessageSentByUser}}
-                        <span class="chats__chat-last-message-sent-by-user">Вы :</span>
+                        <span class="chats__chat-last-message-sent-by-user">Вы:</span>
                     {{/if}}
                     {{ last_message.content }}
                 </span>

@@ -34,6 +34,7 @@ export class Chat extends Component {
 
     chatInput: HTMLElement
     messagesContainer: HTMLElement
+    isInputFocused: boolean
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
@@ -97,11 +98,12 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
-                        console.log(chat.messages)
                         this.setProps({
                             ...chat,
                             messagesComponents: this._getMessagesComponents(chat.messages || []),
                         })
+                        // TODO: Скролить только тогда, когда сообщение было отправело мною
+                        // Иначе показывать типо не прочитанное сообщение и скролл вниз
                         this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
                     },
                 ),
@@ -115,6 +117,10 @@ export class Chat extends Component {
             this.element.classList.remove("chat_empty")
             // Добавляем класс к форме
             this.sendForm.element.classList.add("chat__input-width")
+            //
+            if(this.isInputFocused) {
+                this.sendForm.formElements[0].inputElement.focus()
+            }
         }
     }
 
@@ -131,6 +137,7 @@ export class Chat extends Component {
                                 const messageInput = this.sendForm.formElements[0] as MessageInput
                                 this.props.messenger?.sendMessage(messageInput.value)
                                 messageInput.value = ''
+                                this.isInputFocused = true
                             }
                         },
                     ),
@@ -148,6 +155,20 @@ export class Chat extends Component {
                             Router.go(PAGES.CHATSETTINGS + `/${this.props.id}`)
                         },
                     ),
+            )
+            this._onMountSubscriptions.push(
+                Observable
+                .fromEvent(this.sendForm.formElements[0].inputElement, "focus")
+                .subscribe(
+                    () => this.isInputFocused = true
+                )
+            )
+            this._onMountSubscriptions.push(
+                Observable
+                .fromEvent(this.sendForm.formElements[0].inputElement, "blur")
+                .subscribe(
+                    () => this.isInputFocused = false
+                )
             )
         }
     }

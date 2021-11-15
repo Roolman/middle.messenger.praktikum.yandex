@@ -78,27 +78,27 @@ export class ProfileView extends Component {
         // Кнопки
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.editDataButton.element, "click")
-                .subscribe(() => this.props.onEditDataButton()),
+            .fromEvent(this.editDataButton.element, "click")
+            .subscribe(() => this.props.onEditDataButton()),
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.changePasswordButton.element, "click")
-                .subscribe(() => this.props.onChangePasswordButton()),
+            .fromEvent(this.changePasswordButton.element, "click")
+            .subscribe(() => this.props.onChangePasswordButton()),
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.logoutButton.element, "click")
-                .subscribe(() => {
-                    this._userService.logOut()
-                }),
+            .fromEvent(this.logoutButton.element, "click")
+            .subscribe(() => {
+                this._userService.logOut()
+            }),
         )
         // Аватар
         if(this.avatar) {
             this._onMountSubscriptions.push(
                 Observable
-                    .fromEvent(this.avatar, "click")
-                    .subscribe(() => this.props.onAvatar()),
+                .fromEvent(this.avatar, "click")
+                .subscribe(() => this.props.onAvatar()),
             )
         }
     }
