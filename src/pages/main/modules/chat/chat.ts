@@ -7,21 +7,22 @@ import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
 import { Component } from "../../../../utils/classes/component"
-import { ChatData, ChatsService, MessageData } from "../../../../services/state/chats.service"
+import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
-import { MessageInput } from "./components/message-input"
+import { MessageInput } from "./components/message-Input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
 import Router from "../../../../services/core/router"
 import { PAGES } from "../../../../services/core/navigation"
 import { ComponentChild, ComponentProps } from "../../../../types/components/component"
+import { MessageView } from "./components/message/message"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
 type ChatProps = ComponentProps & ChatData & {
-    messagesComponents: ComponentChild<Message>[]
+    messagesComponents: ComponentChild<MessageView>[]
 }
 
 export class Chat extends Component {
@@ -96,10 +97,12 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
+                        console.log(chat.messages)
                         this.setProps({
                             ...chat,
                             messagesComponents: this._getMessagesComponents(chat.messages || []),
                         })
+                        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
                     },
                 ),
         )
@@ -125,10 +128,9 @@ export class Chat extends Component {
                             e.preventDefault()
 
                             if (this.sendForm.isValid) {
-                                let message = this.sendForm.formElements[0].value
-                                console.log(message)
-                                // this._chatsService.addMessage(message)
-                                message = ""
+                                const messageInput = this.sendForm.formElements[0] as MessageInput
+                                this.props.messenger?.sendMessage(messageInput.value)
+                                messageInput.value = ''
                             }
                         },
                     ),
@@ -158,10 +160,10 @@ export class Chat extends Component {
         }
     }
 
-    private _getMessagesComponents(messages: MessageData[]): ComponentChild<Message>[] {
+    private _getMessagesComponents(messages: Message[]): ComponentChild<MessageView>[] {
         const messagesComponents = messages.map((x, i) => ({
             name: `message__${i}`,
-            component: new Message(x),
+            component: new MessageView(x),
         }))
         // Обновляем children компонента для ререндера
         if (this.props.children) {

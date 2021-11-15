@@ -1,5 +1,5 @@
 export enum MESSAGE_TYPES {
-    TEXT = "TEXT",
+    TEXT = "message",
     IMAGE = "IMAGE",
 }
 

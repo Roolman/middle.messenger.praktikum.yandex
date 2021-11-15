@@ -14,6 +14,8 @@ import { PAGES } from "../../../../services/core/navigation"
 import { ComponentChild, ComponentProps } from "../../../../types/components/component"
 import { RequestChatsParams } from "../../../../api/chats.api"
 import { SearchInput } from "./components/search-input"
+import { UserService } from "../../../../services/state/user.service"
+import { User } from "../../../../types/state/user"
 
 type ChatsProps = ComponentProps & {
     chats?: ComponentChild<ChatPreview>[]
@@ -33,6 +35,9 @@ export class Chats extends Component {
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor(props: ChatsProps) {
         super("div", props, templ)
@@ -66,7 +71,19 @@ export class Chats extends Component {
                 this.setProps({ chats: this._getChatsPreviewComponents(chats) })
             },
         ))
-        this._chatsService.getChats()
+        this._subscriptions.push(
+            this
+            ._userService
+            .userObservable
+            .subscribe(
+                (x: User) => {
+                    if(x) {
+                        this._chatsService.getChats()
+                    }
+                }
+            )
+        )
+
     }
 
     componentDidRender() {

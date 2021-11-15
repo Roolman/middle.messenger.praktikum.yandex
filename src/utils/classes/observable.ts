@@ -65,7 +65,7 @@ export class Observable {
         })
     }
 
-    static fromEvent(source: HTMLElement | Window, eventName: string): Observable {
+    static fromEvent(source: HTMLElement | Window | WebSocket, eventName: string): Observable {
         return new Observable((observer: InternalObserver): Subscription => {
             const callbackFn = (e: Event) => observer.onNext(e)
 

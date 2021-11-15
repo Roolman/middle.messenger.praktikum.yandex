@@ -12,7 +12,7 @@ type MessageInputProps = ComponentProps & {
 }
 
 export class MessageInput extends Component implements FormElement {
-    private _onValueChange: Subject<string | number | boolean>
+    private _onValueChange: Subject<string>
     private _onValueChangeObservable: Observable
 
     get name(): string {
@@ -20,6 +20,9 @@ export class MessageInput extends Component implements FormElement {
     }
     get value(): string {
         return (this.element as HTMLInputElement).value
+    }
+    set value(val: string) {
+        (this.element as HTMLInputElement).value = val
     }
     get isValid(): boolean {
         return this._checkInputValidity(this.element as HTMLInputElement)

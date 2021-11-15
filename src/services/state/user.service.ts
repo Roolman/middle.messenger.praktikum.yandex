@@ -10,6 +10,7 @@ import { Inject } from "../../utils/decorators/inject"
 import { PAGES } from "../core/navigation"
 import Router from "../core/router"
 import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
+import { ChatsService } from "./chats.service"
 
 export const LOGGED_IN_KEY = "authorized"
 
@@ -114,6 +115,9 @@ export class UserService {
                 },
                 (err: ServerErrorResponse) => {
                     console.error(err)
+                    if(err.reason === "Cookie is not valid") {
+                        this.logOut()
+                    }
                 }
             )
     }

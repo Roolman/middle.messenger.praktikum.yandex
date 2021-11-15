@@ -56,6 +56,10 @@ export class ChatsApi extends BaseAPI {
         return this._api.get(`/new/${chatId}`)
     }
 
+    requestToken(chatId: number): Observable {
+        return this._api.post(`/token/${chatId}`)
+    }
+
     loadChatAvatar(data: UploadChatAvatar): Observable {
         let form = new FormData()
         form.set("chatId", data.chatId.toString())

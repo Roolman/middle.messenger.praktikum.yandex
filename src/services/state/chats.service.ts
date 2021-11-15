@@ -1,6 +1,5 @@
 import { AddDeleteChatUsers, ChatsApi, RequestChatsParams, RequestChatUsersParams, UploadChatAvatar } from "../../api/chats.api"
 import { RESOURCES_URL } from "../../constants/api"
-import { MESSAGES } from "../../mock/chat"
 import { ServerErrorResponse } from "../../types/api"
 import { User } from "../../types/state/user"
 import { Observable } from "../../utils/classes/observable"
@@ -12,19 +11,23 @@ import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
 import { LOGGED_IN_KEY, UserService } from "./user.service"
 import Router from "../core/router"
 import { PAGES } from "../core/navigation"
+import { Message, Messenger } from "../core/messenger"
 
 export type ChatData = {
     id: number
     title: string
     avatar: string | null
     unread_count: number | null
-    last_message: MessageData | null
+    last_message: LastMessageData | null
     created_by?: number
     users?: User[]
-    messages?: MessageData[]
     lastMessageTimeShort?: string
     lastMessageSentByUser?: boolean
     selected?: boolean
+    // Отображаемые сообщения в чате
+    messages?: Message[]
+    // Сервис обмена сообщениями для чата
+    messenger?: Messenger
 }
 
 type ChatDataShort = {
@@ -34,7 +37,7 @@ type ChatDataShort = {
     created_by: number
 }
 
-export type MessageData = {
+export type LastMessageData = {
     user: User
     time: Date
     content: string
@@ -96,12 +99,8 @@ export class ChatsService {
         .request(data)
         .subscribe(
             (chats: ChatData[]) => {
-                this._chats = chats.map((x) => ({
-                    ...x,
-                    avatar: x.avatar ? RESOURCES_URL + x.avatar: null,
-                    lastMessageTimeShort: x.last_message ? getShortChatDate(x.last_message.time) : undefined,
-                    lastMessageSentByUser: isEqual(x.last_message?.user, this._userService.user)
-                }))
+                // TODO: Подумать о создании новых чатов
+                this._chats = this._mapChats(chats)
                 this._chatsSubject.next(this._chats)
             },
             (err: ServerErrorResponse) => {
@@ -109,17 +108,6 @@ export class ChatsService {
                 this._snackBar.open("Сервис не доступен. Попробуйте позже")
             }
         )
-    }
-
-    getChat(id: string): void {
-        const chat = this._chats.find(x => x.id == Number(id))
-        if(chat) {
-            this._chat = chat
-            this._chatSubject.next(this._chat)
-        }
-        else {
-            throw new Error(`Чат с id ${id} не найден`)
-        }
     }
 
     createChat(title: string, users?: User[], avatar?: File | null): void {
@@ -163,8 +151,13 @@ export class ChatsService {
         this._chat = this._chats.find((x) => x.id === chatId) || null
         if (this._chat) {
             const { id } = this._chat
-            this.setMessages(this._chat)
             this._chats = this._chats.map((x) => ({ ...x, selected: x.id === id }))
+
+            // Если нет сообщений в чате, то получаем с 0го
+            console.log(this._chat.messages)
+            if(!this._chat.messages?.length) {
+                this._chat.messenger?.getOldMessages(0)
+            }
 
             this._chatsSubject.next(this._chats)
             this._chatSubject.next(this._chat)
@@ -260,19 +253,65 @@ export class ChatsService {
             )
     }
 
-    setMessages(chat: ChatData): void {
-        chat.messages = MESSAGES
+    onGetOldMessages(messages:  Message[], chatId: number): void {
+        const chat = this._chats.find(x => x.id === chatId)
+        if(chat) {
+            chat.messages?.unshift(...messages.reverse())
+            if(chat === this._chat) {
+                this._chatSubject.next(chat)
+            }
+            else {
+                // TODO: 
+                // this._chatsSubject.next(this._chats)
+            }
+        }
     }
 
-    // addMessage(message: string): void {
-    //     const messageData: MessageData = {
-    //         id: Math.round(Math.random() * 100),
-    //         type: MESSAGE_TYPES.TEXT,
-    //         value: message,
-    //         time: new Date(),
-    //         sentByUser: true,
-    //     }
-    //     this._chat?.messages.push(messageData)
-    //     this._chatSubject.next(this._chat)
-    // }
+    onNewMessage(message: Message, chatId: number): void {
+        const chat = this._chats.find(x => x.id === chatId)
+        if(chat) {
+            chat.messages?.push(message)
+            if(chat.id === this._chat?.id) {
+                this._chatSubject.next(chat)
+            }
+            else {
+                // TODO:
+                // this._chatsSubject.next(this._chats)
+            }
+        }        
+    }
+
+    private _mapChats(chats: ChatData[]) {
+        const chatIds = this._chats.map(x => x.id)
+        // TODO: Заменить поиск на более оптимальный
+        return chats.map(
+            (x: ChatData) => {
+                if(chatIds.includes(x.id)) {
+                    const existingChat = this._chats.find(c => c.id === x.id) as ChatData
+                    return {
+                        ...existingChat,
+                        avatar: x.avatar ? RESOURCES_URL + x.avatar: null,
+                        lastMessageTimeShort: x.last_message ? getShortChatDate(new Date(x.last_message.time)) : undefined,
+                        lastMessageSentByUser: isEqual(x.last_message?.user, this._userService.user),
+                    }
+                }
+                else {
+                    return {
+                        ...x,
+                        avatar: x.avatar ? RESOURCES_URL + x.avatar: null,
+                        lastMessageTimeShort: x.last_message ? getShortChatDate(new Date(x.last_message.time)) : undefined,
+                        lastMessageSentByUser: isEqual(x.last_message?.user, this._userService.user),
+                        messages: [],
+                        messenger: new Messenger({
+                            chatId: x.id,
+                            user: this._userService.user as User,
+                            api: this._chatsApi,
+                            onGetOldMessages: this.onGetOldMessages.bind(this),
+                            onNewMessage: this.onNewMessage.bind(this),
+                        })
+                    }
+                }
+            }
+        )
+    }
 }
