@@ -1,4 +1,4 @@
-import { RouteData } from "../../services/core/router"
+import { RouteData } from "../../services/core/router/router"
 import { ComponentProps } from "../../types/components/component"
 import { Guard } from "../guards/auth.guard"
 import isEqual from "../helpers/isEqual"
@@ -17,6 +17,10 @@ export class Route {
     private _props: RouteProps 
     private _guards: Guard[]
 
+    get pathname(): string {
+        return this._pathname
+    }
+
     constructor(pathname: string, view: Function, props: RouteProps, guards?: Guard[]) {
         this._pathname = pathname
         this._blockClass = view
@@ -33,7 +37,7 @@ export class Route {
 
     leave() {
         if (this._block) {
-            const root = document.querySelector(this._props.rootQuery) as HTMLElement
+            const root = window.document.querySelector(this._props.rootQuery) as HTMLElement
             if(root.contains(this._block.getContent())) {
                 root.removeChild(this._block.getContent())
             }
@@ -65,7 +69,7 @@ export class Route {
     }
 
     private _render(query: string, block: Component) {
-        const root = document.querySelector(query) as HTMLElement
+        const root = window.document.querySelector(query) as HTMLElement
         root.appendChild(block.getContent())
         return root
     }

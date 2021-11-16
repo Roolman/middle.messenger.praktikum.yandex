@@ -1,7 +1,7 @@
 import { LOGGED_IN_KEY, UserService } from "../../services/state/user.service";
 import { User } from "../../types/state/user";
 import { Inject } from "../decorators/inject";
-import Router from "../../services/core/router"
+import Router from "../../services/core/router/router"
 import { PAGES } from "../../services/core/navigation";
 
 export interface Guard {

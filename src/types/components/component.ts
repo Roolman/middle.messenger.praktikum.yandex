@@ -1,4 +1,4 @@
-import { RouteData } from "../../services/core/router"
+import { RouteData } from "../../services/core/router/router"
 import { Component } from "../../utils/classes/component"
 
 export type ComponentMeta = {
