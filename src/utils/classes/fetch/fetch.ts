@@ -1,7 +1,8 @@
-import { Indexed } from "../../types"
+import { Indexed } from "../../../types"
+import { queryStringify } from "../../helpers/query-stringify"
 import {
     InternalObserver, Observable, Subscription,
-} from "./observable"
+} from "../observable"
 
 export enum HTTP_METHODS {
     GET = "GET",
@@ -17,22 +18,15 @@ export type HTTP_OPTIONS = {
     timeout?: number
 }
 
-function queryStringify(data: Object): string {
-    const entriesArray = Object.entries(data)
-    if (!entriesArray.length) {
-        return ""
-    }
-    let output = "?"
-    for (const [index, [key, value]] of entriesArray.entries()) {
-        output += `${key}=${value.toString()}`
-        if (index !== entriesArray.length - 1) output += "&"
-    }
-    return output
-}
-
 export class HttpClient {
 
     private _baseUrl: string
+    private _xhr: XMLHttpRequest
+    private _isTimedOut: boolean
+
+    get xhr(): XMLHttpRequest {
+        return this._xhr
+    }
 
     constructor(baseUrl?: string) {
         this._baseUrl = baseUrl || ''
@@ -73,6 +67,7 @@ export class HttpClient {
                     }
                 })
                 .catch((err: any) => {
+                    console.log(err)
                     observer.onError(err)
                 })
                 .finally(() => {
@@ -97,33 +92,34 @@ export class HttpClient {
         if (!options.method) {
             throw new Error("Укажите метод HTTP запроса")
         }
+        this._isTimedOut = false
 
-        const xhr = new XMLHttpRequest()
+        this._xhr = new XMLHttpRequest()
         // Открываем запрос
-        xhr.open(options.method, url)
-        xhr.withCredentials = true
-
+        this._xhr.open(options.method, url)
+        this._xhr.withCredentials = true
         // Устанавливаем headers
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
-                console.log(key, value.toString())
-                xhr.setRequestHeader(key, value.toString())
+                this._xhr.setRequestHeader(key, value.toString())
             }
         }
-        if(!(options.data instanceof FormData)) {
-            xhr.setRequestHeader("content-type", "application/json")
+        if(!(options?.data instanceof FormData)) {
+            this._xhr.setRequestHeader("content-type", "application/json")
         }
 
-        xhr.onload = () => {
-            resolve(xhr)
+        this._xhr.onload = () => {
+            if(!this._isTimedOut) {
+                resolve(this._xhr)
+            }
         }
 
-        xhr.onabort = reject
-        xhr.onerror = reject
-        xhr.ontimeout = reject
+        this._xhr.onabort = reject
+        this._xhr.onerror = reject
+        this._xhr.ontimeout = reject
 
         if (options.method === HTTP_METHODS.GET || !options.data) {
-            xhr.send()
+            this._xhr.send()
         } else {
             let body
             if(options.data instanceof FormData) {
@@ -132,13 +128,14 @@ export class HttpClient {
             else {
                 body = JSON.stringify(options.data)
             }
-            xhr.send(body)
+            this._xhr.send(body)
         }
 
-        if (timeout) {
+        if (timeout !== undefined) {
             setTimeout(() => {
-                if (xhr.readyState !== 4) {
-                    reject(xhr)
+                if (this._xhr.readyState !== 4) {
+                    this._isTimedOut = true
+                    reject(this._xhr)
                     console.warn("Таймаут запроса ", url)
                 }
             }, timeout)

@@ -1,7 +1,7 @@
 import { BASE_URL } from "../constants/api";
 import { User } from "../types/state/user";
 import { BaseAPI } from "../utils/classes/base-api";
-import { HttpClient } from "../utils/classes/fetch";
+import { HttpClient } from "../utils/classes/fetch/fetch";
 import { Observable } from "../utils/classes/observable";
 
 export class UsersApi extends BaseAPI {

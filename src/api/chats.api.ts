@@ -1,6 +1,6 @@
 import { BASE_URL } from "../constants/api";
 import { BaseAPI } from "../utils/classes/base-api";
-import { HttpClient } from "../utils/classes/fetch";
+import { HttpClient } from "../utils/classes/fetch/fetch";
 import { Observable } from "../utils/classes/observable";
 
 export type UploadChatAvatar = {
