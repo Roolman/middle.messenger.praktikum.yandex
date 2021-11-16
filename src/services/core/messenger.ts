@@ -73,9 +73,11 @@ export class Messenger {
             .requestToken(this._chatId)
             .subscribe(
                 ({token}: {token: string}) => {
-                    this._token = token
-                    this._socket = new WebSocket(WEBSOCKET_BASE_URL + `${this._user.id}/${this._chatId}/${token}`)
-                    this.init()
+                    if(token) {
+                        this._token = token
+                        this._socket = new WebSocket(WEBSOCKET_BASE_URL + `${this._user.id}/${this._chatId}/${token}`)
+                        this.init()
+                    }
                 },
                 (err: ServerErrorResponse) => {
                     console.log(err)
@@ -90,7 +92,6 @@ export class Messenger {
             .fromEvent(this._socket, "open")
             .subscribe(
                 () => {
-                    console.log('Соединение установлено')
                     // NOTE: Пингуем сокет раз в секунду
                     this._pingTimer = setInterval(
                         () => {
@@ -109,15 +110,11 @@ export class Messenger {
             .subscribe(
                 (event: CloseEvent) => {
                     if (event.wasClean) {
-                        console.log('Соединение закрыто чисто')
                     } 
                     else {
-                        console.log('Обрыв соединения')
                     }
     
                     clearInterval(this._pingTimer)
-                
-                    console.log(`Код: ${event.code} | Причина: ${event.reason}`)
                 }
             )              
         )

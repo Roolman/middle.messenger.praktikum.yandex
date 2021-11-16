@@ -129,6 +129,9 @@ export class ChatsService {
                     avatar: null,
                     unread_count: null,
                     last_message: null,
+                    messages: [],
+                    messenger: this._createMessenger(response.id),
+                    created_by: this._userService.user?.id
                 }
                 this._chats.unshift(newChat)
                 this._chatsSubject.next(this._chats)
@@ -256,15 +259,18 @@ export class ChatsService {
             .subscribe(
                 () => {
                     this._snackBar.open("Чат успешно удален", SNACKBAR_TYPE.SUCCESS)
-                    // this._chats = this._chats.filter(x => x.id !== chatId)
-                    // this._chatsSubject.next(this._chats)
-                    Router.go(PAGES.MAIN)
+                    this.leaveChat(chatId)
                 },
                 (err: ServerErrorResponse) => {
                     this._snackBar.open("Ошибка удаления чата", SNACKBAR_TYPE.ERROR)
                 }
         )
         this._subscriptions.push(deleteChatSub)
+    }
+
+    leaveChat(chatId: number): void {
+        this._chats = this._chats.filter(x => x.id !== chatId)
+        this._chatsSubject.next(this._chats)
     }
 
     loadMoreMessages(): void {
@@ -346,16 +352,20 @@ export class ChatsService {
                         lastMessageTimeShort: x.last_message ? getShortChatDate(new Date(x.last_message.time)) : undefined,
                         lastMessageSentByUser: isEqual(lastMessageUser, authUser),
                         messages: [],
-                        messenger: new Messenger({
-                            chatId: x.id,
-                            user: this._userService.user as User,
-                            api: this._chatsApi,
-                            onGetOldMessages: this.onGetOldMessages.bind(this),
-                            onNewMessage: this.onNewMessage.bind(this),
-                        })
+                        messenger: this._createMessenger(x.id)
                     }
                 }
             }
         )
+    }
+
+    private _createMessenger(chatId: number): Messenger {
+        return new Messenger({
+            chatId: chatId,
+            user: this._userService.user as User,
+            api: this._chatsApi,
+            onGetOldMessages: this.onGetOldMessages.bind(this),
+            onNewMessage: this.onNewMessage.bind(this),
+        })
     }
 }

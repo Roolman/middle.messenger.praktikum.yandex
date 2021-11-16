@@ -171,6 +171,7 @@ export class ChatSettings extends Component {
             description: "Вы уверены, что хотите удалить чат?",
             onConfirm: () => {
                 this._chatsService.deleteChat(this.props.chat.id)
+                Router.go(PAGES.MAIN)
             }
         })
         this.confirmModal.show()
@@ -184,7 +185,7 @@ export class ChatSettings extends Component {
                 this.confirmModal.hide()
                 // Покинуть страницу и обновить чаты
                 if(leavePage) {
-                    this._chatsService.getChats()
+                    this._chatsService.leaveChat(this._chatsService.chat?.id || 0)
                     Router.go(PAGES.MAIN)
                 }
             }

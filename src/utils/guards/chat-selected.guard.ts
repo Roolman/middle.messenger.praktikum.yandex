@@ -1,5 +1,5 @@
 import { Inject } from "../decorators/inject";
-import Router from "../../services/core/router/router"
+import Router from "../../services/core/router"
 import { PAGES } from "../../services/core/navigation";
 import { ChatData, ChatsService } from "../../services/state/chats.service";
 

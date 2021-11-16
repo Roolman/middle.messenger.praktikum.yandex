@@ -18,11 +18,11 @@ export type HTTP_OPTIONS = {
     timeout?: number
 }
 
+
 export class HttpClient {
 
     private _baseUrl: string
     private _xhr: XMLHttpRequest
-    private _isTimedOut: boolean
 
     get xhr(): XMLHttpRequest {
         return this._xhr
@@ -67,7 +67,6 @@ export class HttpClient {
                     }
                 })
                 .catch((err: any) => {
-                    console.log(err)
                     observer.onError(err)
                 })
                 .finally(() => {
@@ -92,34 +91,33 @@ export class HttpClient {
         if (!options.method) {
             throw new Error("Укажите метод HTTP запроса")
         }
-        this._isTimedOut = false
 
-        this._xhr = new XMLHttpRequest()
+        const xhr = new XMLHttpRequest()
+        this._xhr = xhr
         // Открываем запрос
-        this._xhr.open(options.method, url)
-        this._xhr.withCredentials = true
+        xhr.open(options.method, url)
+        xhr.withCredentials = true
+
         // Устанавливаем headers
         if (options.headers) {
             for (const [key, value] of Object.entries(options.headers)) {
-                this._xhr.setRequestHeader(key, value.toString())
+                xhr.setRequestHeader(key, value.toString())
             }
         }
-        if(!(options?.data instanceof FormData)) {
-            this._xhr.setRequestHeader("content-type", "application/json")
+        if(!(options.data instanceof FormData)) {
+            xhr.setRequestHeader("content-type", "application/json")
         }
 
-        this._xhr.onload = () => {
-            if(!this._isTimedOut) {
-                resolve(this._xhr)
-            }
+        xhr.onload = () => {
+            resolve(xhr)
         }
 
-        this._xhr.onabort = reject
-        this._xhr.onerror = reject
-        this._xhr.ontimeout = reject
+        xhr.onabort = reject
+        xhr.onerror = reject
+        xhr.ontimeout = reject
 
         if (options.method === HTTP_METHODS.GET || !options.data) {
-            this._xhr.send()
+            xhr.send()
         } else {
             let body
             if(options.data instanceof FormData) {
@@ -128,14 +126,13 @@ export class HttpClient {
             else {
                 body = JSON.stringify(options.data)
             }
-            this._xhr.send(body)
+            xhr.send(body)
         }
 
         if (timeout !== undefined) {
             setTimeout(() => {
-                if (this._xhr.readyState !== 4) {
-                    this._isTimedOut = true
-                    reject(this._xhr)
+                if (xhr.readyState !== 4) {
+                    reject(xhr)
                     console.warn("Таймаут запроса ", url)
                 }
             }, timeout)
