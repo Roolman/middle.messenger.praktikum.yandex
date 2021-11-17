@@ -9,8 +9,6 @@ import { getShortChatDate } from "../../utils/helpers/date.utils"
 import isEqual from "../../utils/helpers/isEqual"
 import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
 import { LOGGED_IN_KEY, UserService } from "./user.service"
-import Router from "../core/router"
-import { PAGES } from "../core/navigation"
 import { Message, Messenger } from "../core/messenger"
 
 export type ChatData = {
