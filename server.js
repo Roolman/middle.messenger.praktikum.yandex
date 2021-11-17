@@ -7,7 +7,7 @@ app.use(express.static(`${__dirname}/dist`))
 
 // NOTE: Базовая защита от DDOS
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 20 * 60 * 1000,
   max: 100,
 })
 app.use(limiter)
