@@ -131,7 +131,8 @@ export class ChatsService {
                     last_message: null,
                     messages: [],
                     messenger: this._createMessenger(response.id),
-                    created_by: this._userService.user?.id
+                    created_by: this._userService.user?.id,
+                    allMessagesLoaded: true
                 }
                 this._chats.unshift(newChat)
                 this._chatsSubject.next(this._chats)
@@ -336,7 +337,7 @@ export class ChatsService {
                     const {avatar, ...lastMessageUserData} = x.last_message.user
                     lastMessageUser = lastMessageUserData
                 }
-                if(chatIds.includes(x.id)) {
+                if(x && chatIds.includes(x.id)) {
                     const existingChat = this._chats.find(c => c.id === x.id) as ChatData
                     return {
                         ...existingChat,
