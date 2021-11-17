@@ -1,8 +1,15 @@
 @import "../../styles/colors.scss";
 
-.register__form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-bottom: 20px;
+.register {
+  .login-register-block {
+    @media (min-height: 900px) {
+      overflow-y: hidden;
+    }
+  }
+
+  .login-register-block__container {
+    @media (max-height: 900px) {
+      min-height: 730px;
+    }
+  }
 }

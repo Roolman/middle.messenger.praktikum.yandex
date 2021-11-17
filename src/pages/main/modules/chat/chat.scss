@@ -7,19 +7,19 @@ $input_height: 55px;
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 0 10px;
+  padding: 0 10px;
   min-height: 100vh;
 }
 
 .chat_empty {
   align-items: center;
   justify-content: center;
-
   background-color: #eaeaea;
+  margin: 0;
 }
 
 .chat__empty-text {
-  color: #999999;
+  color: #999;
 }
 
 .chat__header {
@@ -71,16 +71,8 @@ $input_height: 55px;
       cursor: pointer;
     }
   }
+}
 
-  .chat__input-text {
-    padding: 10px;
-    min-height: 32px;
-    width: calc(100% - 20px - 32px - 32px);
-    border-radius: 20px;
-    border: 0;
-    outline: 0;
-    background-color: #efefef;
-    font-family: inherit;
-    font-size: medium;
-  }
+.chat__input-width {
+  width: calc(100% - 20px - 32px - 32px);
 }
