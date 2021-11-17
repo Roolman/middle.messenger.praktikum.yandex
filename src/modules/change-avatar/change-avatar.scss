@@ -1,0 +1,13 @@
+@import "../../styles/colors.scss";
+@import "../../styles/constants.scss";
+
+.change-avatar__file-upload-label {
+  display: inline-block;
+  cursor: pointer;
+  color: $main_color;
+  overflow-wrap: anywhere;
+}
+
+.change-avatar__file-upload-label ~ input {
+  display: none;
+}

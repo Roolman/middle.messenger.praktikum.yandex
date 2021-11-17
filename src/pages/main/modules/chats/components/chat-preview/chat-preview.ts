@@ -1,9 +1,10 @@
-import { Component, ComponentProps } from "../../../../../../utils/classes/component"
+import { Component } from "../../../../../../utils/classes/component"
 import templ from "./chat-preview.tmpl"
 import "./chat-preview.scss"
 import { ChatData, ChatsService } from "../../../../../../services/state/chats.service"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Inject } from "../../../../../../utils/decorators/inject"
+import { ComponentProps } from "../../../../../../types/components/component"
 
 type ChatPreviewProps = ComponentProps & ChatData
 

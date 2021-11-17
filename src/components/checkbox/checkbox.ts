@@ -1,4 +1,5 @@
-import { Component, ComponentProps } from "../../utils/classes/component"
+import { ComponentProps } from "../../types/components/component"
+import { Component } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import { FormElement } from "../form/form"
@@ -19,8 +20,11 @@ export class Checkbox extends Component implements FormElement {
     get name(): string {
         return this.input.name
     }
-    get value(): string | number | boolean {
+    get value(): boolean {
         return this.input.checked
+    }
+    set value(val: boolean) {
+        this.input.checked = val
     }
     get isValid(): boolean {
         return this.input.validity.valid

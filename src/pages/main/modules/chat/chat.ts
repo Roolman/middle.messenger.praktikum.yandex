@@ -6,19 +6,23 @@ import templ, { emptyChat } from "./chat.tmpl"
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
 import { Message } from "./components/message/index"
-import { Component, ComponentChild, ComponentProps } from "../../../../utils/classes/component"
-import { ChatData, ChatsService, MessageData } from "../../../../services/state/chats.service"
+import { Component } from "../../../../utils/classes/component"
+import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
-import { MessageInput } from "./components/message-input"
+import { MessageInput } from "./components/message-Input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
+import Router from "../../../../services/core/router"
+import { PAGES } from "../../../../services/core/navigation"
+import { ComponentChild, ComponentProps } from "../../../../types/components/component"
+import { MessageView } from "./components/message/message"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
 type ChatProps = ComponentProps & ChatData & {
-    messagesComponents: ComponentChild[]
+    messagesComponents: ComponentChild<MessageView>[]
 }
 
 export class Chat extends Component {
@@ -26,9 +30,14 @@ export class Chat extends Component {
 
     sendForm: Form
     sendButton: Button
+    openChatSettingsButton: Button
 
     chatInput: HTMLElement
     messagesContainer: HTMLElement
+    isInputFocused: boolean
+
+    loadMoreButton: HTMLElement
+    onLoadMoreWasTriggered: boolean
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
@@ -59,6 +68,14 @@ export class Chat extends Component {
                     }),
                 },
                 {
+                    name: "openChatSettingsButton",
+                    component: new Button({
+                        type: BUTTON_TYPES.ROUND,
+                        theme: BUTTON_THEMES.NORMAL,
+                        iconClass: "fa fa-cog fa-lg",
+                    }),
+                },
+                {
                     name: "sendForm",
                     component: new Form({
                         children: [
@@ -86,8 +103,16 @@ export class Chat extends Component {
                     (chat: ChatData) => {
                         this.setProps({
                             ...chat,
-                            messagesComponents: this._getMessagesComponents(chat.messages),
+                            messagesComponents: this._getMessagesComponents(chat.messages || []),
                         })
+                        // TODO: Скролить только тогда, когда сообщение было отправело мною
+                        // Иначе показывать типо не прочитанное сообщение и скролл вниз
+                        if(!this.onLoadMoreWasTriggered) {
+                            this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
+                        }
+                        else {
+                            this.onLoadMoreWasTriggered = false
+                        }
                     },
                 ),
         )
@@ -100,6 +125,10 @@ export class Chat extends Component {
             this.element.classList.remove("chat_empty")
             // Добавляем класс к форме
             this.sendForm.element.classList.add("chat__input-width")
+            //
+            if(this.isInputFocused) {
+                this.sendForm.formElements[0].inputElement.focus()
+            }
         }
     }
 
@@ -113,10 +142,10 @@ export class Chat extends Component {
                             e.preventDefault()
 
                             if (this.sendForm.isValid) {
-                                let message = this.sendForm.formElements[0].value
-                                console.log(message)
-                                // this._chatsService.addMessage(message)
-                                message = ""
+                                const messageInput = this.sendForm.formElements[0] as MessageInput
+                                this.props.messenger?.sendMessage(messageInput.value)
+                                messageInput.value = ''
+                                this.isInputFocused = true
                             }
                         },
                     ),
@@ -126,6 +155,39 @@ export class Chat extends Component {
                     (isValid: boolean) => this._setSendButtonVisibility(isValid),
                 ),
             )
+            this._onMountSubscriptions.push(
+                Observable.fromEvent(this.openChatSettingsButton.element, "click")
+                    .subscribe(
+                        (e: Event) => {
+                            e.preventDefault()
+                            Router.go(PAGES.CHATSETTINGS + `/${this.props.id}`)
+                        },
+                    ),
+            )
+            this._onMountSubscriptions.push(
+                Observable
+                .fromEvent(this.sendForm.formElements[0].inputElement, "focus")
+                .subscribe(
+                    () => this.isInputFocused = true
+                )
+            )
+            this._onMountSubscriptions.push(
+                Observable
+                .fromEvent(this.sendForm.formElements[0].inputElement, "blur")
+                .subscribe(
+                    () => this.isInputFocused = false
+                )
+            )
+            if(this.loadMoreButton) {
+                Observable
+                .fromEvent(this.loadMoreButton, "click")
+                .subscribe(
+                    () => {
+                        this.onLoadMoreWasTriggered = true
+                        this._chatsService.loadMoreMessages()
+                    }
+                )
+            }
         }
     }
 
@@ -137,10 +199,10 @@ export class Chat extends Component {
         }
     }
 
-    private _getMessagesComponents(messages: MessageData[]): ComponentChild[] {
+    private _getMessagesComponents(messages: Message[]): ComponentChild<MessageView>[] {
         const messagesComponents = messages.map((x, i) => ({
             name: `message__${i}`,
-            component: new Message(x),
+            component: new MessageView(x),
         }))
         // Обновляем children компонента для ререндера
         if (this.props.children) {

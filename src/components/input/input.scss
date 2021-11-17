@@ -39,6 +39,7 @@
   outline: 0;
   background: transparent;
   font-size: large;
+  caret-color: $main_color;
 
   &::placeholder {
     color: transparent;
@@ -63,10 +64,12 @@
 .input-container__input-check-validity {
   &:valid {
     border-bottom-color: $success_color !important;
+    caret-color: $success_color !important;
   }
 
   &:invalid {
     border-bottom-color: $danger_color !important;
+    caret-color: $danger_color !important;
   }
 }
 

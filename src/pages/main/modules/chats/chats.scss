@@ -62,9 +62,10 @@ $chats_width: 35vw;
     color: $secondary_color;
     font-size: 0.9rem;
     cursor: text;
+    user-select: none;
   }
 
-  input {
+  .chats__search__input {
     padding: 10px;
     height: 32px;
     width: 100%;
@@ -74,9 +75,11 @@ $chats_width: 35vw;
     background-color: #efefef;
     font-family: inherit;
     font-size: medium;
+    caret-color: $main_color;
 
     &::placeholder {
       color: transparent;
+      user-select: none;
     }
 
     &:placeholder-shown ~ .chats__search__label {
@@ -103,4 +106,8 @@ $chats_width: 35vw;
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.chats__chat-no-last-message {
+  align-self: center;
 }

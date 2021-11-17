@@ -3,23 +3,29 @@ import templ from "./message.tmpl"
 
 import { MESSAGE_TYPE_CLASS } from "../../../../../../constants/message"
 import { getDateHoursAndMinutes } from "../../../../../../utils/helpers/date.utils"
-import { Component, ComponentProps } from "../../../../../../utils/classes/component"
-import { MessageData } from "../../../../../../services/state/chats.service"
+import { Component } from "../../../../../../utils/classes/component"
+import { ComponentProps } from "../../../../../../types/components/component"
+import { Message } from "../../../../../../services/core/messenger"
+import { Inject } from "../../../../../../utils/decorators/inject"
+import { UserService } from "../../../../../../services/state/user.service"
 
-type MessageProps = MessageData & ComponentProps
+type MessageViewProps = Message & ComponentProps
 
-export class Message extends Component {
-    props: MessageProps
+export class MessageView extends Component {
+    props: MessageViewProps
 
-    constructor(props: MessageProps) {
+    @Inject(UserService)
+    private _userService: UserService
+
+    constructor(props: MessageViewProps) {
         super("div", props, templ)
     }
 
-    setDefaultProps(props: MessageProps): MessageProps {
+    setDefaultProps(props: MessageViewProps): MessageViewProps {
         return {
             ...props,
             componentClassName: "message",
-            time: getDateHoursAndMinutes(props.time) as any, // TODO: Fix
+            time: getDateHoursAndMinutes(new Date(props.time)) as any, // TODO: Fix
         }
     }
 
@@ -30,7 +36,7 @@ export class Message extends Component {
     private _defineClass() {
         const messageTypeClass = MESSAGE_TYPE_CLASS[this.props.type]
         let sentByClass: string = ""
-        if (this.props.sentByUser) {
+        if (this.props.user_id === this._userService.user?.id) {
             sentByClass = "message_sent-by-user"
         } else {
             sentByClass = "message_sent-not-by-user"

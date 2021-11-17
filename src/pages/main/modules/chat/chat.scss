@@ -26,19 +26,26 @@ $input_height: 55px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: 55px;
   border-bottom: 1px solid $light_gray_border_color;
 
-  .chat__avatar-image {
-    width: 34px;
-    height: 34px;
-    border-radius: 34px;
-  }
+  .chat__header-chat-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-  .chat__name {
-    padding-left: 10px;
-    font-weight: bold;
+    .chat__avatar-image {
+      width: 34px;
+      height: 34px;
+      border-radius: 34px;
+    }
+
+    .chat__name {
+      padding-left: 10px;
+      font-weight: bold;
+    }
   }
 }
 
@@ -47,6 +54,30 @@ $input_height: 55px;
   flex-direction: column;
   height: calc(100vh - $header_height - $input_height);
   overflow: auto;
+
+  .chat__messages-no-messages {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    height: 100%;
+    font-size: larger;
+    color: $secondary_color;
+  }
+
+  .chat__messages-load-more {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    font-size: smaller;
+    color: $secondary_color;
+    user-select: none;
+    padding-top: 10px;
+
+    &:hover {
+      cursor: pointer;
+      color: $light_gray_hover_color;
+    }
+  }
 
   &::-webkit-scrollbar {
     display: none;

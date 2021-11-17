@@ -3,17 +3,26 @@ import templ from "./login.tmpl"
 
 import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
-import { Checkbox } from "../../components/checkbox/index"
 import { Header } from "../../components/header/index"
 
-import { goToRegisterPage, goToMainPage } from "../../services/core/navigation"
-import { Component, ComponentProps } from "../../utils/classes/component"
+import Router from "../../services/core/router"
+import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators } from "../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../constants/validators"
+import { PAGES } from "../../services/core/navigation"
+import { Inject } from "../../utils/decorators/inject"
+import { UserService } from "../../services/state/user.service"
+import { ComponentProps } from "../../types/components/component"
+import { Indexed } from "../../types"
+
+type LoginPageProps = ComponentProps & {
+    logInLoading?: boolean
+}
 
 export class LoginPage extends Component {
+    props: LoginPageProps
     // Компоненты
     loginBlock: LoginRegisterBlock
     header: Header
@@ -23,11 +32,14 @@ export class LoginPage extends Component {
         return this._valid
     }
 
+    @Inject(UserService)
+    private _userService: UserService
+
     constructor() {
         super("div", {}, templ)
     }
 
-    setDefaultProps(props: ComponentProps): ComponentProps {
+    setDefaultProps(props: LoginPageProps): LoginPageProps {
         return {
             ...props,
             componentClassName: "login",
@@ -61,14 +73,7 @@ export class LoginPage extends Component {
                                         validators: new Validators([REQUIRED_VALIDATOR]),
                                         isValidationHidden: true,
                                     }),
-                                },
-                                {
-                                    name: "rememberMe",
-                                    component: new Checkbox({
-                                        name: "rememberMe",
-                                        label: "Запомнить меня",
-                                    }),
-                                },
+                                }
                             ],
                             attributes: {
                                 id: "loginFormId",
@@ -82,6 +87,23 @@ export class LoginPage extends Component {
         }
     }
 
+    componentDidInit() {
+        this._subscriptions.push(
+        this._userService
+            .logInLoadingObservable
+            .subscribe(
+                (isLoading: boolean) => {
+                    if(isLoading) {
+                        this.loginBlock.mainButton.setDisabled()
+                    }
+                    else {
+                        this.loginBlock.mainButton.setEnabled()
+                    }
+                }
+            )
+        )
+    }
+
     componentDidRender() {
         // Определяем состояние кнопки по валидности формы
         this._setLoginButtonValidity(this.loginBlock.form.isValid)
@@ -90,20 +112,24 @@ export class LoginPage extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.mainButton.element, "click")
-                .subscribe(() => {
+                .subscribe((e: Event) => {
+                    e.preventDefault()
+
                     if (this.loginBlock.form.isValid) {
-                        const values = []
+                        const logInData: Indexed = {}
                         for (const formElement of this.loginBlock.form.formElements) {
-                            values.push({ name: formElement.name, value: formElement.value })
+                            logInData[formElement.name] = formElement.value
                         }
-                        console.log(values)
-                        goToMainPage()
+                        this._userService.logIn({
+                            login: logInData.login,
+                            password: logInData.password
+                        })
                     }
                 }),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.loginBlock.secondButton.element, "click")
-                .subscribe(() => goToRegisterPage()),
+                .subscribe(() => Router.go(PAGES.REGISTER)),
         )
         this._onMountSubscriptions.push(
             this.loginBlock.form.onValidityChange.subscribe(

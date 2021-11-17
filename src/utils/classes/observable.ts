@@ -1,3 +1,5 @@
+import { throttle } from "../helpers/throttle"
+
 export interface Subscription {
     unsubscribe: () => void
 }
@@ -63,7 +65,7 @@ export class Observable {
         })
     }
 
-    static fromEvent(source: HTMLElement, eventName: string): Observable {
+    static fromEvent(source: HTMLElement | Window | WebSocket, eventName: string): Observable {
         return new Observable((observer: InternalObserver): Subscription => {
             const callbackFn = (e: Event) => observer.onNext(e)
 
@@ -72,6 +74,16 @@ export class Observable {
             return {
                 unsubscribe: () => source.removeEventListener(eventName, callbackFn),
             }
+        })
+    }
+    
+    throttle(ms: number): Observable {
+        return new Observable((observer: InternalObserver) => {
+            return this.subscribe(
+                throttle((val: any) => observer.onNext(val), ms),
+                throttle((err: any) => observer.onError(err), ms),
+                throttle(() => observer.onCompleted(), ms)
+            )
         })
     }
 }

@@ -5,8 +5,8 @@ import { LoginRegisterBlock } from "../../components/login-register-block/index"
 import { Input } from "../../components/input/index"
 import { Header } from "../../components/header/index"
 
-import { goToLoginPage } from "../../services/core/navigation"
-import { Component, ComponentProps } from "../../utils/classes/component"
+import Router from "../../services/core/router"
+import { Component } from "../../utils/classes/component"
 import { Form } from "../../components/form"
 import { Observable } from "../../utils/classes/observable"
 import { Validators, VALIDITY_TYPES } from "../../utils/classes/validators"
@@ -16,12 +16,20 @@ import {
     PASSWORD_MIN_LENGTH_VALIDATOR, PASSWORD_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
     PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
 } from "../../constants/validators"
+import { PAGES } from "../../services/core/navigation"
+import { ComponentProps } from "../../types/components/component"
+import { Indexed } from "../../types"
+import { Inject } from "../../utils/decorators/inject"
+import { UserService } from "../../services/state/user.service"
 
 export class RegisterPage extends Component {
     registerBlock: LoginRegisterBlock
     // Форма
     passwordInput: Input
     passwordCheckInput: Input
+
+    @Inject(UserService)
+    private _userService: UserService
 
     constructor() {
         super("div", {}, templ)
@@ -149,6 +157,23 @@ export class RegisterPage extends Component {
         }
     }
 
+    componentDidInit() {
+        this._subscriptions.push(
+        this._userService
+            .registerLoadingObservable
+            .subscribe(
+                (isLoading: boolean) => {
+                    if(isLoading) {
+                        this.registerBlock.mainButton.setDisabled()
+                    }
+                    else {
+                        this.registerBlock.mainButton.setEnabled()
+                    }
+                }
+            )
+            )
+    }
+
     componentDidRender() {
         // Определяем состояние кнопки по валидности формы
         this._setRegisterButtonValidity(this.registerBlock.form.isValid)
@@ -163,23 +188,28 @@ export class RegisterPage extends Component {
                     e.preventDefault()
 
                     if (this.registerBlock.form.isValid) {
-                        const values = []
+                        const registerData: Indexed = {}
                         for (const formElement of this.registerBlock.form.formElements) {
-                            values.push({ name: formElement.name, value: formElement.value })
+                            registerData[formElement.name] = formElement.value
                         }
-                        console.log(values)
-                        alert("Зареган!")
+                        this._userService.signUp({
+                            first_name: registerData.first_name,
+                            second_name: registerData.second_name,
+                            login: registerData.login,
+                            email: registerData.email,
+                            password: registerData.password,
+                            phone: registerData.phone,
+                        })
                     }
                 }),
         )
         this._onMountSubscriptions.push(
             Observable.fromEvent(this.registerBlock.secondButton.element, "click")
-                .subscribe(() => goToLoginPage()),
+                .subscribe(() => Router.go(PAGES.LOGIN)),
         )
         this._onMountSubscriptions.push(
             this.registerBlock.form.onValidityChange.subscribe(
                 (isValid: boolean) => {
-                    console.log(isValid)
                     this._setRegisterButtonValidity(isValid)
                 },
             ),

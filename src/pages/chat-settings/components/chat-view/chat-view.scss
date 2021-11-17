@@ -1,0 +1,59 @@
+@import "../../../../styles/settings-pages.scss";
+@import "../../../../styles/colors.scss";
+@import "../../../../styles/constants.scss";
+
+.members__text {
+  color: $secondary_color;
+  padding-bottom: 7px;
+}
+
+.chat__users-container {
+  overflow-y: auto;
+  height: 45vh;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chat__user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 15px 0px;
+  border-bottom: solid 0.5px $secondary_color;
+
+  .chat__user-main-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .chat__user-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 35px;
+    }
+
+    .chat__user-name {
+      padding-left: 10px;
+      font-weight: bold;
+    }
+
+    .chat__user-login {
+      padding-left: 10px;
+      color: gray;
+    }
+  }
+
+  .chat__user-delete {
+    i {
+      font-size: x-large;
+      color: $danger_color;
+    }
+
+    i:hover {
+      color: $hover_danger_color !important;
+      cursor: pointer;
+    }
+  }
+}

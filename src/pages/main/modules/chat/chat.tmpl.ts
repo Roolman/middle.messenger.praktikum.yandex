@@ -1,21 +1,29 @@
 export default
 `
     {{#if id}}
-        <div class="chat__header">
-            {{#if avatar}}
-                <img class="chat__avatar-image" src="{{avatar}}"/>
-            {{else}}
-                <img class="chat__avatar-image" src="static/img/chat_default.png"/>
-            {{/if}}
-            <span class="chat__name">{{ name }}</span>                
+        <div data-ref="chatHeader" class="chat__header">
+            <div class="chat__header-chat-info">
+                {{#if avatar}}
+                <img class="chat__avatar-image" src="{{avatar}}" crossorigin="use-credentials"/>
+                {{else}}
+                    <img class="chat__avatar-image" src="static/img/chat_default.png" crossorigin="use-credentials"/>
+                {{/if}}
+                <span class="chat__name">{{ title }}</span>   
+            </div>
+            <div data-component="openChatSettingsButton"></div>             
         </div>
         <div data-ref="messagesContainer" class="chat__messages">
             {{#unless messagesComponents}}
-                <h4>Сообщений нет</h4>
+                <div class="chat__messages-no-messages">Отправьте первое сообщение</div>
             {{/unless}}
-            {{#each messagesComponents}}
-                <div data-component="{{ this.name }}"></div>
-            {{/each}}
+            {{#if messagesComponents}}
+                {{#unless allMessagesLoaded}}
+                    <div data-ref="loadMoreButton" class="chat__messages-load-more">Загрузить еще</div>
+                {{/unless}}
+                {{#each messagesComponents}}
+                    <div data-component="{{ this.name }}"></div>
+                {{/each}}
+            {{/if}}
         </div>
         <div data-ref="chatInput" class="chat__input">
             <i class="chat__attach fa fa-paperclip"></i>
