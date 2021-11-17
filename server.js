@@ -1,8 +1,16 @@
 const express = require("express")
+const rateLimit = require("express-rate-limit")
 
 const app = express()
 
 app.use(express.static(`${__dirname}/dist`))
+
+// NOTE: Базовая защита от DDOS
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+})
+app.use(limiter)
 
 const port = 3000
 

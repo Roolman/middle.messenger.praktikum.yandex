@@ -4,8 +4,10 @@
   "description": "VanillaTS messenger with component approach",
   "dependencies": {
     "express": "^4.17.1",
+    "express-rate-limit": "^5.5.1",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.7.7",
+    "helmet": "^4.6.0",
     "parcel": "^2.0.0-rc.0",
     "typescript": "^4.4.4"
   },
