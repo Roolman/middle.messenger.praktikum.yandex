@@ -38,7 +38,7 @@ export class AuthGuard implements Guard {
     invert(): AuthGuard {
         this.checkAccess = () => {
             this._isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
-            return !(Boolean(this._user) || this._isLoggedIn)
+            return !(this._user || this._isLoggedIn)
         }
         this.actionOnNoAccess = () => {
             Router.go(PAGES.MAIN)

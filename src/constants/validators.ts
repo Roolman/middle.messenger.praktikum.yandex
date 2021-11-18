@@ -43,8 +43,8 @@ export const PHONE_MIN_LENGTH_VALIDATOR: Validator = {
 
 export const PHONE_MAX_LENGTH_VALIDATOR: Validator = {
     type: VALIDITY_TYPES.maxLength,
-    value: 15,
-    error: "Не более 15 символов",
+    value: 13,
+    error: "Не более 13 символов",
 }
 
 export const PHONE_PATTERN_VALIDATOR: Validator = {

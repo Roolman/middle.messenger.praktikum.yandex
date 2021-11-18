@@ -93,8 +93,13 @@ export class UserService {
                 },
                 (err: ServerErrorResponse) => {
                     this._registerLoadingSubject.next(false)
-                    this._snackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
                     console.error(err)
+                    if(err.reason === "Login already exists") {
+                        this._snackBar.open("Логин уже занят. Попробуйте другой", SNACKBAR_TYPE.ERROR)
+                    }
+                    else {
+                        this._snackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
+                    }
                 }
             )         
     }
