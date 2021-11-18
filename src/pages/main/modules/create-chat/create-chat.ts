@@ -1,18 +1,17 @@
-import { ComponentProps } from "../../../../types/components/component";
-import { Component } from "../../../../utils/classes/component";
+import { ComponentProps } from "../../../../types/components/component"
+import { Component } from "../../../../utils/classes/component"
 
 import tmpl from "./create-chat.tmpl"
 import "./create-chat.scss"
-import { ChatName } from "./components/chat-name";
-import { AddChatUsers } from "../../../../modules/add-chat-users";
-import { ChangeAvatar } from "../../../../modules/change-avatar";
-import { User } from "../../../../types/state/user";
-import { Observable } from "../../../../utils/classes/observable";
-import { Inject } from "../../../../utils/decorators/inject";
-import { ChatsService } from "../../../../services/state/chats.service";
+import { ChatName } from "./components/chat-name"
+import { AddChatUsers } from "../../../../modules/add-chat-users"
+import { ChangeAvatar } from "../../../../modules/change-avatar"
+import { User } from "../../../../types/state/user"
+import { Observable } from "../../../../utils/classes/observable"
+import { Inject } from "../../../../utils/decorators/inject"
+import { ChatsService } from "../../../../services/state/chats.service"
 
 export class CreateChat extends Component {
-
     chatName: ChatName
     addChatUsers: AddChatUsers
     selectAvatar: ChangeAvatar
@@ -35,8 +34,8 @@ export class CreateChat extends Component {
                         onNextButton: () => {
                             this.chatName.hide()
                             this.addChatUsers.show()
-                        }
-                    })
+                        },
+                    }),
                 },
                 {
                     name: "addChatUsers",
@@ -45,7 +44,7 @@ export class CreateChat extends Component {
                             this.addChatUsers.hide()
                             this.selectAvatar.show()
                         },
-                    })
+                    }),
                 },
                 {
                     name: "selectAvatar",
@@ -57,20 +56,20 @@ export class CreateChat extends Component {
                             // Здесь создаем чат
                             this._createChat()
                             // После чего стираем все значения
-                            this.chatName.titleInput.value = ''
-                            this.addChatUsers.userNameInput.value = ''
+                            this.chatName.titleInput.value = ""
+                            this.addChatUsers.userNameInput.value = ""
                             this.addChatUsers.setProps({
                                 selectedUsers: [],
-                                fetchedUsers: []
+                                fetchedUsers: [],
                             })
                             this.selectAvatar.file = null
                             this.selectAvatar.selectFileLabel.textContent = "Загрузите файл"
                         },
                         applyButtonText: "Создать",
-                        headerTitle: "Загрузите лого"
-                    })
-                }
-            ]
+                        headerTitle: "Загрузите лого",
+                    }),
+                },
+            ],
         }
     }
 
@@ -81,20 +80,20 @@ export class CreateChat extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.element, "click")
-            .subscribe(
-                (e: Event) => {
-                    const isVisible = this.element.style.display === "flex"
-                    if(e.target === this.element && isVisible) {
+                .fromEvent(this.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        const isVisible = this.element.style.display === "flex"
+                        if (e.target === this.element && isVisible) {
                         // Скрываем
-                        this.hide()
-                        this.addChatUsers.hide()
-                        this.selectAvatar.hide()
-                        // При открытии начинаем с названия
-                        this.chatName.show()
-                    }
-                }
-            )
+                            this.hide()
+                            this.addChatUsers.hide()
+                            this.selectAvatar.hide()
+                            // При открытии начинаем с названия
+                            this.chatName.show()
+                        }
+                    },
+                ),
         )
     }
 
@@ -102,8 +101,7 @@ export class CreateChat extends Component {
         const chatTitle: string = this.chatName.titleInput.value as string
         const chatUsers: User[] = this.addChatUsers.props.selectedUsers || []
         const chatLogoFile: File | null = this.selectAvatar.file
-        // TODO: Вызов функции 
+        // TODO: Вызов функции
         this._chatsService.createChat(chatTitle, chatUsers, chatLogoFile)
     }
-
 }

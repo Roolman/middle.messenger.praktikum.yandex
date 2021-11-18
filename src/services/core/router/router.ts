@@ -11,7 +11,6 @@ type PathParams = {
 }
 
 export class Router {
-
     routes: Route[]
     history: History
 
@@ -39,11 +38,11 @@ export class Router {
     }
 
     use(pathname: string, block: Function, guards?: Guard[]) {
-        const route = new Route(pathname, block, {rootQuery: this._rootQuery}, guards)
+        const route = new Route(pathname, block, { rootQuery: this._rootQuery }, guards)
         // Если путь существует, то заменяем
-        const pathNames = this.routes.map(x => x.pathname)
-        if(pathNames.includes(pathname)) {
-            this.routes = this.routes.filter(x => x.pathname !== pathname)
+        const pathNames = this.routes.map((x) => x.pathname)
+        if (pathNames.includes(pathname)) {
+            this.routes = this.routes.filter((x) => x.pathname !== pathname)
         }
         this.routes.push(route)
         return this
@@ -51,13 +50,13 @@ export class Router {
 
     start() {
         // Реагируем на изменения в адресной строке и вызываем перерисовку
-        window.onpopstate = event => {
+        window.onpopstate = (event) => {
             const location = (event.currentTarget as any).location.pathname
-            const {path, params} = this._getPathParams(location)
+            const { path, params } = this._getPathParams(location)
             this._onRoute(path, params)
         }
-        
-        const {path, params} = this._getPathParams(window.location.pathname)
+
+        const { path, params } = this._getPathParams(window.location.pathname)
         this._onRoute(path, params)
     }
 
@@ -68,21 +67,19 @@ export class Router {
             this._currentRoute.leave()
         }
 
-        if(route) {
+        if (route) {
             this._currentRoute = route
             route.render(data)
-        }
-        else if(pathname !== "/") {
+        } else if (pathname !== "/") {
             this.go(this._defaultRoute)
-        }
-        else {
+        } else {
             throw Error("Задайте страницу для дефолтного пути")
         }
     }
 
     go(fullPathName: string) {
-        const {path, params} = this._getPathParams(fullPathName)
-        this.history.pushState({path, params}, "", fullPathName)
+        const { path, params } = this._getPathParams(fullPathName)
+        this.history.pushState({ path, params }, "", fullPathName)
         this._onRoute(path, params)
     }
 
@@ -95,7 +92,7 @@ export class Router {
     }
 
     getRoute(pathname: string): Route | undefined {
-        return this.routes.find(route => route.match(pathname))
+        return this.routes.find((route) => route.match(pathname))
     }
 
     setDefault(defaulteRoute: string) {
@@ -103,12 +100,12 @@ export class Router {
     }
 
     private _getPathParams(pathname: string): PathParams {
-        const [_, pathName, param] = pathname.split('/')
+        const [_, pathName, param] = pathname.split("/")
         const path = `/${pathName}`
-        const params: RouteData = {data: param}
+        const params: RouteData = { data: param }
         return {
             path,
-            params
+            params,
         }
     }
 }

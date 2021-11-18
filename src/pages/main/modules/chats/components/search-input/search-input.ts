@@ -17,5 +17,4 @@ export class SearchInput extends Component {
             componentClassName: "chats__search",
         }
     }
-
 }

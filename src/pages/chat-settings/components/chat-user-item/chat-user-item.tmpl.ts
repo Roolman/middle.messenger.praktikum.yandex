@@ -4,7 +4,11 @@ export default
     {{#if user.avatar}}
         <img src="{{user.avatar}}" class="chat__user-avatar" crossorigin="use-credentials"/>
     {{else}}
-        <img src="../static/img/avatar_default.jpg" class="chat__user-avatar" crossorigin="use-credentials"/>
+        <img 
+            src="../static/img/avatar_default.jpg" 
+            class="chat__user-avatar" 
+            crossorigin="use-credentials"
+        />
     {{/if}}
     <div class="chat__user-name">
         <span>{{user.first_name}} {{user.second_name}}</span>

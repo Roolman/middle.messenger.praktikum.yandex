@@ -39,37 +39,39 @@ export class ChangeAvatar extends Component {
             children: [
                 {
                     name: "applyButton",
-                    component: new Button({ 
+                    component: new Button({
                         title: props.applyButtonText,
                         styles: {
-                            width: "100%"
-                        }
-                    })
-                }
-            ]
+                            width: "100%",
+                        },
+                    }),
+                },
+            ],
         }
     }
 
     componentDidInit() {
         this.hide()
-        if(this.props.isModal) {
+        if (this.props.isModal) {
             this._subscriptions.push(
                 Observable
-                .fromEvent(this.element, "click")
-                .subscribe(
-                    (e: Event) => {
-                        const target = e.target as HTMLElement
-                        if(target.classList.contains(this.props.componentClassName  as string)) {
-                            this.hide()
-                        }
-                    }
-                )
+                    .fromEvent(this.element, "click")
+                    .subscribe(
+                        (e: Event) => {
+                            const target = e.target as HTMLElement
+                            if (target.classList.contains(
+                                this.props.componentClassName as string,
+                            )) {
+                                this.hide()
+                            }
+                        },
+                    ),
             )
         }
     }
 
     componentDidRender() {
-        if(this.props.isFileRequired) {
+        if (this.props.isFileRequired) {
             this.applyButton.setDisabled()
         }
     }
@@ -77,33 +79,32 @@ export class ChangeAvatar extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.applyButton.element, "click")
-            .subscribe(() => {
-                this.props.onApplyButton(this.file)
-            }),
+                .fromEvent(this.applyButton.element, "click")
+                .subscribe(() => {
+                    this.props.onApplyButton(this.file)
+                }),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.fileInput, "input")
-            .subscribe(() => {
-                const file: File = this.fileInput.files?.item(0) as File
-                if(file.type.startsWith(ACCEPT_TYPE)) {
-                    this.selectFileLabel.textContent = file.name
-                    this.file = file
-                    if(this.props.isFileRequired) {
-                        this.applyButton.setEnabled()
+                .fromEvent(this.fileInput, "input")
+                .subscribe(() => {
+                    const file: File = this.fileInput.files?.item(0) as File
+                    if (file.type.startsWith(ACCEPT_TYPE)) {
+                        this.selectFileLabel.textContent = file.name
+                        this.file = file
+                        if (this.props.isFileRequired) {
+                            this.applyButton.setEnabled()
+                        }
+                    } else {
+                        this.selectFileLabel.textContent = "Выберите файл"
+                        this.fileInput.files = null
+                        this.file = null
+                        this._snackBar.open("Выберите изображение", SNACKBAR_TYPE.ERROR)
+                        if (this.props.isFileRequired) {
+                            this.applyButton.setDisabled()
+                        }
                     }
-                }
-                else {
-                    this.selectFileLabel.textContent = "Выберите файл"
-                    this.fileInput.files = null
-                    this.file = null
-                    this._snackBar.open("Выберите изображение", SNACKBAR_TYPE.ERROR)
-                    if(this.props.isFileRequired) {
-                        this.applyButton.setDisabled()
-                    }
-                }
-            })
+                }),
         )
     }
 }

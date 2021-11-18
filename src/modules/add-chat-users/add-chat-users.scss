@@ -5,9 +5,9 @@ $cancel-icon-hover-color: #8c8c8c;
 
 .add-chat__selected-users {
   display: flex;
-  flex-direction: row;
   width: 100%;
   flex-flow: row wrap;
+  padding-left: 0;
 
   .add-chat__selected-user-container {
     display: flex;

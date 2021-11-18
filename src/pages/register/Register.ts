@@ -159,19 +159,18 @@ export class RegisterPage extends Component {
 
     componentDidInit() {
         this._subscriptions.push(
-        this._userService
-            .registerLoadingObservable
-            .subscribe(
-                (isLoading: boolean) => {
-                    if(isLoading) {
-                        this.registerBlock.mainButton.setDisabled()
-                    }
-                    else {
-                        this.registerBlock.mainButton.setEnabled()
-                    }
-                }
-            )
-            )
+            this._userService
+                .registerLoadingObservable
+                .subscribe(
+                    (isLoading: boolean) => {
+                        if (isLoading) {
+                            this.registerBlock.mainButton.setDisabled()
+                        } else {
+                            this.registerBlock.mainButton.setEnabled()
+                        }
+                    },
+                ),
+        )
     }
 
     componentDidRender() {

@@ -1,20 +1,22 @@
-import { Button } from "../../../../components/button";
-import { Component } from "../../../../utils/classes/component";
-import { Observable } from "../../../../utils/classes/observable";
-import { Inject } from "../../../../utils/decorators/inject";
+import { Button } from "../../../../components/button"
+import { Component } from "../../../../utils/classes/component"
+import { Observable } from "../../../../utils/classes/observable"
+import { Inject } from "../../../../utils/decorators/inject"
 
 import tmpl from "./profile-edit.tmpl"
 import "./profile-edit.scss"
-import { Input } from "../../../../components/input";
-import { EMAIL_VALIDATOR, LOGIN_MAX_LENGTH_VALIDATOR, LOGIN_MIN_LENGTH_VALIDATOR, LOGIN_PATTERN_VALIDATOR, NAME_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR, 
-    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR 
-} from "../../../../constants/validators";
-import { Validators } from "../../../../utils/classes/validators";
-import { Form } from "../../../../components/form";
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { ComponentProps } from "../../../../types/components/component";
-import { User } from "../../../../types/state/user";
-import { UserService } from "../../../../services/state/user.service";
+import { Input } from "../../../../components/input"
+import {
+    EMAIL_VALIDATOR, LOGIN_MAX_LENGTH_VALIDATOR, LOGIN_MIN_LENGTH_VALIDATOR,
+    LOGIN_PATTERN_VALIDATOR, NAME_PATTERN_VALIDATOR, PHONE_MAX_LENGTH_VALIDATOR,
+    PHONE_MIN_LENGTH_VALIDATOR, PHONE_PATTERN_VALIDATOR, REQUIRED_VALIDATOR,
+} from "../../../../constants/validators"
+import { Validators } from "../../../../utils/classes/validators"
+import { Form } from "../../../../components/form"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
+import { ComponentProps } from "../../../../types/components/component"
+import { User } from "../../../../types/state/user"
+import { UserService } from "../../../../services/state/user.service"
 
 type ProfileEditProps = ComponentProps & {
     user: User | null
@@ -95,7 +97,7 @@ export class ProfileEdit extends Component {
                                         REQUIRED_VALIDATOR,
                                         LOGIN_PATTERN_VALIDATOR,
                                         LOGIN_MIN_LENGTH_VALIDATOR,
-                                        LOGIN_MAX_LENGTH_VALIDATOR
+                                        LOGIN_MAX_LENGTH_VALIDATOR,
                                     ]),
                                 }),
                             },
@@ -148,23 +150,24 @@ export class ProfileEdit extends Component {
                     component: new Button({
                         title: "Отмена",
                         type: BUTTON_TYPES.STROKED,
-                        theme: BUTTON_THEMES.NORMAL
+                        theme: BUTTON_THEMES.NORMAL,
                     }),
                 },
-            ]
+            ],
         }
     }
 
     componentDidInit() {
         this._subscriptions.push(
             this._userService.userObservable.subscribe(
-            (user: User) => {
-                this.setProps({user})
-                if(user) {
-                    this._updateFormValue(user)
-                }
-            },
-        ))
+                (user: User) => {
+                    this.setProps({ user })
+                    if (user) {
+                        this._updateFormValue(user)
+                    }
+                },
+            ),
+        )
     }
 
     componentDidMount() {
@@ -208,7 +211,6 @@ export class ProfileEdit extends Component {
         )
     }
 
-    
     private _setSaveButtonValidity(isValid: boolean) {
         if (isValid) {
             this.profileSaveButton.setEnabled()
@@ -218,8 +220,8 @@ export class ProfileEdit extends Component {
     }
 
     private _updateFormValue(user: User) {
-        const formElements = this.profileEditForm.formElements
-        for(let element of formElements) {
+        const { formElements } = this.profileEditForm
+        for (const element of formElements) {
             const userFieldValue = (user as any)[element.name]
             element.value = userFieldValue
         }

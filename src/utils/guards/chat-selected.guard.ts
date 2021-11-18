@@ -1,7 +1,7 @@
-import { Inject } from "../decorators/inject";
+import { Inject } from "../decorators/inject"
 import Router from "../../services/core/router"
-import { PAGES } from "../../services/core/navigation";
-import { ChatData, ChatsService } from "../../services/state/chats.service";
+import { PAGES } from "../../services/core/navigation"
+import { ChatData, ChatsService } from "../../services/state/chats.service"
 
 export interface Guard {
     checkAccess: () => boolean
@@ -9,7 +9,6 @@ export interface Guard {
 }
 
 export class ChatSelectedGuard implements Guard {
-
     @Inject(ChatsService)
     private _chatsService: ChatsService
     private _chat: ChatData
@@ -18,7 +17,7 @@ export class ChatSelectedGuard implements Guard {
         this._chatsService.chatObservable.subscribe(
             (chat: ChatData) => {
                 this._chat = chat
-            }
+            },
         )
     }
 

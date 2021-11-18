@@ -1,22 +1,22 @@
-import { Component } from "../../utils/classes/component";
+import { Component } from "../../utils/classes/component"
 
 import tmpl from "./chat-settings.tmpl"
 import "./chat-settings.scss"
-import { Button } from "../../components/button";
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button";
-import { ChangeAvatar } from "../../modules/change-avatar";
-import { ChatData, ChatsService } from "../../services/state/chats.service";
-import { Inject } from "../../utils/decorators/inject";
-import { Observable } from "../../utils/classes/observable";
+import { Button } from "../../components/button"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
+import { ChangeAvatar } from "../../modules/change-avatar"
+import { ChatData, ChatsService } from "../../services/state/chats.service"
+import { Inject } from "../../utils/decorators/inject"
+import { Observable } from "../../utils/classes/observable"
 import Router from "../../services/core/router"
-import { PAGES } from "../../services/core/navigation";
-import { ChatView } from "./components/chat-view";
-import { ComponentProps } from "../../types/components/component";
-import { AddDeleteChatUsers, UploadChatAvatar } from "../../api/chats.api";
-import { ConfirmModal } from "../../modules/confirm-modal";
-import { AddChatUsers } from "../../modules/add-chat-users";
-import { User } from "../../types/state/user";
-import { UserService } from "../../services/state/user.service";
+import { PAGES } from "../../services/core/navigation"
+import { ChatView } from "./components/chat-view"
+import { ComponentProps } from "../../types/components/component"
+import { AddDeleteChatUsers, UploadChatAvatar } from "../../api/chats.api"
+import { ConfirmModal } from "../../modules/confirm-modal"
+import { AddChatUsers } from "../../modules/add-chat-users"
+import { User } from "../../types/state/user"
+import { UserService } from "../../services/state/user.service"
 
 type ChatSettingsProps = ComponentProps & {
     chat: ChatData
@@ -24,7 +24,6 @@ type ChatSettingsProps = ComponentProps & {
 }
 
 export class ChatSettings extends Component {
-
     props: ChatSettingsProps
 
     // Кнопки
@@ -63,7 +62,7 @@ export class ChatSettings extends Component {
                             // Обновить аватар
                             const data: UploadChatAvatar = {
                                 chatId: this.props.chat.id,
-                                avatar: file
+                                avatar: file,
                             }
                             this._chatsService.uploadChatAvatar(data)
                             this.сhangeAvatar.hide()
@@ -71,7 +70,7 @@ export class ChatSettings extends Component {
                         applyButtonText: "Загрузить",
                         headerTitle: "Выберите лого",
                         isModal: true,
-                        isFileRequired: true
+                        isFileRequired: true,
                     }),
                 },
                 {
@@ -92,36 +91,42 @@ export class ChatSettings extends Component {
                         onDeleteChatButton: () => {
                             const user = this._userService.user as User
                             // Если создатель, то удялаем чат
-                            if(this._isUserChatCreator(user)) {
+                            if (this._isUserChatCreator(user)) {
                                 this._onChatDelete()
-                            }
-                            else {
+                            } else {
                                 // Иначе покидаем
                                 const data: AddDeleteChatUsers = {
                                     chatId: this.props.chat.id,
-                                    users: [user.id]
+                                    users: [user.id],
                                 }
-                                this._onDeleteChatUser(data, "Вы уверены, что хотите покинуть чат?", true)
+                                this._onDeleteChatUser(
+                                    data,
+                                    "Вы уверены, что хотите покинуть чат?",
+                                    true,
+                                )
                             }
                         },
                         onDeleteUserButton: (user: User) => {
                             const data: AddDeleteChatUsers = {
                                 chatId: this.props.chat.id,
-                                users: [user.id]
-                            }  
-                            this._onDeleteChatUser(data, "Вы уверены, что хотите удалить пользователя?")
+                                users: [user.id],
+                            }
+                            this._onDeleteChatUser(
+                                data,
+                                "Вы уверены, что хотите удалить пользователя?",
+                            )
                         },
                         onAvatar: () => {
                             this.сhangeAvatar.show()
-                        }
-                    })
+                        },
+                    }),
                 },
                 {
                     name: "confirmModal",
                     component: new ConfirmModal({
                         onConfirm: () => {},
-                        onDecline: () => this.confirmModal.hide()
-                    })
+                        onDecline: () => this.confirmModal.hide(),
+                    }),
                 },
                 {
                     name: "addChatUsers",
@@ -132,13 +137,13 @@ export class ChatSettings extends Component {
                             const chatUsers: User[] = this.addChatUsers.props.selectedUsers || []
                             const data: AddDeleteChatUsers = {
                                 chatId: this.props.chat.id,
-                                users: chatUsers.map(x => x.id)
+                                users: chatUsers.map((x) => x.id),
                             }
                             this._chatsService.addChatUsers(data)
                         },
-                        nextButtonTitle: "Добавить"
-                    })
-                }
+                        nextButtonTitle: "Добавить",
+                    }),
+                },
             ],
         }
     }
@@ -149,9 +154,9 @@ export class ChatSettings extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
-                        this.setProps({chat})
-                    }
-                )
+                        this.setProps({ chat })
+                    },
+                ),
         )
     }
 
@@ -172,27 +177,27 @@ export class ChatSettings extends Component {
             onConfirm: () => {
                 this._chatsService.deleteChat(this.props.chat.id)
                 Router.go(PAGES.MAIN)
-            }
+            },
         })
         this.confirmModal.show()
     }
 
     private _onDeleteChatUser(data: AddDeleteChatUsers, description: string, leavePage?: boolean) {
         this.confirmModal.setProps({
-            description: description,
-            onConfirm: () => {             
+            description,
+            onConfirm: () => {
                 this._chatsService.deleteChatUsers(data)
                 this.confirmModal.hide()
                 // Покинуть страницу и обновить чаты
-                if(leavePage) {
+                if (leavePage) {
                     this._chatsService.leaveChat(this._chatsService.chat?.id || 0)
                     Router.go(PAGES.MAIN)
                 }
-            }
+            },
         })
         this.confirmModal.show()
     }
-    
+
     private _isUserChatCreator(user: User): boolean {
         return this._chatsService.chat?.created_by === user.id
     }

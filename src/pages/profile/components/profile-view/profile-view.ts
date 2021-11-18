@@ -1,18 +1,18 @@
-import { Button } from "../../../../components/button";
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { Component } from "../../../../utils/classes/component";
-import { Observable } from "../../../../utils/classes/observable";
-import { Inject } from "../../../../utils/decorators/inject";
+import { Button } from "../../../../components/button"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
+import { Component } from "../../../../utils/classes/component"
+import { Observable } from "../../../../utils/classes/observable"
+import { Inject } from "../../../../utils/decorators/inject"
 
 import tmpl from "./profile-view.tmpl"
 import "./profile-view.scss"
-import { UserService } from "../../../../services/state/user.service";
-import { ComponentProps } from "../../../../types/components/component";
-import { User } from "../../../../types/state/user";
-import { ChatsService } from "../../../../services/state/chats.service";
+import { UserService } from "../../../../services/state/user.service"
+import { ComponentProps } from "../../../../types/components/component"
+import { User } from "../../../../types/state/user"
+import { ChatsService } from "../../../../services/state/chats.service"
 
 type ProfilewViewProps = ComponentProps & {
-    user: User |  null
+    user: User | null
     onEditDataButton: Function
     onChangePasswordButton: Function
     onAvatar: Function
@@ -63,47 +63,48 @@ export class ProfileView extends Component {
                         theme: BUTTON_THEMES.DANGER,
                     }),
                 },
-            ]
+            ],
         }
     }
 
     componentDidInit() {
         this._subscriptions.push(
             this._userService.userObservable.subscribe(
-            (user: User) => {
-                this.setProps({
-                    user
-                })
-            },
-        ))
+                (user: User) => {
+                    this.setProps({
+                        user,
+                    })
+                },
+            ),
+        )
     }
 
     componentDidMount() {
         // Кнопки
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.editDataButton.element, "click")
-            .subscribe(() => this.props.onEditDataButton()),
+                .fromEvent(this.editDataButton.element, "click")
+                .subscribe(() => this.props.onEditDataButton()),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.changePasswordButton.element, "click")
-            .subscribe(() => this.props.onChangePasswordButton()),
+                .fromEvent(this.changePasswordButton.element, "click")
+                .subscribe(() => this.props.onChangePasswordButton()),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.logoutButton.element, "click")
-            .subscribe(() => {
-                this._userService.logOut()
-                this._chatsService.destroy()
-            }),
+                .fromEvent(this.logoutButton.element, "click")
+                .subscribe(() => {
+                    this._userService.logOut()
+                    this._chatsService.destroy()
+                }),
         )
         // Аватар
-        if(this.avatar) {
+        if (this.avatar) {
             this._onMountSubscriptions.push(
                 Observable
-                .fromEvent(this.avatar, "click")
-                .subscribe(() => this.props.onAvatar()),
+                    .fromEvent(this.avatar, "click")
+                    .subscribe(() => this.props.onAvatar()),
             )
         }
     }

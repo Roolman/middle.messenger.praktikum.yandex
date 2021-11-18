@@ -18,7 +18,7 @@ export class UsersListItem extends Component {
     addUserButton: Button
 
     constructor(props?: UsersListItemProps) {
-        super("div", props, tmpl)
+        super("li", props, tmpl)
     }
 
     setDefaultProps(props: UsersListItemProps): UsersListItemProps {
@@ -31,17 +31,16 @@ export class UsersListItem extends Component {
                     component: new Button({
                         type: BUTTON_TYPES.ROUND,
                         iconClass: "fa fa-plus",
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 
     componentDidRender() {
-        if(this.props.disabled) {
+        if (this.props.disabled) {
             this.addUserButton.setDisabled()
-        }
-        else {
+        } else {
             this.addUserButton.setEnabled()
         }
     }
@@ -49,16 +48,15 @@ export class UsersListItem extends Component {
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.addUserButton.element, "click")
-            .subscribe(
-                (e: Event) => {
-                    e.preventDefault()
+                .fromEvent(this.addUserButton.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        e.preventDefault()
 
-                    this.props.onAddButtonFunc()
-                    this.addUserButton.setDisabled()
-                }
-            )
+                        this.props.onAddButtonFunc()
+                        this.addUserButton.setDisabled()
+                    },
+                ),
         )
-        
     }
 }

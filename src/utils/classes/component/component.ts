@@ -92,10 +92,13 @@ export abstract class Component {
         this._isDefaultDestroyLogicEnabled = true
         this._createResources()
         // Компонент должен быть удален если его нет в дереве
-        if(this._mutationsObservation) {
+        if (this._mutationsObservation) {
             this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
                 () => {
-                    if (!document.body.contains(this._element) && this._isDefaultDestroyLogicEnabled) {
+                    if (
+                        !document.body.contains(this._element)
+                        && this._isDefaultDestroyLogicEnabled
+                    ) {
                         this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
                     }
                 },

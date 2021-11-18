@@ -1,10 +1,10 @@
-import { Component } from "../../../../utils/classes/component";
+import { Component } from "../../../../utils/classes/component"
 
 import tmpl from "./chat-user-item.tmpl"
 import "./chat-user-item.scss"
-import { ComponentProps } from "../../../../types/components/component";
-import { User } from "../../../../types/state/user";
-import { Observable } from "../../../../utils/classes/observable";
+import { ComponentProps } from "../../../../types/components/component"
+import { User } from "../../../../types/state/user"
+import { Observable } from "../../../../utils/classes/observable"
 
 type ChatUserItemProps = ComponentProps & {
     user: User
@@ -25,7 +25,7 @@ export class ChatUserItem extends Component {
             ...props,
             componentClassName: "chat__user-container",
             children: [
-            ]
+            ],
         }
     }
 
@@ -33,15 +33,15 @@ export class ChatUserItem extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.isChatCreatorOrAuthUser) {
+        if (!this.props.isChatCreatorOrAuthUser) {
             this._onMountSubscriptions.push(
                 Observable
-                .fromEvent(this.deleteElement, "click")
-                .subscribe(
-                    () => {
-                        this.props.onUserDelete()
-                    }
-                )
+                    .fromEvent(this.deleteElement, "click")
+                    .subscribe(
+                        () => {
+                            this.props.onUserDelete()
+                        },
+                    ),
             )
         }
     }

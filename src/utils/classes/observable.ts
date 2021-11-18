@@ -76,14 +76,12 @@ export class Observable {
             }
         })
     }
-    
+
     throttle(ms: number): Observable {
-        return new Observable((observer: InternalObserver) => {
-            return this.subscribe(
-                throttle((val: any) => observer.onNext(val), ms),
-                throttle((err: any) => observer.onError(err), ms),
-                throttle(() => observer.onCompleted(), ms)
-            )
-        })
+        return new Observable((observer: InternalObserver) => this.subscribe(
+            throttle((val: any) => observer.onNext(val), ms),
+            throttle((err: any) => observer.onError(err), ms),
+            throttle(() => observer.onCompleted(), ms),
+        ))
     }
 }

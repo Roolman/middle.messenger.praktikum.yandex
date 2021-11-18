@@ -1,4 +1,4 @@
-import { ComponentProps } from "./component";
+import { ComponentProps } from "./component"
 
 export interface ButtonClass {
     [key: string]: string

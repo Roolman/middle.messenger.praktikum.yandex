@@ -10,11 +10,10 @@ type RouteProps = {
 }
 
 export class Route {
-
     private _pathname: string
     private _blockClass: any
     private _block: Component
-    private _props: RouteProps 
+    private _props: RouteProps
     private _guards: Guard[]
 
     get pathname(): string {
@@ -38,31 +37,31 @@ export class Route {
     leave() {
         if (this._block) {
             const root = window.document.querySelector(this._props.rootQuery) as HTMLElement
-            if(root.contains(this._block.getContent())) {
+            if (root.contains(this._block.getContent())) {
                 root.removeChild(this._block.getContent())
             }
         }
     }
 
     match(pathname: string) {
-        return isEqual({pathname}, {pathname: this._pathname})
+        return isEqual({ pathname }, { pathname: this._pathname })
     }
 
     render(data?: RouteData) {
         // Проверяем Guards перед рендером
         let accessApproved = true
-        for(let guard of this._guards) {
-            if(!guard.checkAccess()) {
+        for (const guard of this._guards) {
+            if (!guard.checkAccess()) {
                 accessApproved = false
                 guard.actionOnNoAccess()
                 break
             }
         }
-        if(!accessApproved) {
+        if (!accessApproved) {
             return
         }
         const props: ComponentProps = {
-            routeData: data
+            routeData: data,
         }
         this._block = new this._blockClass(props) as Component
         this._render(this._props.rootQuery, this._block)

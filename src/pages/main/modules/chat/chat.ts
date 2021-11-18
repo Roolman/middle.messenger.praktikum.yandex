@@ -107,10 +107,9 @@ export class Chat extends Component {
                         })
                         // TODO: Скролить только тогда, когда сообщение было отправело мною
                         // Иначе показывать типо не прочитанное сообщение и скролл вниз
-                        if(!this.onLoadMoreWasTriggered) {
+                        if (!this.onLoadMoreWasTriggered) {
                             this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
-                        }
-                        else {
+                        } else {
                             this.onLoadMoreWasTriggered = false
                         }
                     },
@@ -126,7 +125,7 @@ export class Chat extends Component {
             // Добавляем класс к форме
             this.sendForm.element.classList.add("chat__input-width")
             //
-            if(this.isInputFocused) {
+            if (this.isInputFocused) {
                 this.sendForm.formElements[0].inputElement.focus()
             }
         }
@@ -144,7 +143,7 @@ export class Chat extends Component {
                             if (this.sendForm.isValid) {
                                 const messageInput = this.sendForm.formElements[0] as MessageInput
                                 this.props.messenger?.sendMessage(messageInput.value)
-                                messageInput.value = ''
+                                messageInput.value = ""
                                 this.isInputFocused = true
                             }
                         },
@@ -160,33 +159,37 @@ export class Chat extends Component {
                     .subscribe(
                         (e: Event) => {
                             e.preventDefault()
-                            Router.go(PAGES.CHATSETTINGS + `/${this.props.id}`)
+                            Router.go(`${PAGES.CHATSETTINGS}/${this.props.id}`)
                         },
                     ),
             )
             this._onMountSubscriptions.push(
                 Observable
-                .fromEvent(this.sendForm.formElements[0].inputElement, "focus")
-                .subscribe(
-                    () => this.isInputFocused = true
-                )
+                    .fromEvent(this.sendForm.formElements[0].inputElement, "focus")
+                    .subscribe(
+                        () => {
+                            this.isInputFocused = true
+                        },
+                    ),
             )
             this._onMountSubscriptions.push(
                 Observable
-                .fromEvent(this.sendForm.formElements[0].inputElement, "blur")
-                .subscribe(
-                    () => this.isInputFocused = false
-                )
+                    .fromEvent(this.sendForm.formElements[0].inputElement, "blur")
+                    .subscribe(
+                        () => {
+                            this.isInputFocused = false
+                        },
+                    ),
             )
-            if(this.loadMoreButton) {
+            if (this.loadMoreButton) {
                 Observable
-                .fromEvent(this.loadMoreButton, "click")
-                .subscribe(
-                    () => {
-                        this.onLoadMoreWasTriggered = true
-                        this._chatsService.loadMoreMessages()
-                    }
-                )
+                    .fromEvent(this.loadMoreButton, "click")
+                    .subscribe(
+                        () => {
+                            this.onLoadMoreWasTriggered = true
+                            this._chatsService.loadMoreMessages()
+                        },
+                    )
             }
         }
     }

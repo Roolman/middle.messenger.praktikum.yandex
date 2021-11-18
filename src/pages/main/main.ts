@@ -26,7 +26,7 @@ export class MainPage extends Component {
                     component: new Chats({
                         onAddChatButton: () => {
                             this.createChat.show()
-                        }
+                        },
                     }),
                 },
                 {
@@ -35,7 +35,7 @@ export class MainPage extends Component {
                 },
                 {
                     name: "createChat",
-                    component: new CreateChat({})
+                    component: new CreateChat({}),
                 },
             ],
         }

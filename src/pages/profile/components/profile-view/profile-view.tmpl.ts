@@ -5,7 +5,11 @@ export default
         {{#if user.avatar}}
             <img src="{{user.avatar}}" class="settings__main-avatar" crossorigin="use-credentials"/>
         {{else}}
-            <img src="static/img/avatar_default.jpg" class="settings__main-avatar" crossorigin="use-credentials"/>
+            <img 
+                src="static/img/avatar_default.jpg" 
+                class="settings__main-avatar" 
+                crossorigin="use-credentials"
+            />
         {{/if}}
         <div class="settings__main-avatar-hover-block">
             <span class="settings__main-avatar-hover-block-title">Поменять</span>

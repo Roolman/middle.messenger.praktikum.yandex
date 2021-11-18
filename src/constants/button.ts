@@ -10,7 +10,7 @@ export enum BUTTON_TYPES {
 export enum BUTTON_THEMES {
     PRIMARY = "PRIMARY",
     DANGER = "DANGER",
-    NORMAL = "NORMAL"
+    NORMAL = "NORMAL",
 }
 
 export const BUTTON_TYPE_CLASS: Indexed = {

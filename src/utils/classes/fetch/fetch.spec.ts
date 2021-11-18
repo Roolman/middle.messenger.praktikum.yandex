@@ -1,13 +1,13 @@
 import { expect } from "chai"
 import sinon, { SinonFakeXMLHttpRequest } from "sinon"
+import regRunt from "regenerator-runtime"
 import { HttpClient } from "."
 import { Observable } from "../observable"
 import { HTTP_METHODS } from "./fetch"
-import regRunt from "regenerator-runtime"
 
 describe("HttpClient", () => {
     // NOTE: Для async в timeoute тесте
-    let regeneratorRuntime = regRunt
+    const regeneratorRuntime = regRunt
     const TestApiUrl = "http://jsonplaceholder.typicode.com/posts"
 
     it("should return Observable on request", () => {
@@ -44,24 +44,24 @@ describe("HttpClient", () => {
         const request = (httpClient as any)._request
         const timedOut = "timed out"
         let result
-        
+
         await request(
-            TestApiUrl, 
+            TestApiUrl,
             {
-                method: HTTP_METHODS.GET 
+                method: HTTP_METHODS.GET,
             },
-            0
+            0,
         )
-        .then(
-            (val: any) => {
-                result = "successfull xhr"
-            }
-        )
-        .catch(
-            (val: any) => {
-                result = timedOut
-            }
-        )
+            .then(
+                (val: any) => {
+                    result = "successfull xhr"
+                },
+            )
+            .catch(
+                (val: any) => {
+                    result = timedOut
+                },
+            )
 
         expect(result).to.equal(timedOut)
     })
@@ -69,10 +69,9 @@ describe("HttpClient", () => {
     it("should always set withCredentials", () => {
         const httpClient = new HttpClient()
         httpClient
-        .get(TestApiUrl)
-        .subscribe(() => {})
+            .get(TestApiUrl)
+            .subscribe(() => {})
 
         expect(httpClient.xhr.withCredentials).to.equal(true)
     })
-
 })

@@ -73,7 +73,7 @@ export class LoginPage extends Component {
                                         validators: new Validators([REQUIRED_VALIDATOR]),
                                         isValidationHidden: true,
                                     }),
-                                }
+                                },
                             ],
                             attributes: {
                                 id: "loginFormId",
@@ -89,18 +89,17 @@ export class LoginPage extends Component {
 
     componentDidInit() {
         this._subscriptions.push(
-        this._userService
-            .logInLoadingObservable
-            .subscribe(
-                (isLoading: boolean) => {
-                    if(isLoading) {
-                        this.loginBlock.mainButton.setDisabled()
-                    }
-                    else {
-                        this.loginBlock.mainButton.setEnabled()
-                    }
-                }
-            )
+            this._userService
+                .logInLoadingObservable
+                .subscribe(
+                    (isLoading: boolean) => {
+                        if (isLoading) {
+                            this.loginBlock.mainButton.setDisabled()
+                        } else {
+                            this.loginBlock.mainButton.setEnabled()
+                        }
+                    },
+                ),
         )
     }
 
@@ -122,7 +121,7 @@ export class LoginPage extends Component {
                         }
                         this._userService.logIn({
                             login: logInData.login,
-                            password: logInData.password
+                            password: logInData.password,
                         })
                     }
                 }),

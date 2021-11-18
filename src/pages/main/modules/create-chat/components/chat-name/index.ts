@@ -1,1 +1,1 @@
-export {ChatName} from "./chat-name"
+export { ChatName } from "./chat-name"

@@ -59,7 +59,7 @@ export class ProfilePage extends Component {
                         applyButtonText: "Загрузить",
                         headerTitle: "Выберите аватар",
                         isModal: true,
-                        isFileRequired: true
+                        isFileRequired: true,
                     }),
                 },
                 {
@@ -90,8 +90,8 @@ export class ProfilePage extends Component {
                         },
                         onAvatar: () => {
                             this.сhangeAvatar.show()
-                        }
-                    })
+                        },
+                    }),
                 },
                 {
                     name: "profileEdit",
@@ -103,8 +103,8 @@ export class ProfilePage extends Component {
                                 changePasswordFormIsShown: false,
                                 profileIsEditable: false,
                             })
-                        }
-                    })
+                        },
+                    }),
                 },
                 {
                     name: "passwordEdit",
@@ -115,9 +115,9 @@ export class ProfilePage extends Component {
                                 changePasswordFormIsShown: false,
                                 profileIsEditable: false,
                             })
-                        }
-                    })
-                }
+                        },
+                    }),
+                },
             ],
         }
     }

@@ -1,16 +1,16 @@
-import { Button } from "../../../../components/button";
-import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button";
-import { Component } from "../../../../utils/classes/component";
-import { Observable } from "../../../../utils/classes/observable";
-import { Inject } from "../../../../utils/decorators/inject";
+import { Button } from "../../../../components/button"
+import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
+import { Component } from "../../../../utils/classes/component"
+import { Observable } from "../../../../utils/classes/observable"
+import { Inject } from "../../../../utils/decorators/inject"
 
 import tmpl from "./chat-view.tmpl"
 import "./chat-view.scss"
-import { ChatData, ChatsService } from "../../../../services/state/chats.service";
-import { ComponentChild, ComponentProps } from "../../../../types/components/component";
-import { User } from "../../../../types/state/user";
-import { ChatUserItem } from "../chat-user-item";
-import { UserService } from "../../../../services/state/user.service";
+import { ChatData, ChatsService } from "../../../../services/state/chats.service"
+import { ComponentChild, ComponentProps } from "../../../../types/components/component"
+import { User } from "../../../../types/state/user"
+import { ChatUserItem } from "../chat-user-item"
+import { UserService } from "../../../../services/state/user.service"
 
 type ChatViewProps = ComponentProps & {
     chat: ChatData
@@ -39,8 +39,16 @@ export class ChatView extends Component {
     }
 
     setDefaultProps(props: ChatViewProps): ChatViewProps {
-        const usersChildComponents = this._getChatUserItemComponents(this._chatsService.chat?.users || [])
-        const onDeleteTitle = this._isUserChatCreator(this._userService.user as User) ? "Удалить чат" : "Покинуть чат"
+        const usersChildComponents = this._getChatUserItemComponents(
+            this._chatsService.chat?.users || [],
+        )
+        const user = this._userService.user as User
+        let onDeleteTitle: string
+        if (this._isUserChatCreator(user)) {
+            onDeleteTitle = "Удалить чат"
+        } else {
+            onDeleteTitle = "Покинуть чат"
+        }
         return {
             ...props,
             componentClassName: "settings__main",
@@ -60,9 +68,9 @@ export class ChatView extends Component {
                         theme: BUTTON_THEMES.DANGER,
                     }),
                 },
-                ...usersChildComponents
+                ...usersChildComponents,
             ],
-            users: usersChildComponents
+            users: usersChildComponents,
         }
     }
 
@@ -71,34 +79,35 @@ export class ChatView extends Component {
             this._chatsService.chatObservable.subscribe(
                 (chat: ChatData) => {
                     this.setProps({
-                         chat: chat,
-                         users: this._getChatUserItemComponents(chat.users || [])
+                        chat,
+                        users: this._getChatUserItemComponents(chat.users || []),
                     })
                 },
-        ))
+            ),
+        )
     }
 
     componentDidMount() {
         // Кнопки
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.addUsersButton.element, "click")
-            .subscribe(() => {
-                this.props.onAddUsersButton()
-            }),
+                .fromEvent(this.addUsersButton.element, "click")
+                .subscribe(() => {
+                    this.props.onAddUsersButton()
+                }),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.deleteChatButton.element, "click")
-            .subscribe(() => {
-                this.props.onDeleteChatButton()
-            }),
+                .fromEvent(this.deleteChatButton.element, "click")
+                .subscribe(() => {
+                    this.props.onDeleteChatButton()
+                }),
         )
         // Аватар
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.avatar, "click")
-            .subscribe(() => this.props.onAvatar()),
+                .fromEvent(this.avatar, "click")
+                .subscribe(() => this.props.onAvatar()),
         )
     }
 
@@ -110,7 +119,7 @@ export class ChatView extends Component {
                 onUserDelete: () => {
                     this.props.onDeleteUserButton(x)
                 },
-                isChatCreatorOrAuthUser: this._isUserChatCreator(x) || this._isAuthUser(x)
+                isChatCreatorOrAuthUser: this._isUserChatCreator(x) || this._isAuthUser(x),
             }),
         }))
         // Обновляем children компонента для ререндера

@@ -16,7 +16,6 @@ export const SNACKBAR_TYPE_CLASS: Indexed = {
 }
 
 export class SnackBarService {
-
     private _overlayContainer: HTMLDivElement
     private _globalOverlayWrapper: HTMLDivElement
     private _overlayElementContainer: HTMLDivElement
@@ -37,7 +36,7 @@ export class SnackBarService {
             return SnackBarService.__instance
         }
 
-        this._title = ''
+        this._title = ""
         this._type = SNACKBAR_TYPE.INFO
         this._duration = 2000
 
@@ -63,12 +62,12 @@ export class SnackBarService {
                 this._elementText.textContent = this._title
                 this._element.classList.add("snackbar-shown")
             },
-            5
+            5,
         )
 
         this._timer = setTimeout(
             () => this.close(),
-            this._duration
+            this._duration,
         )
     }
 
@@ -96,18 +95,18 @@ export class SnackBarService {
         this._elementText = document.createElement("span")
 
         this._elementButton = new Button({
-            title: 'ОК',
+            title: "ОК",
             theme: BUTTON_THEMES.PRIMARY,
-            type: BUTTON_TYPES.LINK
+            type: BUTTON_TYPES.LINK,
         })
 
         Observable
-        .fromEvent(this._elementButton.element, "click")
-        .subscribe(
-            () => {
-                this.close()
-            }
-        )
+            .fromEvent(this._elementButton.element, "click")
+            .subscribe(
+                () => {
+                    this.close()
+                },
+            )
 
         this._element.appendChild(this._elementText)
         this._element.appendChild(this._elementButton.element)
