@@ -124,7 +124,9 @@ export class UserService {
                 },
                 (err: ServerErrorResponse) => {
                     console.error(err)
-                    if (err.reason === "Cookie is not valid") {
+                    const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
+                    const isInSystem = this._user || isLoggedIn
+                    if (err.reason === "Cookie is not valid" && isInSystem) {
                         this.logOut()
                     }
                 },

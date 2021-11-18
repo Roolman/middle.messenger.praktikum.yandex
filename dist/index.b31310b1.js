@@ -14973,7 +14973,9 @@ var UserService = (_dec = _inject.Inject(_snackbar.SnackBarService), (_class = /
                     _this3._userSubject.next(_this3._user);
                 }, function(err) {
                     console.error(err);
-                    if (err.reason === "Cookie is not valid") _this3.logOut();
+                    var isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY));
+                    var isInSystem = _this3._user || isLoggedIn;
+                    if (err.reason === "Cookie is not valid" && isInSystem) _this3.logOut();
                 });
             }
         },
@@ -16283,7 +16285,8 @@ var LoginPage1 = (_dec = _inject.Inject(_user.UserService), (_class = /*#__PURE_
             key: "componentDidRender",
             value: function componentDidRender() {
                 // Определяем состояние кнопки по валидности формы
-                this._setLoginButtonValidity(this.loginBlock.form.isValid);
+                this._setLoginButtonValidity(this.loginBlock.form.isValid); // Фокусируемся для корректного отображения autofill
+                this.loginBlock.element.focus();
             }
         },
         {
