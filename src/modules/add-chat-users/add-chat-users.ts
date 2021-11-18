@@ -169,9 +169,7 @@ export class AddChatUsers extends Component {
                                 if(i > 1) {
                                     return acc || isEqual(u, val)
                                 }
-                                else {
-                                    return isEqual(u, acc) || isEqual(u, val)
-                                }
+                                return isEqual(u, acc) || isEqual(u, val)
                             }
                         ))
                     }
