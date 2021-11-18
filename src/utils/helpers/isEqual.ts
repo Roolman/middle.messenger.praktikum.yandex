@@ -1,26 +1,26 @@
-type isEqualInput = PlainObject | null | undefined
+type IsEqualInput = PlainObject | null | undefined
 
 type PlainObject<T = any> = {
     [k in string]: T
 }
 
 function isPlainObject(value: unknown): value is PlainObject {
-    return typeof value === 'object'
+    return typeof value === "object"
         && value !== null
         && value.constructor === Object
-        && Object.prototype.toString.call(value) === '[object Object]'
+        && Object.prototype.toString.call(value) === "[object Object]"
 }
 
 function isArray(value: unknown): value is [] {
-    return Array.isArray(value);
+    return Array.isArray(value)
 }
 
 function isArrayOrObject(value: unknown): value is [] | PlainObject {
     return isPlainObject(value) || isArray(value)
 }
 
-function isEqual(lhs: isEqualInput, rhs: isEqualInput) {
-    if(!lhs || !rhs) {
+function isEqual(lhs: IsEqualInput, rhs: IsEqualInput) {
+    if (!lhs || !rhs) {
         return false
     }
     if (Object.keys(lhs).length !== Object.keys(rhs).length) {
@@ -28,10 +28,12 @@ function isEqual(lhs: isEqualInput, rhs: isEqualInput) {
     }
 
     for (const [key, value] of Object.entries(lhs)) {
-        const rightValue = rhs[key];
+        const rightValue = rhs[key]
         if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
             if (isEqual(value, rightValue)) {
+                /* eslint-disable */
                 continue
+                /* eslint-enable */
             }
             return false
         }

@@ -1,4 +1,4 @@
-import { ServerUserResponse } from "../api/auth.api";
+import { ServerUserResponse } from "../api/auth.api"
 
 export type User = ServerUserResponse & {
 }

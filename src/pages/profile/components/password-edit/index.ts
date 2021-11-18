@@ -1,1 +1,1 @@
-export {PasswordEdit} from "./password-edit"
+export { PasswordEdit } from "./password-edit"

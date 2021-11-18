@@ -25,9 +25,9 @@ export class Error500Page extends Component {
                     component: new Button({
                         title: "Назад к чатам",
                         type: BUTTON_TYPES.LINK,
-                    })
-                }
-            ]
+                    }),
+                },
+            ],
         }
     }
 

@@ -1,7 +1,7 @@
-import { BASE_URL } from "../constants/api";
-import { BaseAPI } from "../utils/classes/base-api";
-import { HttpClient } from "../utils/classes/fetch/fetch";
-import { Observable } from "../utils/classes/observable";
+import { BASE_URL } from "../constants/api"
+import { BaseAPI } from "../utils/classes/base-api"
+import { HttpClient } from "../utils/classes/fetch/fetch"
+import { Observable } from "../utils/classes/observable"
 
 export type UploadChatAvatar = {
     chatId: number
@@ -26,14 +26,12 @@ export type RequestChatUsersParams = {
     email?: string
 }
 
-
 export class ChatsApi extends BaseAPI {
-
     private _api: HttpClient
 
     constructor() {
         super()
-        this._api = new HttpClient(BASE_URL + "chats")
+        this._api = new HttpClient(`${BASE_URL}chats`)
     }
 
     request(data?: RequestChatsParams): Observable {
@@ -41,11 +39,11 @@ export class ChatsApi extends BaseAPI {
     }
 
     create(title: string): Observable {
-        return this._api.post("", {title})
+        return this._api.post("", { title })
     }
 
     delete(chatId: number): Observable {
-        return this._api.delete("", {chatId})
+        return this._api.delete("", { chatId })
     }
 
     requestChatUsers(chatId: number, requstParams?: RequestChatUsersParams): Observable {
@@ -61,18 +59,17 @@ export class ChatsApi extends BaseAPI {
     }
 
     loadChatAvatar(data: UploadChatAvatar): Observable {
-        let form = new FormData()
+        const form = new FormData()
         form.set("chatId", data.chatId.toString())
         form.set("avatar", data.avatar, data.avatar.name)
-        return this._api.put(`/avatar`, form)
+        return this._api.put("/avatar", form)
     }
 
     addChatUsers(data: AddDeleteChatUsers): Observable {
-        return this._api.put(`/users`, data)
+        return this._api.put("/users", data)
     }
 
     deleteChatUsers(data: AddDeleteChatUsers): Observable {
-        return this._api.delete(`/users`, data)
+        return this._api.delete("/users", data)
     }
-
 }

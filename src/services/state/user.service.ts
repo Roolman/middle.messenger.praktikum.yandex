@@ -10,12 +10,10 @@ import { Inject } from "../../utils/decorators/inject"
 import { PAGES } from "../core/navigation"
 import Router from "../core/router"
 import { SnackBarService, SNACKBAR_TYPE } from "../core/snackbar"
-import { ChatsService } from "./chats.service"
 
 export const LOGGED_IN_KEY = "authorized"
 
 export class UserService {
-
     private _authApi: AuthApi
     private _usersApi: UsersApi
 
@@ -64,16 +62,15 @@ export class UserService {
                 },
                 (err: ServerErrorResponse) => {
                     this._logInLoadingSubject.next(false)
-                    if(err.reason === "User already in system") {
+                    if (err.reason === "User already in system") {
                         // Если по какой-то причине это произошло, то входим
                         this._logIn()
-                    }
-                    else {
+                    } else {
                         this._snackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
                         console.error(err)
                     }
-                }
-            )        
+                },
+            )
     }
 
     private _logIn(): void {
@@ -96,14 +93,19 @@ export class UserService {
                 (err: ServerErrorResponse) => {
                     this._registerLoadingSubject.next(false)
                     console.error(err)
-                    if(err.reason === "Login already exists") {
-                        this._snackBar.open("Логин уже занят. Попробуйте другой", SNACKBAR_TYPE.ERROR)
+                    if (err.reason === "Login already exists") {
+                        this._snackBar.open(
+                            "Логин уже занят. Попробуйте другой",
+                            SNACKBAR_TYPE.ERROR,
+                        )
+                    } else {
+                        this._snackBar.open(
+                            "Ошибка регистрации. Попробуйте еще раз",
+                            SNACKBAR_TYPE.ERROR,
+                        )
                     }
-                    else {
-                        this._snackBar.open("Ошибка регистрации. Попробуйте еще раз", SNACKBAR_TYPE.ERROR)
-                    }
-                }
-            )         
+                },
+            )
     }
 
     getUserData(): void {
@@ -111,21 +113,21 @@ export class UserService {
             .requestUser()
             .subscribe(
                 (user: ServerUserResponse) => {
-                    if(!user.display_name) {
+                    if (!user.display_name) {
                         user.display_name = `${user.first_name} ${user.second_name}`
                     }
-                    if(user.avatar) {
+                    if (user.avatar) {
                         user.avatar = RESOURCES_URL + user.avatar
-                    }                    
+                    }
                     this._user = user
                     this._userSubject.next(this._user)
                 },
                 (err: ServerErrorResponse) => {
                     console.error(err)
-                    if(err.reason === "Cookie is not valid") {
+                    if (err.reason === "Cookie is not valid") {
                         this.logOut()
                     }
-                }
+                },
             )
     }
 
@@ -144,7 +146,7 @@ export class UserService {
                     this._user = null
                     this._userSubject.next(this._user)
                     Router.go(PAGES.LOGIN)
-                }
+                },
             )
     }
 
@@ -152,17 +154,17 @@ export class UserService {
         this._usersApi
             .update(user)
             .subscribe(
-                (user: User) => {
-                    if(user.avatar) {
-                        user.avatar = RESOURCES_URL + user.avatar
+                (newUser: User) => {
+                    if (newUser.avatar) {
+                        newUser.avatar = RESOURCES_URL + newUser.avatar
                     }
-                    this._user = user
+                    this._user = newUser
                     this._userSubject.next(this._user)
                     this._snackBar.open("Данные успешно изменены", SNACKBAR_TYPE.SUCCESS)
                 },
-                (err: ServerErrorResponse) => {
+                () => {
                     this._snackBar.open("Ошибка изменения данных", SNACKBAR_TYPE.ERROR)
-                }
+                },
             )
     }
 
@@ -176,10 +178,10 @@ export class UserService {
                     this._userSubject.next(this._user)
                     this._snackBar.open("Аватар успешно изменен", SNACKBAR_TYPE.SUCCESS)
                 },
-                (err: ServerErrorResponse) => {
+                () => {
                     this._snackBar.open("Ошибка смены аватара", SNACKBAR_TYPE.ERROR)
-                }
-            )        
+                },
+            )
     }
 
     updatePassword(oldPassword: string, newPassword: string) {
@@ -190,13 +192,12 @@ export class UserService {
                     this._snackBar.open("Пароль успешно изменен", SNACKBAR_TYPE.SUCCESS)
                 },
                 (err: ServerErrorResponse) => {
-                    if(err.reason === "Password is incorrect") {
+                    if (err.reason === "Password is incorrect") {
                         this._snackBar.open("Пароль неверный", SNACKBAR_TYPE.ERROR)
-                    }
-                    else {
+                    } else {
                         this._snackBar.open("Ошибка смены пароля", SNACKBAR_TYPE.ERROR)
                     }
-                }
+                },
             )
     }
 }

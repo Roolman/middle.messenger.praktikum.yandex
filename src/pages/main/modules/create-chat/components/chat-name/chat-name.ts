@@ -1,4 +1,3 @@
-
 import { ComponentProps } from "../../../../../../types/components/component"
 import { Component } from "../../../../../../utils/classes/component"
 
@@ -36,54 +35,54 @@ export class ChatName extends Component {
                         title: "Название",
                         type: "text",
                         validators: new Validators([
-                            REQUIRED_VALIDATOR
+                            REQUIRED_VALIDATOR,
                         ]),
                         isValidationHidden: true,
                         styles: {
-                            width: "100%"
-                        }
-                    })
+                            width: "100%",
+                        },
+                    }),
                 },
                 {
                     name: "nextButton",
                     component: new Button({
                         title: "Далее",
                         styles: {
-                            width: "100%"
+                            width: "100%",
                         },
                         attributes: {
-                            disabled: ''
-                        }
-                    })
-                }
-            ]
+                            disabled: "",
+                        },
+                    }),
+                },
+            ],
         }
     }
 
     componentDidMount() {
         this._onMountSubscriptions.push(
-        Observable
-        .fromEvent(this.nextButton.element, 'click')
-        .subscribe(
-            (e: Event) => {
-                e.preventDefault()
+            Observable
+                .fromEvent(this.nextButton.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        e.preventDefault()
 
-                this.props.onNextButton()
-            }
-        ))
+                        this.props.onNextButton()
+                    },
+                ),
+        )
         this._onMountSubscriptions.push(
-        this.titleInput.onValueChange
-        .subscribe(
-            () => {
-                const isValid = this.titleInput.isValid
-                if(isValid) {
-                    this.nextButton.setEnabled()
-                }
-                else {
-                    this.nextButton.setDisabled()
-                }
-            }
-        ))
+            this.titleInput.onValueChange
+                .subscribe(
+                    () => {
+                        const { isValid } = this.titleInput
+                        if (isValid) {
+                            this.nextButton.setEnabled()
+                        } else {
+                            this.nextButton.setDisabled()
+                        }
+                    },
+                ),
+        )
     }
-
 }

@@ -1,5 +1,4 @@
-const addChatUsersTemplate = 
-`
+const addChatUsersTemplate = `
 <h3>Добавить пользователей</h3>
 <ul data-ref="seclectedUsersContainer" class="add-chat__selected-users">
     {{#each selectedUsers}}

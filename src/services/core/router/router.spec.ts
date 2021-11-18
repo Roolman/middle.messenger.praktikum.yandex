@@ -1,15 +1,14 @@
 import { expect } from "chai"
-import { JSDOM } from 'jsdom'
+import { JSDOM } from "jsdom"
 import { ComponentProps } from "../../../types/components/component"
 import { Component } from "../../../utils/classes/component"
 import { Router } from "./router"
 
 describe("Router", () => {
-
-    const base_url = 'http://localhost'
+    const base_url = "http://localhost"
 
     class PageDefault extends Component {
-        constructor(props?: ComponentProps){
+        constructor(props?: ComponentProps) {
             super("div", props)
         }
     }
@@ -29,7 +28,7 @@ describe("Router", () => {
     }
 
     beforeEach(() => {
-        const dom = new JSDOM('<div id="root"></div>', { url: base_url })
+        const dom = new JSDOM("<div id=\"root\"></div>", { url: base_url })
         global.window = dom.window.document.defaultView as Window & typeof globalThis
     })
 
@@ -37,13 +36,13 @@ describe("Router", () => {
         const router = initRouter()
         router.go(FIRST_PAGE)
         router.go(SECOND_PAGE)
-    
+
         expect(window.history.length).to.equal(3)
     })
 
     it("should create routes", () => {
         const router = initRouter()
-    
+
         expect(router.routes.length).to.equal(3)
     })
 

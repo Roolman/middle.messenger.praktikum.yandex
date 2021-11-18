@@ -1,16 +1,15 @@
-import { BASE_URL } from "../constants/api";
-import { SignInUserData, SignUpUserData } from "../types/api/auth.api";
-import { BaseAPI } from "../utils/classes/base-api";
-import { HttpClient } from "../utils/classes/fetch/fetch";
-import { Observable } from "../utils/classes/observable";
+import { BASE_URL } from "../constants/api"
+import { SignInUserData, SignUpUserData } from "../types/api/auth.api"
+import { BaseAPI } from "../utils/classes/base-api"
+import { HttpClient } from "../utils/classes/fetch/fetch"
+import { Observable } from "../utils/classes/observable"
 
 export class AuthApi extends BaseAPI {
-
     private _api: HttpClient
 
     constructor() {
         super()
-        this._api = new HttpClient(BASE_URL + "auth/")
+        this._api = new HttpClient(`${BASE_URL}auth/`)
     }
 
     signup(data: SignUpUserData): Observable {
@@ -28,5 +27,4 @@ export class AuthApi extends BaseAPI {
     logout(): Observable {
         return this._api.post("logout")
     }
-
 }

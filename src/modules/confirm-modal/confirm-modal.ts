@@ -34,27 +34,27 @@ export class ConfirmModal extends Component {
             children: [
                 {
                     name: "confirmButton",
-                    component: new Button({ 
+                    component: new Button({
                         title: props.onConfirmTitle || "Да",
                         type: BUTTON_TYPES.STROKED,
                         theme: BUTTON_THEMES.PRIMARY,
                         styles: {
-                            width: "100px"
-                        }
-                    })
+                            width: "100px",
+                        },
+                    }),
                 },
                 {
                     name: "declineButton",
-                    component: new Button({ 
+                    component: new Button({
                         title: props.onDeclineTitle || "Отмена",
                         type: BUTTON_TYPES.BASIC,
                         theme: BUTTON_THEMES.DANGER,
                         styles: {
-                            width: "100px"
-                        }
-                    })
-                }
-            ]
+                            width: "100px",
+                        },
+                    }),
+                },
+            ],
         }
     }
 
@@ -62,36 +62,36 @@ export class ConfirmModal extends Component {
         this.hide()
         this._subscriptions.push(
             Observable
-            .fromEvent(this.element, "click")
-            .subscribe(
-                (e: Event) => {
-                    const target = e.target as HTMLElement
-                    if(target.classList.contains(this.props.componentClassName  as string)) {
-                        this.hide()
-                    }
-                }
-            )
+                .fromEvent(this.element, "click")
+                .subscribe(
+                    (e: Event) => {
+                        const target = e.target as HTMLElement
+                        if (target.classList.contains(this.props.componentClassName as string)) {
+                            this.hide()
+                        }
+                    },
+                ),
         )
     }
 
     componentDidMount() {
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.confirmButton.element, "click")
-            .subscribe(
-                () => {
-                    this.props.onConfirm()
-                }
-            )
+                .fromEvent(this.confirmButton.element, "click")
+                .subscribe(
+                    () => {
+                        this.props.onConfirm()
+                    },
+                ),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.declineButton.element, "click")
-            .subscribe(
-                () => {
-                    this.props.onDecline()
-                }
-            )
+                .fromEvent(this.declineButton.element, "click")
+                .subscribe(
+                    () => {
+                        this.props.onDecline()
+                    },
+                ),
         )
     }
 }

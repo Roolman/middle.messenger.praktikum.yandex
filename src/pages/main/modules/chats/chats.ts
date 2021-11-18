@@ -60,9 +60,9 @@ export class Chats extends Component {
                 },
                 {
                     name: "searchInput",
-                    component: new SearchInput({})
+                    component: new SearchInput({}),
                 },
-                ...chatsChildComponents
+                ...chatsChildComponents,
             ],
         }
     }
@@ -75,21 +75,20 @@ export class Chats extends Component {
         ))
         this._subscriptions.push(
             this
-            ._userService
-            .userObservable
-            .subscribe(
-                (x: User) => {
-                    if(x) {
-                        this._chatsService.getChats()
-                    }
-                }
-            )
+                ._userService
+                .userObservable
+                .subscribe(
+                    (x: User) => {
+                        if (x) {
+                            this._chatsService.getChats()
+                        }
+                    },
+                ),
         )
-
     }
 
     componentDidRender() {
-        if(this.isInputFocused) {
+        if (this.isInputFocused) {
             this.searchInput.input.focus()
         }
     }
@@ -105,40 +104,44 @@ export class Chats extends Component {
                 ),
         )
         this._onMountSubscriptions.push(
-        Observable.fromEvent(this.addChatButton.element, "click")
-            .subscribe(
-                (event: MouseEvent) => {
-                    event.preventDefault()
-                    this.props.onAddChatButton()
-                },
-            ),
+            Observable.fromEvent(this.addChatButton.element, "click")
+                .subscribe(
+                    (event: MouseEvent) => {
+                        event.preventDefault()
+                        this.props.onAddChatButton()
+                    },
+                ),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.searchInput.input, "input")
-            .throttle(500)
-            .subscribe(
-                () => {
-                    const request: RequestChatsParams = {
-                        title: this.searchInput.input.value
-                    }
-                    this._chatsService.getChats(request)
-                }
-            )
+                .fromEvent(this.searchInput.input, "input")
+                .throttle(500)
+                .subscribe(
+                    () => {
+                        const request: RequestChatsParams = {
+                            title: this.searchInput.input.value,
+                        }
+                        this._chatsService.getChats(request)
+                    },
+                ),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.searchInput.input, "focus")
-            .subscribe(
-                () => this.isInputFocused = true
-            )
+                .fromEvent(this.searchInput.input, "focus")
+                .subscribe(
+                    () => {
+                        this.isInputFocused = true
+                    },
+                ),
         )
         this._onMountSubscriptions.push(
             Observable
-            .fromEvent(this.searchInput.input, "blur")
-            .subscribe(
-                () => this.isInputFocused = false
-            )
+                .fromEvent(this.searchInput.input, "blur")
+                .subscribe(
+                    () => {
+                        this.isInputFocused = false
+                    },
+                ),
         )
     }
 

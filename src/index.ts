@@ -16,7 +16,7 @@ import { Error404Page } from "./pages/errors/404"
 import { Error500Page } from "./pages/errors/500"
 import { ChatSettings } from "./pages/chat-settings"
 import { UserService } from "./services/state/user.service"
-import {AuthGuard} from "./utils/guards/auth.guard"
+import { AuthGuard } from "./utils/guards/auth.guard"
 import { SnackBarService } from "./services/core/snackbar"
 import { AddChatUsersService } from "./modules/add-chat-users/services/users.service"
 import { ChatSelectedGuard } from "./utils/guards/chat-selected.guard"
@@ -32,10 +32,10 @@ function registerServices() {
 }
 
 function initRouter() {
-   const authGuard = new AuthGuard()
-   const notAuthGuard = new AuthGuard().invert()
-   const chatSelectedGuard = new ChatSelectedGuard()
-   Router
+    const authGuard = new AuthGuard()
+    const notAuthGuard = new AuthGuard().invert()
+    const chatSelectedGuard = new ChatSelectedGuard()
+    Router
         .use(PAGES.LOGIN, LoginPage, [notAuthGuard])
         .use(PAGES.REGISTER, RegisterPage, [notAuthGuard])
         .use(PAGES.MAIN, MainPage, [authGuard])

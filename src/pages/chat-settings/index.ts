@@ -1,1 +1,1 @@
-export {ChatSettings} from "./chat-settings"
+export { ChatSettings } from "./chat-settings"

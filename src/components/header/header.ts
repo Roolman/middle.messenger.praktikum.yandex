@@ -4,7 +4,6 @@ import "./header.scss"
 import templ from "./header.tmpl"
 
 export class Header extends Component {
-
     constructor() {
         super("header", {}, templ)
     }

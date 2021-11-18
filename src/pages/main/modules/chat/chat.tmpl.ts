@@ -6,7 +6,11 @@ export default
                 {{#if avatar}}
                 <img class="chat__avatar-image" src="{{avatar}}" crossorigin="use-credentials"/>
                 {{else}}
-                    <img class="chat__avatar-image" src="static/img/chat_default.png" crossorigin="use-credentials"/>
+                    <img 
+                        class="chat__avatar-image" 
+                        src="static/img/chat_default.png" 
+                        crossorigin="use-credentials"
+                    />
                 {{/if}}
                 <span class="chat__name">{{ title }}</span>   
             </div>
@@ -18,7 +22,12 @@ export default
             {{/unless}}
             {{#if messagesComponents}}
                 {{#unless allMessagesLoaded}}
-                    <div data-ref="loadMoreButton" class="chat__messages-load-more">Загрузить еще</div>
+                    <div 
+                        data-ref="loadMoreButton" 
+                        class="chat__messages-load-more"
+                    >
+                        Загрузить еще
+                    </div>
                 {{/unless}}
                 {{#each messagesComponents}}
                     <div data-component="{{ this.name }}"></div>

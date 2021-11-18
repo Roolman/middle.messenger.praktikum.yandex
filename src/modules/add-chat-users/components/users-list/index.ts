@@ -1,1 +1,1 @@
-export {UsersListItem} from "./users-list-item"
+export { UsersListItem } from "./users-list-item"

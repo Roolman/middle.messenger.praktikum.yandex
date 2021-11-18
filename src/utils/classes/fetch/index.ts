@@ -1,1 +1,1 @@
-export {HttpClient} from "./fetch"
+export { HttpClient } from "./fetch"
