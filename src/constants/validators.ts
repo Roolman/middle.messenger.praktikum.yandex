@@ -13,7 +13,7 @@ export const EMAIL_VALIDATOR: Validator = {
 
 export const LOGIN_PATTERN_VALIDATOR: Validator = {
     type: VALIDITY_TYPES.pattern,
-    value: "^[A-ZА-Я]{1}[A-Za-zА-Яа-я0-9\_\-]+$",
+    value: "^[A-Za-zA-Zа-я]{1}[A-Za-zА-Яа-я0-9\_\-]+$",
     error: "Логин должен содержать только символы [A-z][0-9]-_ и начинаться с буквы",
 }
 
