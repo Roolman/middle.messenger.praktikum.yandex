@@ -14,11 +14,11 @@ export class AuthApi extends BaseAPI {
     }
 
     signup(data: SignUpUserData): Observable {
-        return this._api.post("signup", {data})
+        return this._api.post("signup", data)
     }
 
     signin(data: SignInUserData): Observable {
-        return this._api.post("signin", {data})
+        return this._api.post("signin", data)
     }
 
     requestUser(): Observable {

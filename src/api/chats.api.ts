@@ -37,19 +37,19 @@ export class ChatsApi extends BaseAPI {
     }
 
     request(data?: RequestChatsParams): Observable {
-        return this._api.get("", {data})
+        return this._api.get("", data)
     }
 
     create(title: string): Observable {
-        return this._api.post("", {data: {title}})
+        return this._api.post("", {title})
     }
 
     delete(chatId: number): Observable {
-        return this._api.delete("", {data: {chatId}})
+        return this._api.delete("", {chatId})
     }
 
     requestChatUsers(chatId: number, requstParams?: RequestChatUsersParams): Observable {
-        return this._api.get(`/${chatId}/users`, {data: requstParams})
+        return this._api.get(`/${chatId}/users`, requstParams)
     }
 
     requestChatNewMessages(chatId: number): Observable {
@@ -64,15 +64,15 @@ export class ChatsApi extends BaseAPI {
         let form = new FormData()
         form.set("chatId", data.chatId.toString())
         form.set("avatar", data.avatar, data.avatar.name)
-        return this._api.put(`/avatar`, {data: form})
+        return this._api.put(`/avatar`, form)
     }
 
     addChatUsers(data: AddDeleteChatUsers): Observable {
-        return this._api.put(`/users`, {data})
+        return this._api.put(`/users`, data)
     }
 
     deleteChatUsers(data: AddDeleteChatUsers): Observable {
-        return this._api.delete(`/users`, {data})
+        return this._api.delete(`/users`, data)
     }
 
 }

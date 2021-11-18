@@ -18,17 +18,17 @@ export class UsersApi extends BaseAPI {
     }
 
     requestUsers(login: string): Observable {
-        return this._api.post("search", {data: {login}})
+        return this._api.post("search", {login})
     }
     
     update(data: User): Observable {
-        return this._api.put("profile", {data})
+        return this._api.put("profile", data)
     }
 
     updateAvatar(avatar: File): Observable {
         let form = new FormData()
         form.append("avatar", avatar)
-        return this._api.put("profile/avatar", {data: form})
+        return this._api.put("profile/avatar", form)
     }
 
     updatePassword(oldPassword: string, newPassword: string): Observable {
@@ -36,7 +36,7 @@ export class UsersApi extends BaseAPI {
             oldPassword,
             newPassword
         }
-        return this._api.put("password", {data})
+        return this._api.put("password", data)
     }
 
 }
