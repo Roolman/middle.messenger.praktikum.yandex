@@ -18,7 +18,7 @@ export class UsersListItem extends Component {
     addUserButton: Button
 
     constructor(props?: UsersListItemProps) {
-        super("div", props, tmpl)
+        super("li", props, tmpl)
     }
 
     setDefaultProps(props: UsersListItemProps): UsersListItemProps {
