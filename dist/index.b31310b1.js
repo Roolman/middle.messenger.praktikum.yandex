@@ -16292,7 +16292,7 @@ var LoginPage1 = (_dec = _inject.Inject(_user.UserService), (_class = /*#__PURE_
             value: function componentDidRender() {
                 // Определяем состояние кнопки по валидности формы
                 this._setLoginButtonValidity(this.loginBlock.form.isValid); // Фокусируемся для корректного отображения autofill
-                this.loginBlock.element.focus();
+                this.loginBlock.form.element.focus();
             }
         },
         {

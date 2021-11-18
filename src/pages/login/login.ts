@@ -107,7 +107,7 @@ export class LoginPage extends Component {
         // Определяем состояние кнопки по валидности формы
         this._setLoginButtonValidity(this.loginBlock.form.isValid)
         // Фокусируемся для корректного отображения autofill
-        this.loginBlock.element.focus()
+        this.loginBlock.form.element.focus()
     }
 
     componentDidMount() {
