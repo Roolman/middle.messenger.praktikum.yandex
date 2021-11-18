@@ -49,14 +49,8 @@ export class UserService {
         this._authApi = new AuthApi()
         this._usersApi = new UsersApi()
 
-        const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
-        if(isLoggedIn) {
-            this.getUserData()
-        }
-        else {
-            // На случай если юзер руками удалил переменную в lS
-            this.logOut()
-        }
+        // На случай если юзер руками удалил переменную в lS
+        this.getUserData()
     }
 
     logIn(data: SignInUserData): void {
@@ -66,16 +60,26 @@ export class UserService {
             .subscribe(
                 () => {
                     this._logInLoadingSubject.next(false)
-                    localStorage.setItem(LOGGED_IN_KEY, "online")
-                    Router.go(PAGES.MAIN)
-                    this.getUserData()
+                    this._logIn()
                 },
                 (err: ServerErrorResponse) => {
                     this._logInLoadingSubject.next(false)
-                    this._snackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
-                    console.error(err)
+                    if(err.reason === "User already in system") {
+                        // Если по какой-то причине это произошло, то входим
+                        this._logIn()
+                    }
+                    else {
+                        this._snackBar.open("Неверный логин или пароль", SNACKBAR_TYPE.ERROR)
+                        console.error(err)
+                    }
                 }
             )        
+    }
+
+    private _logIn(): void {
+        localStorage.setItem(LOGGED_IN_KEY, "online")
+        Router.go(PAGES.MAIN)
+        this.getUserData()
     }
 
     signUp(data: SignUpUserData): void {
@@ -86,10 +90,8 @@ export class UserService {
                 () => {
                     this._registerLoadingSubject.next(false)
                     this._snackBar.open("Добро пожаловать в Fast messenger!", SNACKBAR_TYPE.SUCCESS)
-                    this.logIn({
-                        login: data.login,
-                        password: data.password
-                    })
+                    // После этого сразу входим
+                    this._logIn()
                 },
                 (err: ServerErrorResponse) => {
                     this._registerLoadingSubject.next(false)
