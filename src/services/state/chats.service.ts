@@ -327,7 +327,7 @@ export class ChatsService {
 
     private _mapChats(chats: ChatData[]) {
         const chatIds = this._chats.map((x) => x.id)
-        const { id, avatar, ...authUser } = this._userService.user as User
+        const { id, avatar, ...authUser } = this._userService.user || {}
         // TODO: Заменить поиск на более оптимальный
         return chats.map(
             (x: ChatData) => {

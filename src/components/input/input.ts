@@ -40,6 +40,8 @@ export class Input extends Component implements FormElement {
     }
     set value(value: string) {
         this.input.value = value
+        this._checkInputValidity()
+        this._onValueChange.next(value)
     }
     get inputElement(): HTMLElement {
         return this.input

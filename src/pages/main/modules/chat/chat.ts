@@ -135,7 +135,7 @@ export class Chat extends Component {
     componentDidMount() {
         if (this.props.id) {
             this._onMountSubscriptions.push(
-                Observable.fromEvent(this.sendButton.element, "click")
+                Observable.fromEvent(this.sendForm.element, "submit")
                     .subscribe(
                         (e: Event) => {
                             e.preventDefault()
@@ -144,6 +144,7 @@ export class Chat extends Component {
                                 const messageInput = this.sendForm.formElements[0] as MessageInput
                                 this.props.messenger?.sendMessage(messageInput.value)
                                 messageInput.value = ""
+                                this.sendButton.setInvisible()
                                 this.isInputFocused = true
                             }
                         },

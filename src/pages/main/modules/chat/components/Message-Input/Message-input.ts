@@ -22,7 +22,10 @@ export class MessageInput extends Component implements FormElement {
         return (this.element as HTMLInputElement).value
     }
     set value(val: string) {
-        (this.element as HTMLInputElement).value = val
+        const element = this.element as HTMLInputElement
+        element.value = val
+        this._checkInputValidity(element)
+        this._onValueChange.next(val)
     }
     get isValid(): boolean {
         return this._checkInputValidity(this.element as HTMLInputElement)

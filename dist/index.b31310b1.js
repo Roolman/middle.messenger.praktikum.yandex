@@ -12500,7 +12500,8 @@ var ChatsService = (_dec = _inject.Inject(_snackbar.SnackBarService), _dec2 = _i
                 var chatIds = this._chats.map(function(x) {
                     return x.id;
                 });
-                var _ref = this._userService.user, id = _ref.id, avatar = _ref.avatar, authUser = _objectWithoutProperties(_ref, _excluded); // TODO: Заменить поиск на более оптимальный
+                var _ref = this._userService.user || {
+                }, id = _ref.id, avatar = _ref.avatar, authUser = _objectWithoutProperties(_ref, _excluded); // TODO: Заменить поиск на более оптимальный
                 return chats.map(function(x) {
                     var lastMessageUser;
                     if (x.last_message) {
@@ -15837,7 +15838,7 @@ var Messenger = /*#__PURE__*/ function() {
             value: function init() {
                 var _this2 = this;
                 this._subscriptions.push(_observable.Observable.fromEvent(this._socket, "open").subscribe(function() {
-                    // NOTE: Пингуем сокет раз в секунду
+                    // NOTE: Пингуем сокет раз в 5 сек примерно
                     _this2._pingTimer = setInterval(function() {
                         _this2.pingChat();
                     }, 5000);
@@ -15915,7 +15916,12 @@ var Messenger = /*#__PURE__*/ function() {
         {
             key: "_send",
             value: function _send(content, type) {
-                this._socket.send(JSON.stringify({
+                var _this3 = this;
+                // NOTE: Если сокет не открылся, то повторить попытку через 100 мс
+                if (this._socket.readyState === 0) setTimeout(function() {
+                    _this3._send(content, type);
+                }, 50);
+                else this._socket.send(JSON.stringify({
                     content: content,
                     type: type
                 }));
@@ -16725,6 +16731,8 @@ var Input1 = /*#__PURE__*/ function(_Component) {
             },
             set: function set(value) {
                 this.input.value = value;
+                this._checkInputValidity();
+                this._onValueChange.next(value);
             }
         },
         {
@@ -19418,13 +19426,14 @@ var Chat1 = (_dec = _inject.Inject(_chats.ChatsService), (_class = /*#__PURE__*/
             value: function componentDidMount() {
                 var _this3 = this;
                 if (this.props.id) {
-                    this._onMountSubscriptions.push(_observable.Observable.fromEvent(this.sendButton.element, "click").subscribe(function(e) {
+                    this._onMountSubscriptions.push(_observable.Observable.fromEvent(this.sendForm.element, "submit").subscribe(function(e) {
                         e.preventDefault();
                         if (_this3.sendForm.isValid) {
                             var _this3$props$messenge;
                             var messageInput = _this3.sendForm.formElements[0];
                             (_this3$props$messenge = _this3.props.messenger) === null || _this3$props$messenge === void 0 || _this3$props$messenge.sendMessage(messageInput.value);
                             messageInput.value = "";
+                            _this3.sendButton.setInvisible();
                             _this3.isInputFocused = true;
                         }
                     }));
@@ -19663,7 +19672,10 @@ var MessageInput1 = /*#__PURE__*/ function(_Component) {
                 return this.element.value;
             },
             set: function set(val) {
-                this.element.value = val;
+                var element = this.element;
+                element.value = val;
+                this._checkInputValidity(element);
+                this._onValueChange.next(val);
             }
         },
         {
