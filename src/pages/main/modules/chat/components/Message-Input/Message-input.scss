@@ -10,6 +10,7 @@
   background-color: $chat_message_input_color;
   font-family: inherit;
   font-size: medium;
+  caret-color: $main_color;
 
   &::placeholder {
     color: $secondary_color;

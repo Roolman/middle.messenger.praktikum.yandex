@@ -1,5 +1,6 @@
 import { FormElement } from "../../../../../../components/form/form"
-import { Component, ComponentProps } from "../../../../../../utils/classes/component"
+import { ComponentProps } from "../../../../../../types/components/component"
+import { Component } from "../../../../../../utils/classes/component"
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Subject } from "../../../../../../utils/classes/subject"
 import { Validators } from "../../../../../../utils/classes/validators"
@@ -11,7 +12,7 @@ type MessageInputProps = ComponentProps & {
 }
 
 export class MessageInput extends Component implements FormElement {
-    private _onValueChange: Subject<string | number | boolean>
+    private _onValueChange: Subject<string>
     private _onValueChangeObservable: Observable
 
     get name(): string {
@@ -19,6 +20,9 @@ export class MessageInput extends Component implements FormElement {
     }
     get value(): string {
         return (this.element as HTMLInputElement).value
+    }
+    set value(val: string) {
+        (this.element as HTMLInputElement).value = val
     }
     get isValid(): boolean {
         return this._checkInputValidity(this.element as HTMLInputElement)
