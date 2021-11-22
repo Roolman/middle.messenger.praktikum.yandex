@@ -124,6 +124,7 @@ export class HttpClient {
             setTimeout(() => {
                 if (xhr.readyState !== 4) {
                     reject(xhr)
+                    xhr.abort()
                     console.warn("Таймаут запроса ", url)
                 }
             }, timeout)
