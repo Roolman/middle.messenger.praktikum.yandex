@@ -5,12 +5,11 @@ import templ, { emptyChat } from "./chat.tmpl"
 
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
-import { Message } from "./components/message/index"
 import { Component } from "../../../../utils/classes/component"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
-import { MessageInput } from "./components/message-Input"
+import { MessageInput } from "./components/message-input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
@@ -18,6 +17,7 @@ import Router from "../../../../services/core/router"
 import { PAGES } from "../../../../services/core/navigation"
 import { ComponentChild, ComponentProps } from "../../../../types/components/component"
 import { MessageView } from "./components/message/message"
+import { Message } from "../../../../services/core/messenger"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
