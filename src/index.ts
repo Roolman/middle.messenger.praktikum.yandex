@@ -66,6 +66,6 @@ Handlebars.registerHelper(
 document.addEventListener("invalid", (function () {
     return function (e: Event) {
         e.preventDefault()
-        console.log("test 5")
+        console.log("test 6")
     }
 }()), true)
