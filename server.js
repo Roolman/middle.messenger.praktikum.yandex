@@ -12,7 +12,7 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 
-const port = 3000
+const port = 3001
 
 app.get("*", (req, res) => {
   res.sendFile(`${__dirname}/dist/index.html`)

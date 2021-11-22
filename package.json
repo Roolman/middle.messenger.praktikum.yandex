@@ -56,7 +56,7 @@
   },
   "scripts": {
     "husky": "node_modules/.bin/husky",
-    "copy-static": "shx cp -r static/ dist/",
+    "copy-static": "shx cp -r static dist/",
     "remove-dist": "shx rm -rf dist",
     "remove-license": "shx rm -rf dist/*.LICENSE.txt",
     "webpack": "node node_modules/webpack/bin/webpack.js",
