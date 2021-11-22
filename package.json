@@ -55,6 +55,7 @@
     "webpack-dev-server": "^4.5.0"
   },
   "scripts": {
+    "prepare": "node_modules/.bin/husky install",
     "copy-static": "shx cp -r static/ dist/",
     "remove-dist": "shx rm -rf dist",
     "remove-license": "shx rm -rf dist/*.LICENSE.txt",
