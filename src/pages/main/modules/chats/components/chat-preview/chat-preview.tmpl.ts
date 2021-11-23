@@ -1,15 +1,7 @@
 export default
 `
     <div class="chats__chat-avatar">
-        {{#if avatar}}
-            <img class="chats__chat-avatar-image" src="{{avatar}}" crossorigin="use-credentials"/>
-        {{else}}
-            <img 
-                class="chats__chat-avatar-image" 
-                src="static/img/chat_default.png"
-                crossorigin="use-credentials"
-             />
-        {{/if}}
+        <div data-component="avatar"></div>
     </div>
     {{#if last_message}}
         <div class="chats__chat-info-group chats__chat-no-last-message">

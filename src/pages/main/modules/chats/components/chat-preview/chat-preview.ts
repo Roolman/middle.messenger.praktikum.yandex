@@ -5,6 +5,8 @@ import { ChatData, ChatsService } from "../../../../../../services/state/chats.s
 import { Observable } from "../../../../../../utils/classes/observable"
 import { Inject } from "../../../../../../utils/decorators/inject"
 import { ComponentProps } from "../../../../../../types/components/component"
+import { Image } from "../../../../../../components/image"
+import { DEFAULT_CHAT_AVATAR } from "../../../../../../constants/files"
 
 type ChatPreviewProps = ComponentProps & ChatData
 
@@ -22,6 +24,17 @@ export class ChatPreview extends Component {
         return {
             ...props,
             componentClassName: "chats__chat-container",
+            children: [
+                {
+                    name: "avatar",
+                    component: new Image({
+                        class: "chats__chat-avatar-image",
+                        attributes: {
+                            src: props.avatar || DEFAULT_CHAT_AVATAR
+                        }
+                    })
+                }
+            ]
         }
     }
 

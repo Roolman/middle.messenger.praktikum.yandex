@@ -44,6 +44,8 @@ export type LastMessageData = {
     content: string
 }
 
+type AuthUser = Omit<User, "id"|"avatar">
+
 export class ChatsService {
     private _subscriptions: Subscription[]
 
@@ -327,7 +329,11 @@ export class ChatsService {
 
     private _mapChats(chats: ChatData[]) {
         const chatIds = this._chats.map((x) => x.id)
-        const { id, avatar, ...authUser } = this._userService.user as User
+        let authUser: AuthUser
+        if(this._userService.user) {
+            const { id, avatar, ...user } = this._userService.user
+            authUser = user
+        }
         // TODO: Заменить поиск на более оптимальный
         return chats.map(
             (x: ChatData) => {

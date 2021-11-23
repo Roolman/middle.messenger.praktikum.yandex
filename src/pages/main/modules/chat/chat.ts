@@ -18,6 +18,8 @@ import { PAGES } from "../../../../services/core/navigation"
 import { ComponentChild, ComponentProps } from "../../../../types/components/component"
 import { MessageView } from "./components/message/message"
 import { Message } from "../../../../services/core/messenger"
+import { Image } from "../../../../components/image"
+import { DEFAULT_CHAT_AVATAR } from "../../../../constants/files"
 
 Handlebars.registerPartial("emptyChat", emptyChat)
 
@@ -31,6 +33,7 @@ export class Chat extends Component {
     sendForm: Form
     sendButton: Button
     openChatSettingsButton: Button
+    avatar: Image
 
     chatInput: HTMLElement
     messagesContainer: HTMLElement
@@ -47,6 +50,7 @@ export class Chat extends Component {
     }
 
     setDefaultProps(props: ChatProps): ChatProps {
+        console.log(props.avatar)
         return {
             ...props,
             componentClassName: "chat",
@@ -91,6 +95,15 @@ export class Chat extends Component {
                         },
                     }),
                 },
+                {
+                    name: "avatar",
+                    component: new Image({
+                        class: "chat__avatar-image",
+                        attributes: {
+                            src: props.avatar || DEFAULT_CHAT_AVATAR
+                        }
+                    })
+                },
             ],
         }
     }
@@ -101,6 +114,11 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
+                        this.avatar.setProps({
+                            attributes: {
+                                src: chat.avatar || DEFAULT_CHAT_AVATAR
+                            }
+                        })
                         this.setProps({
                             ...chat,
                             messagesComponents: this._getMessagesComponents(chat.messages || []),

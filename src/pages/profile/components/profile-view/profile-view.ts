@@ -10,6 +10,8 @@ import { UserService } from "../../../../services/state/user.service"
 import { ComponentProps } from "../../../../types/components/component"
 import { User } from "../../../../types/state/user"
 import { ChatsService } from "../../../../services/state/chats.service"
+import { Image } from "../../../../components/image"
+import { DEFAULT_USER_AVATAR } from "../../../../constants/files"
 
 type ProfilewViewProps = ComponentProps & {
     user: User | null
@@ -24,7 +26,9 @@ export class ProfileView extends Component {
     editDataButton: Button
     changePasswordButton: Button
     logoutButton: Button
-    avatar: HTMLElement
+    avatar: Image
+
+    avatarContainer: HTMLElement
 
     @Inject(UserService)
     private _userService: UserService
@@ -63,6 +67,15 @@ export class ProfileView extends Component {
                         theme: BUTTON_THEMES.DANGER,
                     }),
                 },
+                {
+                    name: "avatar",
+                    component: new Image({
+                        class: "settings__main-avatar",
+                        attributes: {
+                            src: props.user?.avatar || DEFAULT_USER_AVATAR
+                        }
+                    })
+                }
             ],
         }
     }
@@ -73,6 +86,11 @@ export class ProfileView extends Component {
                 (user: User) => {
                     this.setProps({
                         user,
+                    })
+                    this.avatar.setProps({
+                        attributes: {
+                            src: user?.avatar || DEFAULT_USER_AVATAR
+                        }
                     })
                 },
             ),
@@ -100,11 +118,11 @@ export class ProfileView extends Component {
                 }),
         )
         // Аватар
-        if (this.avatar) {
+        if(this.avatarContainer) {
             this._onMountSubscriptions.push(
                 Observable
-                    .fromEvent(this.avatar, "click")
-                    .subscribe(() => this.props.onAvatar()),
+                .fromEvent(this.avatarContainer, "click")
+                .subscribe(() => this.props.onAvatar()),
             )
         }
     }

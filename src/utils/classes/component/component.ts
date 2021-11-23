@@ -136,14 +136,7 @@ export abstract class Component {
         return true
     }
 
-    private _render() {
-        const block = this.render()
-        this._element.innerHTML = block
-        // Добавляем класс для элемента компонента (если есть)
-        if (this.props.componentClassName) {
-            this._element.classList.add(this.props.componentClassName)
-        }
-        // Устанавливаем стили
+    private _setStyles(): void {
         const styles = Object.entries(this.props.styles || {})
         for (const [styleName, value] of styles) {
             try {
@@ -152,7 +145,9 @@ export abstract class Component {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
-        // Устанавливаем аттрибуты
+    }
+
+    private _setAttributes(): void {
         const attributes = Object.entries(this.props.attributes || {})
         for (const [attributeName, value] of attributes) {
             try {
@@ -161,6 +156,19 @@ export abstract class Component {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
+    }
+
+    private _render() {
+        const block = this.render()
+        this._element.innerHTML = block
+        // Добавляем класс для элемента компонента (если есть)
+        if (this.props.componentClassName) {
+            this._element.classList.add(this.props.componentClassName)
+        }
+        // Устанавливаем стили
+        this._setStyles()
+        // Устанавливаем аттрибуты
+        this._setAttributes()
         // Получаем ссылки на компоненты
         this._getComponentChildrenReferences()
         // Заменяем заглушки на дочерние компоненты
