@@ -30,11 +30,11 @@ export class ChatPreview extends Component {
                     component: new Image({
                         class: "chats__chat-avatar-image",
                         attributes: {
-                            src: props.avatar || DEFAULT_CHAT_AVATAR
-                        }
-                    })
-                }
-            ]
+                            src: props.avatar || DEFAULT_CHAT_AVATAR,
+                        },
+                    }),
+                },
+            ],
         }
     }
 

@@ -72,10 +72,10 @@ export class ProfileView extends Component {
                     component: new Image({
                         class: "settings__main-avatar",
                         attributes: {
-                            src: props.user?.avatar || DEFAULT_USER_AVATAR
-                        }
-                    })
-                }
+                            src: props.user?.avatar || DEFAULT_USER_AVATAR,
+                        },
+                    }),
+                },
             ],
         }
     }
@@ -89,8 +89,8 @@ export class ProfileView extends Component {
                     })
                     this.avatar.setProps({
                         attributes: {
-                            src: user?.avatar || DEFAULT_USER_AVATAR
-                        }
+                            src: user?.avatar || DEFAULT_USER_AVATAR,
+                        },
                     })
                 },
             ),
@@ -118,11 +118,11 @@ export class ProfileView extends Component {
                 }),
         )
         // Аватар
-        if(this.avatarContainer) {
+        if (this.avatarContainer) {
             this._onMountSubscriptions.push(
                 Observable
-                .fromEvent(this.avatarContainer, "click")
-                .subscribe(() => this.props.onAvatar()),
+                    .fromEvent(this.avatarContainer, "click")
+                    .subscribe(() => this.props.onAvatar()),
             )
         }
     }

@@ -77,9 +77,9 @@ export class ChatView extends Component {
                     component: new Image({
                         class: "settings__main-avatar",
                         attributes: {
-                            src: props.chat.avatar || DEFAULT_CHAT_AVATAR
-                        }
-                    })
+                            src: props.chat.avatar || DEFAULT_CHAT_AVATAR,
+                        },
+                    }),
                 },
                 ...usersChildComponents,
             ],
@@ -97,8 +97,8 @@ export class ChatView extends Component {
                     })
                     this.avatar.setProps({
                         attributes: {
-                            src: chat.avatar || DEFAULT_CHAT_AVATAR
-                        }
+                            src: chat.avatar || DEFAULT_CHAT_AVATAR,
+                        },
                     })
                 },
             ),

@@ -50,11 +50,17 @@ export class Chat extends Component {
     }
 
     setDefaultProps(props: ChatProps): ChatProps {
-        console.log(props.avatar)
+        const chat = this._chatsService.chat
+        const messages = this._chatsService.chat?.messages
+        let mesComps: ComponentChild<MessageView>[] = []
+        if (messages) {
+            mesComps = this._getMessagesComponents(messages)
+        }
         return {
             ...props,
+            ...chat,
             componentClassName: "chat",
-            messagesComponents: [],
+            messagesComponents: mesComps,
             children: [
                 {
                     name: "sendButton",
@@ -100,10 +106,11 @@ export class Chat extends Component {
                     component: new Image({
                         class: "chat__avatar-image",
                         attributes: {
-                            src: props.avatar || DEFAULT_CHAT_AVATAR
-                        }
-                    })
+                            src: chat?.avatar || DEFAULT_CHAT_AVATAR,
+                        },
+                    }),
                 },
+                ...mesComps
             ],
         }
     }
@@ -116,8 +123,8 @@ export class Chat extends Component {
                     (chat: ChatData) => {
                         this.avatar.setProps({
                             attributes: {
-                                src: chat.avatar || DEFAULT_CHAT_AVATAR
-                            }
+                                src: chat.avatar || DEFAULT_CHAT_AVATAR,
+                            },
                         })
                         this.setProps({
                             ...chat,
@@ -226,7 +233,7 @@ export class Chat extends Component {
             component: new MessageView(x),
         }))
         // Обновляем children компонента для ререндера
-        if (this.props.children) {
+        if (this.props?.children) {
             this.props.children = this.props.children.filter((x) => !x.name.includes("message"))
             this.props.children.push(...messagesComponents)
         }

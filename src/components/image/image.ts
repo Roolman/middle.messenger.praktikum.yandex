@@ -25,8 +25,7 @@ export class Image extends Component {
             attributes: {
                 ...props.attributes,
                 crossorigin: "use-credentials",
-            }
+            },
         }
     }
-
 }
