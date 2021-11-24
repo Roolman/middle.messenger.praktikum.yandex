@@ -50,7 +50,7 @@ export class Chat extends Component {
     }
 
     setDefaultProps(props: ChatProps): ChatProps {
-        const chat = this._chatsService.chat
+        const { chat } = this._chatsService
         const messages = this._chatsService.chat?.messages
         let mesComps: ComponentChild<MessageView>[] = []
         if (messages) {
@@ -110,7 +110,7 @@ export class Chat extends Component {
                         },
                     }),
                 },
-                ...mesComps
+                ...mesComps,
             ],
         }
     }
