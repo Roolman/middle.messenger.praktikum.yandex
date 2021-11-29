@@ -48,7 +48,9 @@
     "style-loader": "^3.3.1",
     "stylelint": "^14.0.0",
     "stylelint-config-standard": "^23.0.0",
+    "terser-webpack-plugin": "^5.2.5",
     "ts-loader": "^9.2.6",
+    "uglify-js": "^3.14.3",
     "webpack": "^5.64.2",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.5.0"
