@@ -63,7 +63,7 @@
     "webpack-dev": "node node_modules/webpack/bin/webpack.js serve --mode development --target web --open",
     "webpack-build": "node node_modules/webpack/bin/webpack.js --mode production --devtool hidden-source-map",
     "dev": "npm-run-all copy-static webpack-dev",
-    "build": "npm-run-all remove-dist copy-static webpack-build remove-license",
+    "build": "npm-run-all remove-dist webpack-build copy-static remove-license",
     "start": "npm run build && node server.js",
     "eslint": "node_modules/.bin/eslint ./src",
     "eslint-fix": "node_modules/.bin/eslint ./src --fix",
