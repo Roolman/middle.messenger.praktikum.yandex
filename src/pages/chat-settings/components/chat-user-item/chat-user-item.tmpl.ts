@@ -3,7 +3,7 @@ export default
 <div class="chat__user-main-info">
     {{#if user.avatar}}
         <img src="{{user.avatar}}" class="chat__user-avatar" crossorigin="use-credentials"/>
-    {{else}}
+    {{#else}}
         <img 
             src="../static/img/avatar_default.jpg" 
             class="chat__user-avatar" 

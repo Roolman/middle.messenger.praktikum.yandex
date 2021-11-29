@@ -93,7 +93,7 @@ export class Messenger {
                 .fromEvent(this._socket, "open")
                 .subscribe(
                     () => {
-                    // NOTE: Пингуем сокет раз в 5 сек примерно
+                        // NOTE: Пингуем сокет раз в 5 сек
                         this._pingTimer = setInterval(
                             () => {
                                 this.pingChat()

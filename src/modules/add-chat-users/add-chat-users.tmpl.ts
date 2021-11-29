@@ -1,6 +1,6 @@
 const addChatUsersTemplate = `
 <h3>Добавить пользователей</h3>
-<ul data-ref="seclectedUsersContainer" class="add-chat__selected-users">
+<ul data-ref="selectedUsersContainer" class="add-chat__selected-users">
     {{#each selectedUsers}}
         <li class="add-chat__selected-user-container">
             <div class="add-chat__selected-user">
@@ -27,7 +27,7 @@ export default
     <div class="modal-content">
         ${addChatUsersTemplate}
     </div>
-{{else}}
+{{#else}}
     ${addChatUsersTemplate}
 {{/if}}
 `

@@ -1,16 +1,13 @@
-import * as Handlebars from "handlebars"
-
 import "./chat.scss"
-import templ, { emptyChat } from "./chat.tmpl"
+import templ from "./chat.tmpl"
 
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
-import { Message } from "./components/message/index"
 import { Component } from "../../../../utils/classes/component"
 import { ChatData, ChatsService } from "../../../../services/state/chats.service"
 import { Inject } from "../../../../utils/decorators/inject"
 import { Form } from "../../../../components/form"
-import { MessageInput } from "./components/message-Input"
+import { MessageInput } from "./components/message-input"
 import { Observable } from "../../../../utils/classes/observable"
 import { Validators } from "../../../../utils/classes/validators"
 import { REQUIRED_VALIDATOR } from "../../../../constants/validators"
@@ -18,8 +15,9 @@ import Router from "../../../../services/core/router"
 import { PAGES } from "../../../../services/core/navigation"
 import { ComponentChild, ComponentProps } from "../../../../types/components/component"
 import { MessageView } from "./components/message/message"
-
-Handlebars.registerPartial("emptyChat", emptyChat)
+import { Message } from "../../../../services/core/messenger"
+import { Image } from "../../../../components/image"
+import { DEFAULT_CHAT_AVATAR } from "../../../../constants/files"
 
 type ChatProps = ComponentProps & ChatData & {
     messagesComponents: ComponentChild<MessageView>[]
@@ -31,6 +29,7 @@ export class Chat extends Component {
     sendForm: Form
     sendButton: Button
     openChatSettingsButton: Button
+    avatar: Image
 
     chatInput: HTMLElement
     messagesContainer: HTMLElement
@@ -47,10 +46,17 @@ export class Chat extends Component {
     }
 
     setDefaultProps(props: ChatProps): ChatProps {
+        const { chat } = this._chatsService
+        const messages = this._chatsService.chat?.messages
+        let mesComps: ComponentChild<MessageView>[] = []
+        if (messages) {
+            mesComps = this._getMessagesComponents(messages)
+        }
         return {
             ...props,
+            ...chat,
             componentClassName: "chat",
-            messagesComponents: [],
+            messagesComponents: mesComps,
             children: [
                 {
                     name: "sendButton",
@@ -91,6 +97,16 @@ export class Chat extends Component {
                         },
                     }),
                 },
+                {
+                    name: "avatar",
+                    component: new Image({
+                        class: "chat__avatar-image",
+                        attributes: {
+                            src: chat?.avatar || DEFAULT_CHAT_AVATAR,
+                        },
+                    }),
+                },
+                ...mesComps,
             ],
         }
     }
@@ -101,6 +117,11 @@ export class Chat extends Component {
                 .chatObservable
                 .subscribe(
                     (chat: ChatData) => {
+                        this.avatar.setProps({
+                            attributes: {
+                                src: chat.avatar || DEFAULT_CHAT_AVATAR,
+                            },
+                        })
                         this.setProps({
                             ...chat,
                             messagesComponents: this._getMessagesComponents(chat.messages || []),
@@ -209,7 +230,7 @@ export class Chat extends Component {
             component: new MessageView(x),
         }))
         // Обновляем children компонента для ререндера
-        if (this.props.children) {
+        if (this.props?.children) {
             this.props.children = this.props.children.filter((x) => !x.name.includes("message"))
             this.props.children.push(...messagesComponents)
         }

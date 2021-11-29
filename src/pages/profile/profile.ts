@@ -5,7 +5,6 @@ import { Button } from "../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../constants/button"
 import { ChangeAvatar } from "../../modules/change-avatar"
 import Router from "../../services/core/router"
-import { PROFILE_DATA } from "../../mock/profile"
 import { Component } from "../../utils/classes/component"
 import { Inject } from "../../utils/decorators/inject"
 import { Observable } from "../../utils/classes/observable"
@@ -74,7 +73,6 @@ export class ProfilePage extends Component {
                     name: "profileView",
                     component: new ProfileView({
                         user: this._userService.user,
-                        profileData: PROFILE_DATA,
                         onEditDataButton: () => {
                             // Переходим в режим редактирования
                             this.setProps({

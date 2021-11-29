@@ -10,3 +10,13 @@ export function queryStringify(data: Object): string {
     }
     return output
 }
+
+export function trim(str: string, symbols?: Array<string | Symbol>) {
+    let result = str.trim()
+    if (symbols) {
+        const regExpString = `[${Array.from(symbols).reduce((sum, x) => `${sum}\\${x}`)}]+`
+        const regExp = new RegExp(regExpString, "g")
+        result = result.replace(regExp, "")
+    }
+    return result
+}

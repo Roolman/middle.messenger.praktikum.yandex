@@ -1,6 +1,5 @@
 import "../node_modules/font-awesome/scss/font-awesome.scss"
 import "./styles/index.scss"
-import * as Handlebars from "handlebars"
 
 import ServiceLocator from "./services/core/serviceLocator"
 import { ChatsService } from "./services/state/chats.service"
@@ -20,6 +19,7 @@ import { AuthGuard } from "./utils/guards/auth.guard"
 import { SnackBarService } from "./services/core/snackbar"
 import { AddChatUsersService } from "./modules/add-chat-users/services/users.service"
 import { ChatSelectedGuard } from "./utils/guards/chat-selected.guard"
+import { Templator } from "./services/core/templator"
 
 function registerServices() {
     ServiceLocator.registerService(MutationsObservation, new MutationsObservation())
@@ -49,18 +49,9 @@ function initRouter() {
 document.addEventListener("DOMContentLoaded", () => {
     registerServices()
     initRouter()
-})
 
-// Глобальный хэлпер
-Handlebars.registerHelper(
-    "if_eq",
-    function (a: unknown, b: unknown, opts: Handlebars.HelperOptions) {
-        if (a === b) {
-            return opts.fn(this)
-        }
-        return opts.inverse(this)
-    },
-)
+    const templator = new Templator("")
+})
 
 // Отключаем дефолтные подсказки
 document.addEventListener("invalid", (function () {

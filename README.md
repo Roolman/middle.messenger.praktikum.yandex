@@ -6,6 +6,10 @@
 
 Макет: https://www.figma.com/file/eZRBWhlYIjEc3cwfYKAFnY/Messenger?node-id=0%3A1
 
+## Heroku
+
+https://ya-messenger.herokuapp.com
+
 ## Netlify
 
 https://cranky-goldberg-655a03.netlify.app
