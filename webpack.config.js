@@ -45,11 +45,5 @@ module.exports = {
     },
     compress: true,
     port: 3000,
-  },
-  resolve: {
-    extensions: ['.js', '.ts'],
-    alias: {
-       handlebars: 'handlebars/dist/handlebars.min.js'
-    }
-}
+  }
 }

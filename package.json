@@ -19,7 +19,6 @@
     "@babel/preset-typescript": "^7.16.0",
     "@babel/register": "^7.16.0",
     "@types/chai": "^4.2.22",
-    "@types/handlebars": "^4.1.0",
     "@types/jsdom": "^16.2.13",
     "@types/jsdom-global": "^3.0.2",
     "@types/mocha": "^9.0.0",
