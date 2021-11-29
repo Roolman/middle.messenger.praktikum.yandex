@@ -1,30 +1,9 @@
 import * as Handlebars from "handlebars"
-import { MutationsObservation } from "../../services/core/mutationObserver"
-import { Inject } from "../decorators/inject"
-import { EventBus } from "./event-bus"
-import { Subscription } from "./observable"
-
-type ComponentMeta = {
-    tagName: string
-    props: ComponentProps
-}
-
-type ProxyObject = {
-    [key: string]: any
-}
-
-export type ComponentChild = {
-    name: string
-    component: Component
-}
-
-export type ComponentProps = {
-    componentClassName?: string
-    styles?: Object
-    attributes?: Object
-    children?: Array<ComponentChild>
-    [key: string]: any
-}
+import { MutationsObservation } from "../../../services/core/mutationObserver"
+import { ComponentMeta, ComponentProps, ProxyObject } from "../../../types/components/component"
+import { Inject } from "../../decorators/inject"
+import { EventBus } from "../event-bus"
+import { Subscription } from "../observable"
 
 export abstract class Component {
     static EVENTS = {
@@ -113,13 +92,18 @@ export abstract class Component {
         this._isDefaultDestroyLogicEnabled = true
         this._createResources()
         // Компонент должен быть удален если его нет в дереве
-        this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
-            () => {
-                if (!document.body.contains(this._element) && this._isDefaultDestroyLogicEnabled) {
-                    this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
-                }
-            },
-        ))
+        if (this._mutationsObservation) {
+            this._subscriptions.push(this._mutationsObservation.mutationsObservable.subscribe(
+                () => {
+                    if (
+                        !document.body.contains(this._element)
+                        && this._isDefaultDestroyLogicEnabled
+                    ) {
+                        this._eventBus.emit(Component.EVENTS.FLOW_CDUM)
+                    }
+                },
+            ))
+        }
         // Отключаем дефолтное уничтожение при отсутствии в дереве для детей
         for (const child of this.props.children || []) {
             child.component.disableDefaultDestroyLogic()
@@ -217,9 +201,11 @@ export abstract class Component {
         for (const sub of this._subscriptions) {
             sub.unsubscribe()
         }
+        this._subscriptions = []
         for (const sub of this._onMountSubscriptions) {
             sub.unsubscribe()
         }
+        this._onMountSubscriptions = []
         // Уничтожаем подписки детей
         for (const child of this.props.children || []) {
             child.component.destroy()

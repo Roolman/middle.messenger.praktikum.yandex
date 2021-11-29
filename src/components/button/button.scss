@@ -12,12 +12,12 @@ $button_light_color: #fafafa;
   border: none;
   font-size: large;
   cursor: pointer;
+  user-select: none;
 }
 
 .button_basic {
   color: white;
   border: 0;
-  width: 100%;
 
   &.button_primary {
     background-color: $main_color;
@@ -47,6 +47,21 @@ $button_light_color: #fafafa;
     }
   }
 
+  &.button_normal {
+    color: black;
+    background-color: white;
+
+    &:hover {
+      background-color: $button_light_color;
+    }
+
+    &:disabled {
+      color: $secondary_color;
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
   &:disabled {
     background-color: $secondary_color;
     cursor: not-allowed;
@@ -71,6 +86,21 @@ $button_light_color: #fafafa;
     border-color: $danger_color;
 
     &:disabled {
+      border-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &.button_normal {
+    color: black;
+    border-color: $secondary_color;
+
+    &:hover {
+      background-color: $button_light_color;
+    }
+
+    &:disabled {
+      color: $secondary_color;
       border-color: $secondary_color;
       cursor: not-allowed;
     }
@@ -109,6 +139,10 @@ $button_light_color: #fafafa;
     }
   }
 
+  &.button_normal {
+    color: black;
+  }
+
   &:hover {
     background-color: $button_light_color;
   }
@@ -124,10 +158,6 @@ $button_light_color: #fafafa;
   width: 30px;
   border-radius: 50px;
   color: white;
-
-  i {
-    font-size: medium;
-  }
 
   &.button_primary {
     background-color: $main_color;
@@ -149,6 +179,21 @@ $button_light_color: #fafafa;
 
     &:hover {
       background-color: $hover_danger_color;
+    }
+
+    &:disabled {
+      background-color: $secondary_color;
+      cursor: not-allowed;
+    }
+  }
+
+  &.button_normal {
+    color: black;
+    background-color: white;
+    border-color: $secondary_color;
+
+    &:hover {
+      background-color: $light_gray_hover_color;
     }
 
     &:disabled {

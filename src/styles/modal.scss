@@ -1,7 +1,4 @@
-@import "../../../../styles/colors.scss";
-@import "../../../../styles/constants.scss";
-
-.change-avatar {
+.modal-container {
   width: 100vw;
   height: 100vh;
   background-color: rgb(0 0 0 / 50%);
@@ -10,9 +7,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  // z-index: 2000;
 }
 
-.change-avatar__elements {
+.modal-content {
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -23,14 +21,6 @@
   padding: 20px;
   background-color: white;
   border-radius: 12px;
-
-  input {
-    display: none;
-  }
-
-  .change-avatar__file-upload-label {
-    display: inline-block;
-    cursor: pointer;
-    color: $main_color;
-  }
+  overflow-y: auto;
+  max-height: 98vh;
 }

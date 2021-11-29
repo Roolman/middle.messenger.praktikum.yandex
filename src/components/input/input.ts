@@ -1,4 +1,5 @@
-import { Component, ComponentProps } from "../../utils/classes/component"
+import { ComponentProps } from "../../types/components/component"
+import { Component } from "../../utils/classes/component"
 import { Observable } from "../../utils/classes/observable"
 import { Subject } from "../../utils/classes/subject"
 import { Validators } from "../../utils/classes/validators"
@@ -34,8 +35,11 @@ export class Input extends Component implements FormElement {
     get name(): string {
         return this.input.name
     }
-    get value(): string | number | boolean {
+    get value(): string {
         return this.input.value
+    }
+    set value(value: string) {
+        this.input.value = value
     }
     get inputElement(): HTMLElement {
         return this.input
@@ -148,7 +152,9 @@ export class Input extends Component implements FormElement {
     }
 
     private _checkInputValidity(): boolean {
-        if (this.props.validators === undefined) return true
+        if (this.props.validators === undefined) {
+            return true
+        }
         if (!this.input.checkValidity()) {
             this.props.validators.checkValidity(this.input)
             this.setErrors(this.props.validators.getInvalidities())
