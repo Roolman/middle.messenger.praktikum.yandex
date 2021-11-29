@@ -190,22 +190,21 @@ export class Messenger {
 
     private _send(content: string | number, type: string) {
         // NOTE: Если сокет не открылся, то повторить попытку через 100 мс
-        if(this._socket.readyState === 0) {
+        if (this._socket.readyState === 0) {
             setTimeout(
                 () => {
                     this._send(content, type)
                 },
-                50
+                50,
             )
-        }
-        else {
+        } else {
             this._socket
-            .send(
-                JSON.stringify({
-                    content,
-                    type,
-                }),
-            )
+                .send(
+                    JSON.stringify({
+                        content,
+                        type,
+                    }),
+                )
         }
     }
 }
