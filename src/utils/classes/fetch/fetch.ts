@@ -1,5 +1,5 @@
 import { Indexed } from "../../../types"
-import { queryStringify } from "../../helpers/query-stringify"
+import { queryStringify } from "../../helpers/string.utils"
 import {
     InternalObserver, Observable, Subscription,
 } from "../observable"

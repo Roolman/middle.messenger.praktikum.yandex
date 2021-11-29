@@ -25,7 +25,7 @@ export default
                 {{/if}}
             </div> 
         </div>
-    {{else}}
+    {{#else}}
         <div class="chats__chat-info-group chats__chat-no-last-message">
             <div class="chats__chat-message">
                 <span class="chats__chat-name">{{ title }}</span>

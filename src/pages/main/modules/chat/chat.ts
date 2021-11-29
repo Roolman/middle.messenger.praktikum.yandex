@@ -1,7 +1,5 @@
-import * as Handlebars from "handlebars"
-
 import "./chat.scss"
-import templ, { emptyChat } from "./chat.tmpl"
+import templ from "./chat.tmpl"
 
 import { Button } from "../../../../components/button/index"
 import { BUTTON_THEMES, BUTTON_TYPES } from "../../../../constants/button"
@@ -20,8 +18,6 @@ import { MessageView } from "./components/message/message"
 import { Message } from "../../../../services/core/messenger"
 import { Image } from "../../../../components/image"
 import { DEFAULT_CHAT_AVATAR } from "../../../../constants/files"
-
-Handlebars.registerPartial("emptyChat", emptyChat)
 
 type ChatProps = ComponentProps & ChatData & {
     messagesComponents: ComponentChild<MessageView>[]

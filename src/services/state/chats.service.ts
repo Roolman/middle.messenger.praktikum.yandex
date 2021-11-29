@@ -90,40 +90,34 @@ export class ChatsService {
         this.chatObservable = this._chatSubject.asObservable()
 
         this._chatSubject.next(this._chat)
-
-        const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
-        if (isLoggedIn) {
-            this.getChats()
-        }
     }
 
     getChats(data?: RequestChatsParams): void {
         data = {
             ...data,
-            limit: 10000
+            limit: 10000,
         }
         // Фильтр делаем на фронте
         const title = data.title || ""
-        if(title || this._allChats?.length) {
-            this._chats = this._allChats.filter(x => x.title.includes(title))
+        if (title || this._allChats?.length) {
+            this._chats = this._allChats.filter((x) => x.title.includes(title))
             this._chatsSubject.next(this._chats)
-        }
-        else {
+        } else {
             // Первый запрос сохраняем в список всех чатов
             const getChatsSub = this
-            ._chatsApi
-            .request(data)
-            .subscribe(
-                (chats: ChatData[]) => {
-                    this._allChats = this._mapChats(chats)
-                    this._chats = this._allChats
-                    this._chatsSubject.next(this._chats)
-                },
-                (err: ServerErrorResponse) => {
-                    console.log(err)
-                    this._snackBar.open("Сервис не доступен. Попробуйте позже")
-                },
-            )
+                ._chatsApi
+                .request(data)
+                .subscribe(
+                    (chats: ChatData[]) => {
+                        this._allChats = this._mapChats(chats)
+                        this._chats = this._allChats
+                        this._chatsSubject.next(this._chats)
+                    },
+                    (err: ServerErrorResponse) => {
+                        console.log(err)
+                        this._snackBar.open("Сервис не доступен. Попробуйте позже")
+                    },
+                )
             this._subscriptions.push(getChatsSub)
         }
     }
@@ -193,14 +187,12 @@ export class ChatsService {
     }
 
     getChatUsers(chatId: number): void {
-        const updateAvatar = (users: User[]) => {
-            return users.map(
-                (x) => ({
-                    ...x,
-                    avatar: x.avatar ? RESOURCES_URL + x.avatar : "",
-                }),
-            )
-        }
+        const updateAvatar = (users: User[]) => users.map(
+            (x) => ({
+                ...x,
+                avatar: x.avatar ? RESOURCES_URL + x.avatar : "",
+            }),
+        )
         // TODO: Добавить пагинацию ?
         const requestParams: RequestChatUsersParams = {
             limit: 1000,
@@ -214,7 +206,7 @@ export class ChatsService {
                         this._chatSubject.next(this._chat)
                         // Обновляем список всех чатов
                         this._allChats = this._allChats.map(
-                            x => x.id === this._chat?.id ? {...x, users} : x
+                            (x) => (x.id === this._chat?.id ? { ...x, users } : x),
                         )
                     }
                 },
@@ -226,14 +218,12 @@ export class ChatsService {
     }
 
     uploadChatAvatar(data: UploadChatAvatar): void {
-        const updateAvatar = (chats: ChatData[], chat: ChatDataShort) => {
-            return chats.map((x) => {
-                if (x.id === chat.id) {
-                    x.avatar = RESOURCES_URL + chat.avatar
-                }
-                return x
-            })
-        }
+        const updateAvatar = (chats: ChatData[], chat: ChatDataShort) => chats.map((x) => {
+            if (x.id === chat.id) {
+                x.avatar = RESOURCES_URL + chat.avatar
+            }
+            return x
+        })
         const uploadChatAvatarSub = this
             ._chatsApi
             .loadChatAvatar(data)
@@ -292,8 +282,8 @@ export class ChatsService {
     }
 
     leaveChat(chatId: number): void {
-        this._allChats = this._allChats.filter(x => x.id !== chatId)
-        this._chats = this._chats.filter(x => x.id !== chatId)
+        this._allChats = this._allChats.filter((x) => x.id !== chatId)
+        this._chats = this._chats.filter((x) => x.id !== chatId)
         this._chatsSubject.next(this._chats)
     }
 
@@ -311,12 +301,11 @@ export class ChatsService {
             // Если получили меньше 20, то больше нет сообщений
             if (messages.length < 20) {
                 chat.allMessagesLoaded = true
-            }
-            else {
+            } else {
                 chat.allMessagesLoaded = false
             }
             // NOTE: Обновляем инфу в чатах
-            this._allChats = this._allChats.map(x => x.id === chat.id ? chat : x)
+            this._allChats = this._allChats.map((x) => (x.id === chat.id ? chat : x))
             this._chat = chat
             this._chatSubject.next(chat)
         }
@@ -327,7 +316,7 @@ export class ChatsService {
         if (chat) {
             chat.messages?.push(message)
             // NOTE: Обновляем инфу в чатах
-            this._allChats = this._allChats.map(x => x.id === chat.id ? chat : x)
+            this._allChats = this._allChats.map((x) => (x.id === chat.id ? chat : x))
             if (chat.id === this._chat?.id) {
                 this._chatSubject.next(chat)
             } else {
@@ -378,7 +367,7 @@ export class ChatsService {
                     messages: x.messages || [],
                     messenger: this._createMessenger(x.id),
                 }
-            }
+            },
         )
     }
 

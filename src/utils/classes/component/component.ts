@@ -1,5 +1,5 @@
-import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../../services/core/mutationObserver"
+import { Templator } from "../../../services/core/templator"
 import { ComponentMeta, ComponentProps, ProxyObject } from "../../../types/components/component"
 import { Inject } from "../../decorators/inject"
 import { EventBus } from "../event-bus"
@@ -32,6 +32,7 @@ export abstract class Component {
     private _element: HTMLElement
     private _meta: ComponentMeta
     private _template: string
+    private _templator: Templator
     // Вкл/выкл удаление подписок при unmount
     private _isDefaultDestroyLogicEnabled: boolean
 
@@ -52,6 +53,7 @@ export abstract class Component {
             props,
         }
         this._template = template
+        this._templator = new Templator(this._template)
 
         const defaultProps = this.setDefaultProps(props)
         this.props = this._makePropsProxy(defaultProps)
@@ -160,7 +162,8 @@ export abstract class Component {
 
     private _render() {
         const block = this.render()
-        this._element.innerHTML = block
+        this._element.innerHTML = ""
+        this._element.append(block)
         // Добавляем класс для элемента компонента (если есть)
         if (this.props.componentClassName) {
             this._element.classList.add(this.props.componentClassName)
@@ -177,9 +180,8 @@ export abstract class Component {
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
-    render(): string {
-        const template = Handlebars.compile(this._template)
-        const result = template(this.props)
+    render(): DocumentFragment {
+        const result = this._templator.compile(this.props)
         return result
     }
 

@@ -43,7 +43,7 @@ describe("Component base class", () => {
             }
         }
         const textContent = "Test"
-        const component = new RealComponent({}, `<span data-ref='testSpan'>${textContent}</span>`)
+        const component = new RealComponent({}, `<span data-ref="testSpan">${textContent}</span>`)
 
         expect(component.testSpan.textContent).to.equal(textContent)
     })
@@ -72,7 +72,7 @@ describe("Component base class", () => {
             }
         }
 
-        const component = new RealComponent({}, "<div data-component='testChild'></div>")
+        const component = new RealComponent({}, `<div data-component="testChild"></div>`)
 
         expect(component.testChild).to.equal(testChild)
     })

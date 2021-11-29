@@ -1,3 +1,7 @@
+export const emptyChat = `
+<span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
+`
+
 export default
 `
     {{#if id}}
@@ -31,11 +35,7 @@ export default
             <div data-component="sendForm"></div>
             <div data-component="sendButton"></div>
         </div>    
-    {{else}}
-        {{> emptyChat}}
+    {{#else}}
+        ${emptyChat}
     {{/if}}
-`
-
-export const emptyChat = `
-    <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
 `

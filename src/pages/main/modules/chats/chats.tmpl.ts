@@ -3,7 +3,7 @@ export default
     <div class="chats__controls">
         <div class="chats__actions">
             <div data-component="addChatButton"></div>
-            <a data-ref="profileLink" href="" class="chats__profile-link">
+            <a data-ref="profileLink" href="a" class="chats__profile-link">
                 Профиль
                 <i class="fa fa-chevron-right"></i>
             </a>                   

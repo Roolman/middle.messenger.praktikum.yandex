@@ -1,10 +1,10 @@
 export default
 `
-    {{#if_eq type 'message'}}
+    {{#equal type 'message'}}
         <span class="message_text-value">{{ content }}</span>
-    {{/if_eq}}
-    {{#if_eq type 'IMAGE'}}
+    {{/equal}}
+    {{#equal type 'IMAGE'}}
         <img class="message_image-value" src="{{ value }}" />
-    {{/if_eq}}
+    {{/equal}}
     <span class="message__time">{{ time }}</span>
 `
