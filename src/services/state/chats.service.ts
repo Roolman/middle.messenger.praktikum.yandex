@@ -319,9 +319,6 @@ export class ChatsService {
             this._allChats = this._allChats.map((x) => (x.id === chat.id ? chat : x))
             if (chat.id === this._chat?.id) {
                 this._chatSubject.next(chat)
-            } else {
-                // TODO:
-                // this._chatsSubject.next(this._chats)
             }
         }
     }
