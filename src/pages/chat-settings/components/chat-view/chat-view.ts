@@ -11,6 +11,8 @@ import { ComponentChild, ComponentProps } from "../../../../types/components/com
 import { User } from "../../../../types/state/user"
 import { ChatUserItem } from "../chat-user-item"
 import { UserService } from "../../../../services/state/user.service"
+import { Image } from "../../../../components/image"
+import { DEFAULT_CHAT_AVATAR } from "../../../../constants/files"
 
 type ChatViewProps = ComponentProps & {
     chat: ChatData
@@ -26,7 +28,9 @@ export class ChatView extends Component {
 
     addUsersButton: Button
     deleteChatButton: Button
-    avatar: HTMLElement
+    avatar: Image
+
+    avatarContainer: HTMLElement
 
     @Inject(ChatsService)
     private _chatsService: ChatsService
@@ -68,6 +72,15 @@ export class ChatView extends Component {
                         theme: BUTTON_THEMES.DANGER,
                     }),
                 },
+                {
+                    name: "avatar",
+                    component: new Image({
+                        class: "settings__main-avatar",
+                        attributes: {
+                            src: props.chat.avatar || `../${DEFAULT_CHAT_AVATAR}`,
+                        },
+                    }),
+                },
                 ...usersChildComponents,
             ],
             users: usersChildComponents,
@@ -81,6 +94,11 @@ export class ChatView extends Component {
                     this.setProps({
                         chat,
                         users: this._getChatUserItemComponents(chat.users || []),
+                    })
+                    this.avatar.setProps({
+                        attributes: {
+                            src: chat.avatar || `../${DEFAULT_CHAT_AVATAR}`,
+                        },
                     })
                 },
             ),
@@ -106,7 +124,7 @@ export class ChatView extends Component {
         // Аватар
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.avatar, "click")
+                .fromEvent(this.avatarContainer, "click")
                 .subscribe(() => this.props.onAvatar()),
         )
     }

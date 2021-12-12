@@ -3,8 +3,9 @@ import templ from "./login-register-block.tmpl"
 
 import { Button } from "../button/index"
 import { BUTTON_TYPES } from "../../constants/button"
-import { Component, ComponentProps } from "../../utils/classes/component"
+import { Component } from "../../utils/classes/component"
 import { Form } from "../form"
+import { ComponentProps } from "../../types/components/component"
 
 type LoginRegisterBlockProps = ComponentProps & {
     title: string

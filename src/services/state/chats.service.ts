@@ -44,6 +44,8 @@ export type LastMessageData = {
     content: string
 }
 
+type AuthUser = Omit<User, "id" | "avatar">
+
 export class ChatsService {
     private _subscriptions: Subscription[]
 
@@ -51,7 +53,10 @@ export class ChatsService {
 
     public chatsObservable: Observable
     private _chatsSubject: Subject<ChatData[]>
+    // Чаты, которые видит юзер (с фильтрацией)
     private _chats: ChatData[]
+    // Все чаты
+    private _allChats: ChatData[]
 
     public chatObservable: Observable
     private _chatSubject: Subject<ChatData | null>
@@ -75,6 +80,7 @@ export class ChatsService {
 
         this._chatsApi = new ChatsApi()
 
+        this._allChats = []
         this._chats = []
         this._chatsSubject = new Subject()
         this.chatsObservable = this._chatsSubject.asObservable()
@@ -84,37 +90,36 @@ export class ChatsService {
         this.chatObservable = this._chatSubject.asObservable()
 
         this._chatSubject.next(this._chat)
-
-        const isLoggedIn = Boolean(localStorage.getItem(LOGGED_IN_KEY))
-        if (isLoggedIn) {
-            this.getChats()
-        }
     }
 
     getChats(data?: RequestChatsParams): void {
-        // TODO: Сделать пагинацию
-        if (data) {
-            data.limit = 1000
-        } else {
-            data = {
-                limit: 1000,
-            }
+        data = {
+            ...data,
+            limit: 10000,
         }
-        const getChatsSub = this
-            ._chatsApi
-            .request(data)
-            .subscribe(
-                (chats: ChatData[]) => {
-                // TODO: Подумать о создании новых чатов
-                    this._chats = this._mapChats(chats)
-                    this._chatsSubject.next(this._chats)
-                },
-                (err: ServerErrorResponse) => {
-                    console.log(err)
-                    this._snackBar.open("Сервис не доступен. Попробуйте позже")
-                },
-            )
-        this._subscriptions.push(getChatsSub)
+        // Фильтр делаем на фронте
+        const title = data.title || ""
+        if (title || this._allChats?.length) {
+            this._chats = this._allChats.filter((x) => x.title.includes(title))
+            this._chatsSubject.next(this._chats)
+        } else {
+            // Первый запрос сохраняем в список всех чатов
+            const getChatsSub = this
+                ._chatsApi
+                .request(data)
+                .subscribe(
+                    (chats: ChatData[]) => {
+                        this._allChats = this._mapChats(chats)
+                        this._chats = this._allChats
+                        this._chatsSubject.next(this._chats)
+                    },
+                    (err: ServerErrorResponse) => {
+                        console.log(err)
+                        this._snackBar.open("Сервис не доступен. Попробуйте позже")
+                    },
+                )
+            this._subscriptions.push(getChatsSub)
+        }
     }
 
     createChat(title: string, users?: User[], avatar?: File | null): void {
@@ -132,6 +137,7 @@ export class ChatsService {
                     allMessagesLoaded: true,
                 }
                 this._chats.unshift(newChat)
+                this._allChats.unshift(newChat)
                 this._chatsSubject.next(this._chats)
                 this._snackBar.open(
                     "Чат создан. Напишите первое сообщение уже сейчас!",
@@ -166,7 +172,7 @@ export class ChatsService {
         if (this._chat) {
             const { id } = this._chat
             this._chats = this._chats.map((x) => ({ ...x, selected: x.id === id }))
-
+            this._allChats = this._allChats.map((x) => ({ ...x, selected: x.id === id }))
             // Если нет сообщений в чате, то получаем с 0го
             if (!this._chat.messages?.length) {
                 this._chat.messenger?.getOldMessages(0)
@@ -181,7 +187,13 @@ export class ChatsService {
     }
 
     getChatUsers(chatId: number): void {
-        // TODO: Добавить пагинацию
+        const updateAvatar = (users: User[]) => users.map(
+            (x) => ({
+                ...x,
+                avatar: x.avatar ? RESOURCES_URL + x.avatar : "",
+            }),
+        )
+        // TODO: Добавить пагинацию ?
         const requestParams: RequestChatUsersParams = {
             limit: 1000,
         }
@@ -190,14 +202,12 @@ export class ChatsService {
             .subscribe(
                 (users: User[]) => {
                     if (this._chat) {
-                        users = users.map(
-                            (x) => ({
-                                ...x,
-                                avatar: x.avatar ? RESOURCES_URL + x.avatar : "",
-                            }),
-                        )
-                        this._chat.users = users
+                        this._chat.users = updateAvatar(users)
                         this._chatSubject.next(this._chat)
+                        // Обновляем список всех чатов
+                        this._allChats = this._allChats.map(
+                            (x) => (x.id === this._chat?.id ? { ...x, users } : x),
+                        )
                     }
                 },
                 (err: ServerErrorResponse) => {
@@ -208,16 +218,18 @@ export class ChatsService {
     }
 
     uploadChatAvatar(data: UploadChatAvatar): void {
+        const updateAvatar = (chats: ChatData[], chat: ChatDataShort) => chats.map((x) => {
+            if (x.id === chat.id) {
+                x.avatar = RESOURCES_URL + chat.avatar
+            }
+            return x
+        })
         const uploadChatAvatarSub = this
             ._chatsApi
             .loadChatAvatar(data)
             .subscribe((uploadresponse: ChatDataShort) => {
-                this._chats = this._chats.map((x) => {
-                    if (x.id === uploadresponse.id) {
-                        x.avatar = RESOURCES_URL + uploadresponse.avatar
-                    }
-                    return x
-                })
+                this._allChats = updateAvatar(this._allChats, uploadresponse)
+                this._chats = updateAvatar(this._chats, uploadresponse)
                 this._chatsSubject.next(this._chats)
                 if (uploadresponse.id === this._chat?.id) {
                     this._chat.avatar = RESOURCES_URL + uploadresponse.avatar
@@ -270,6 +282,7 @@ export class ChatsService {
     }
 
     leaveChat(chatId: number): void {
+        this._allChats = this._allChats.filter((x) => x.id !== chatId)
         this._chats = this._chats.filter((x) => x.id !== chatId)
         this._chatsSubject.next(this._chats)
     }
@@ -288,8 +301,11 @@ export class ChatsService {
             // Если получили меньше 20, то больше нет сообщений
             if (messages.length < 20) {
                 chat.allMessagesLoaded = true
+            } else {
+                chat.allMessagesLoaded = false
             }
-            // NOTE: Вызов функции только для текущего чата!!!
+            // NOTE: Обновляем инфу в чатах
+            this._allChats = this._allChats.map((x) => (x.id === chat.id ? chat : x))
             this._chat = chat
             this._chatSubject.next(chat)
         }
@@ -299,11 +315,10 @@ export class ChatsService {
         const chat = this._chats.find((x) => x.id === chatId)
         if (chat) {
             chat.messages?.push(message)
+            // NOTE: Обновляем инфу в чатах
+            this._allChats = this._allChats.map((x) => (x.id === chat.id ? chat : x))
             if (chat.id === this._chat?.id) {
                 this._chatSubject.next(chat)
-            } else {
-                // TODO:
-                // this._chatsSubject.next(this._chats)
             }
         }
     }
@@ -325,10 +340,13 @@ export class ChatsService {
         this._chatsSubject.next(this._chats)
     }
 
+    // Инициализация чатов
     private _mapChats(chats: ChatData[]) {
-        const chatIds = this._chats.map((x) => x.id)
-        const { id, avatar, ...authUser } = this._userService.user as User
-        // TODO: Заменить поиск на более оптимальный
+        let authUser: AuthUser
+        if (this._userService.user) {
+            const { id, avatar, ...user } = this._userService.user
+            authUser = user
+        }
         return chats.map(
             (x: ChatData) => {
                 let lastMessageUser
@@ -336,18 +354,6 @@ export class ChatsService {
                     const { avatar, ...lastMessageUserData } = x.last_message.user
                     lastMessageUser = lastMessageUserData
                 }
-                if (x && chatIds.includes(x.id)) {
-                    const existingChat = this._chats.find((c) => c.id === x.id) as ChatData
-                    return {
-                        ...existingChat,
-                        avatar: x.avatar ? RESOURCES_URL + x.avatar : null,
-                        lastMessageTimeShort: x.last_message
-                            ? getShortChatDate(new Date(x.last_message.time))
-                            : undefined,
-                        lastMessageSentByUser: isEqual(lastMessageUser, authUser),
-                    }
-                }
-
                 return {
                     ...x,
                     avatar: x.avatar ? RESOURCES_URL + x.avatar : null,
@@ -355,7 +361,7 @@ export class ChatsService {
                         ? getShortChatDate(new Date(x.last_message.time))
                         : undefined,
                     lastMessageSentByUser: isEqual(lastMessageUser, authUser),
-                    messages: [],
+                    messages: x.messages || [],
                     messenger: this._createMessenger(x.id),
                 }
             },

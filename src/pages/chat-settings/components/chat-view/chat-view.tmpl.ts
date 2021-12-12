@@ -1,15 +1,7 @@
 export default
 `
-<div data-ref="avatar" class="settings__main-avatar-container">
-    {{#if chat.avatar}}
-        <img src="{{chat.avatar}}" class="settings__main-avatar" crossorigin="use-credentials"/>
-    {{else}}
-        <img 
-            src="../static/img/chat_default.png" 
-            class="settings__main-avatar" 
-            crossorigin="use-credentials"
-        />
-    {{/if}}
+<div data-ref="avatarContainer" class="settings__main-avatar-container">
+    <div data-component="avatar"></div>
     <div class="settings__main-avatar-hover-block">
         <span class="settings__main-avatar-hover-block-title">Поменять</span>
         <span class="settings__main-avatar-hover-block-title">аватар</span>

@@ -6,10 +6,10 @@ export default
     {{#if profileIsEditable}}
         {{#if changePasswordFormIsShown}}
             <div data-component="passwordEdit"></div>
-        {{else}}
+        {{#else}}
             <div data-component="profileEdit"></div>
         {{/if}}
-    {{else}}
+    {{#else}}
         <div data-component="profileView"></div>
     {{/if}}
     <div data-component="сhangeAvatar"></div>

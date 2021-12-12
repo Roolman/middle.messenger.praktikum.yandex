@@ -1,17 +1,13 @@
+export const emptyChat = `
+<span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
+`
+
 export default
 `
     {{#if id}}
         <div data-ref="chatHeader" class="chat__header">
             <div class="chat__header-chat-info">
-                {{#if avatar}}
-                <img class="chat__avatar-image" src="{{avatar}}" crossorigin="use-credentials"/>
-                {{else}}
-                    <img 
-                        class="chat__avatar-image" 
-                        src="static/img/chat_default.png" 
-                        crossorigin="use-credentials"
-                    />
-                {{/if}}
+                <div data-component="avatar"></div>
                 <span class="chat__name">{{ title }}</span>   
             </div>
             <div data-component="openChatSettingsButton"></div>             
@@ -39,11 +35,7 @@ export default
             <div data-component="sendForm"></div>
             <div data-component="sendButton"></div>
         </div>    
-    {{else}}
-        {{> emptyChat}}
+    {{#else}}
+        ${emptyChat}
     {{/if}}
-`
-
-export const emptyChat = `
-    <span class="chat__empty-text">Выберите чат чтобы отправить сообщение</span>
 `

@@ -50,19 +50,21 @@ describe("HttpClient", () => {
             {
                 method: HTTP_METHODS.GET,
             },
+            {},
             0,
         )
-            .then(
-                (val: any) => {
-                    result = "successfull xhr"
-                },
-            )
-            .catch(
-                (val: any) => {
-                    result = timedOut
-                },
-            )
-
+        .then(
+            (val: any) => {
+                console.log(val)
+                result = "successfull xhr"
+            },
+        )
+        .catch(
+            (val: any) => {
+                result = timedOut
+            },
+        )
+        
         expect(result).to.equal(timedOut)
     })
 

@@ -1,5 +1,5 @@
-import * as Handlebars from "handlebars"
 import { MutationsObservation } from "../../../services/core/mutationObserver"
+import { Templator } from "../../../services/core/templator"
 import { ComponentMeta, ComponentProps, ProxyObject } from "../../../types/components/component"
 import { Inject } from "../../decorators/inject"
 import { EventBus } from "../event-bus"
@@ -32,6 +32,7 @@ export abstract class Component {
     private _element: HTMLElement
     private _meta: ComponentMeta
     private _template: string
+    private _templator: Templator
     // Вкл/выкл удаление подписок при unmount
     private _isDefaultDestroyLogicEnabled: boolean
 
@@ -52,6 +53,7 @@ export abstract class Component {
             props,
         }
         this._template = template
+        this._templator = new Templator(this._template)
 
         const defaultProps = this.setDefaultProps(props)
         this.props = this._makePropsProxy(defaultProps)
@@ -136,14 +138,7 @@ export abstract class Component {
         return true
     }
 
-    private _render() {
-        const block = this.render()
-        this._element.innerHTML = block
-        // Добавляем класс для элемента компонента (если есть)
-        if (this.props.componentClassName) {
-            this._element.classList.add(this.props.componentClassName)
-        }
-        // Устанавливаем стили
+    private _setStyles(): void {
         const styles = Object.entries(this.props.styles || {})
         for (const [styleName, value] of styles) {
             try {
@@ -152,7 +147,9 @@ export abstract class Component {
                 throw new Error(`Ошибка установки стиля ${styleName} со значением ${value}`)
             }
         }
-        // Устанавливаем аттрибуты
+    }
+
+    private _setAttributes(): void {
         const attributes = Object.entries(this.props.attributes || {})
         for (const [attributeName, value] of attributes) {
             try {
@@ -161,6 +158,20 @@ export abstract class Component {
                 throw new Error(`Ошибка установки аттрибута ${attributeName} со значением ${value}`)
             }
         }
+    }
+
+    private _render() {
+        const block = this.render()
+        this._element.innerHTML = ""
+        this._element.append(block)
+        // Добавляем класс для элемента компонента (если есть)
+        if (this.props.componentClassName) {
+            this._element.classList.add(this.props.componentClassName)
+        }
+        // Устанавливаем стили
+        this._setStyles()
+        // Устанавливаем аттрибуты
+        this._setAttributes()
         // Получаем ссылки на компоненты
         this._getComponentChildrenReferences()
         // Заменяем заглушки на дочерние компоненты
@@ -169,9 +180,8 @@ export abstract class Component {
         this._eventBus.emit(Component.EVENTS.FLOW_CDR)
     }
 
-    render(): string {
-        const template = Handlebars.compile(this._template)
-        const result = template(this.props)
+    render(): DocumentFragment {
+        const result = this._templator.compile(this.props)
         return result
     }
 

@@ -27,7 +27,7 @@ export class AddChatUsers extends Component {
     userNameInput: Input
     nextButton: Button
 
-    seclectedUsersContainer: HTMLDivElement
+    selectedUsersContainer: HTMLDivElement
 
     @Inject(AddChatUsersService)
     private _userService: AddChatUsersService
@@ -124,7 +124,7 @@ export class AddChatUsers extends Component {
         )
         this._onMountSubscriptions.push(
             Observable
-                .fromEvent(this.seclectedUsersContainer, "click")
+                .fromEvent(this.selectedUsersContainer, "click")
                 .subscribe(
                     (e: Event) => {
                         const target = e.target as HTMLElement

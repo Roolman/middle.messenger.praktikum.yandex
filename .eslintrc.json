@@ -28,10 +28,12 @@
       "import/no-cycle": [0],
       "no-useless-escape": [0],
       "no-param-reassign": [0],
+      "max-classes-per-file": [0],
       "@typescript-eslint/semi": [2, "never"],
       "@typescript-eslint/quotes": [2, "double"],
       "@typescript-eslint/eol-last": [0],
       "@typescript-eslint/lines-between-class-members": [0],
+      "@typescript-eslint/no-shadow": [0],
       "@typescript-eslint/indent": [2, 4],
       "@typescript-eslint/no-unused-vars": [0],
       "@typescript-eslint/naming-convention": [
